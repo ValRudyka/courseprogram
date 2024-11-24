@@ -1,5 +1,5 @@
-from view.main.ui_main import MainWindow
-from controller import Controller
+from mvc.view.main.ui_main import MainWindow
+from mvc.controller import Controller
 from PySide6.QtWidgets import QApplication
 import sys
 
