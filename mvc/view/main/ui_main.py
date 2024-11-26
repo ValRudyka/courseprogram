@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
         self.__theme = value
 
     def set_theme(self) -> None:
-        qdarktheme(self.__theme)
+        qdarktheme.setup_theme(self.__theme)
 
         if self.__theme == "light":
             self.setStyleSheet( """ 
@@ -36,6 +36,8 @@ class MainWindow(QMainWindow):
                 border-radius: 3px;               
             }
         """)
+        else:
+            self.setStyleSheet("")
 
     def update_time(self) -> None:
         curr_time = strftime("%H:%M:%S", localtime())

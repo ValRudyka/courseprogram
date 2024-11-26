@@ -8,10 +8,7 @@ class Controller(QObject):
         self.main.ui.pushButton.clicked.connect(self.toggle_theme)
 
     def toggle_theme(self) -> None:
-        if self.main.theme == 'dark':
-            self.main.theme = 'light'
-        else:
-            self.main.theme = 'dark'
+        self.main.theme = 'dark' if self.main.theme == 'light' else 'light'
         
         self.main.set_theme()
 
