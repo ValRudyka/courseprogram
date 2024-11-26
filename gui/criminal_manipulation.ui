@@ -27,7 +27,7 @@
      <enum>QTabWidget::Rounded</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -206,7 +206,7 @@
         <x>300</x>
         <y>140</y>
         <width>121</width>
-        <height>21</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="minimum">
@@ -225,7 +225,7 @@
         <x>300</x>
         <y>230</y>
         <width>121</width>
-        <height>21</height>
+        <height>31</height>
        </rect>
       </property>
       <property name="minimum">

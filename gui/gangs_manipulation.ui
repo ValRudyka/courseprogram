@@ -477,7 +477,7 @@ border-radius: 3px;</string>
 border-radius: 3px;</string>
       </property>
       <property name="text">
-       <string>Додати</string>
+       <string>Оновити</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEdit_7">
