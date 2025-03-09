@@ -2,16 +2,8 @@ import bcrypt
 from sqlalchemy import create_engine
 
 class UserModel:
-    def __init__(self):
-        self.engine = None
-
-    def connect(self, db_URI: str) -> bool:
-        try:
-            self.engine = create_engine(db_URI)
-            return True
-        except Exception as e:
-            print("Помилка приєднання до БД")
-            return False
+    def __init__(self, engine):
+        self.engine = engine
         
     def create_user(self, username: str, password: str) -> str | None:        
         try:
@@ -25,7 +17,7 @@ class UserModel:
                 
                 password_hash = self._hash_password(password)
                 max_id = cursor.execute("SELECT MAX(user_id) FROM Users")
-                id = 1 if max_id is None else max_id + 1
+                id = 1 if max_id.scalar() is None else max_id.scalar() + 1
 
                 cursor.execute(
                     f"""

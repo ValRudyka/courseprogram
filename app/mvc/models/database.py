@@ -1,17 +1,14 @@
 from sqlalchemy import create_engine, text
 
-class DatabaseConnector:
-    """Manages database connections for the application"""
-    
+class DatabaseConnector:    
     def __init__(self):
         self.engine = None
     
     def connect(self, db_uri):
-        """Connect to the PostgreSQL database"""
         try:
             self.engine = create_engine(db_uri)
             
-            # Test connection
+            # тестування з'єднання
             with self.engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
             
