@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         font.setFamily(u"Segoe UI")
         font.setPointSize(14)
         font.setBold(True)
-        font.setWeight(75)
+        font.setWeight(font.Weight.Bold)
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignCenter)
         self.label_2 = QLabel(self.centralwidget)

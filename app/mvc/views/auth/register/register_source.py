@@ -27,7 +27,7 @@ class Ui_RegisterWindow(object):
         font.setFamily(u"Nirmala UI")
         font.setPointSize(16)
         font.setBold(False)
-        font.setWeight(50)
+        font.setWeight(font.Weight.Normal)
         self.title.setFont(font)
         self.title.setAlignment(Qt.AlignCenter)
         self.title.setIndent(-2)

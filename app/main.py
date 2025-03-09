@@ -2,7 +2,6 @@ import sys
 import os
 from dotenv import load_dotenv
 from PySide6.QtWidgets import QApplication
-# from config import DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
 
 from mvc.models.database import DatabaseConnector
 from mvc.models.users import UserModel
@@ -18,12 +17,12 @@ def main():
     db_connector = DatabaseConnector()
     db_uri = f"""postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}:
                 {os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"""
-    connection_success = db_connector.connect(db_uri)
+    connection_success = db_connector.connect_engine(db_uri)
     
     if not connection_success:
         return 1
     
-    user_model = UserModel(db_connector)
+    user_model = UserModel(db_connector.engine)
     auth_controller = AuthController(user_model)
     nav_service = NavigationService()
     
@@ -36,7 +35,7 @@ def main():
     register_view.register_requested.connect(auth_controller.register_user)
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
     auth_controller.registration_failed.connect(register_view.show_error)
-    
+
     auth_controller.show_main_window.connect(nav_service.show_main_window)
     register_view.switch_to_login.connect(lambda: nav_service.show_view('login'))
     

@@ -1,5 +1,5 @@
 import bcrypt
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 class UserModel:
     def __init__(self, engine):
@@ -8,47 +8,44 @@ class UserModel:
     def create_user(self, username: str, password: str) -> str | None:        
         try:
             with self.engine.connect() as cursor:
-                result = cursor.execute(""" 
-                    SELECT username FROM Users WHERE username = :username;
-                """, {"username": username})
-
+                transaction = cursor.begin()
+                result = cursor.execute(text(f'''SELECT username FROM "Users" WHERE username = '{username}';'''))
+                
                 if result.fetchone():
-                    raise "Такий користувач вже існує, спробуйте увійти з таким логіном!"
+                    raise Exception("Такий користувач вже існує, спробуйте увійти з таким логіном!")
                 
                 password_hash = self._hash_password(password)
-                max_id = cursor.execute("SELECT MAX(user_id) FROM Users")
-                id = 1 if max_id.scalar() is None else max_id.scalar() + 1
+                cursor.execute(text(f"INSERT INTO \"Users\" (username, password_hash) VALUES (:username, :password_hash)"), {"username": username, "password_hash": password_hash})
 
-                cursor.execute(
-                    f"""
-                     INSERT INTO Users VALUES ({id}, {username}, {password_hash})
-                    """)
+                transaction.commit()
+                return True, "Успішно додано користувача, переходимо до головної форми!"
                 
-        except Exception as e:
-            return e
+        except BaseException as e:
+            print(e)
+            return None, e
         
     def authenticate(self, username: str, password: str) -> str | dict:
         try:
             with self.engine.connect() as cursor:
-                result = cursor.execute(""" 
-                    SELECT * FROM Users WHERE username = :username;
-                """, {"username": username})
+
+                result = cursor.execute(text("""SELECT * FROM "Users" WHERE username = :username;"""), {"username": username})
 
                 row = result.fetchone()
 
                 if not row:
-                    raise "Користувач відсутній в системі. Спробуйте зареєструватися!"
-                
+                    raise Exception("Користувач відсутній в системі. Спробуйте зареєструватися!")
+                print(row)
                 user_id, username, password_hash = row
 
                 if not self._verify_password(password, password_hash):
-                    raise "Пароль введений неправильно. Спробуйте ще раз!"
+                    raise Exception("Пароль введений неправильно. Спробуйте ще раз!")
 
                 user = {'user_id': user_id, 'username': username}
 
-                return user
-        except Exception as e:
-            return e
+                return "Success", user
+        except BaseException as e:
+            print(e)
+            return None, e
         
     def _hash_password(self, password: str) -> str:
         if isinstance(password, str):

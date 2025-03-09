@@ -4,7 +4,7 @@ class DatabaseConnector:
     def __init__(self):
         self.engine = None
     
-    def connect(self, db_uri):
+    def connect_engine(self, db_uri):
         try:
             self.engine = create_engine(db_uri)
             
