@@ -13,7 +13,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 
-class Ui_LoginWindow(object):
+class Ui_RegisterWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")

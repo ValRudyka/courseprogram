@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QMessageBox
 from PySide6.QtCore import Signal
-from .register_source import Ui_LoginWindow
+from .register_source import Ui_RegisterWindow
 
 class RegisterView(QMainWindow):
     register_requested = Signal(str, str)
@@ -8,7 +8,7 @@ class RegisterView(QMainWindow):
     
     def __init__(self) -> None:
         super().__init__()
-        self.ui = Ui_LoginWindow()
+        self.ui = Ui_RegisterWindow()
         self.ui.setupUi(self)
             
         self.ui.register_btn.clicked.connect(self._on_register)
