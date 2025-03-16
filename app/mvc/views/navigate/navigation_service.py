@@ -17,7 +17,7 @@ class NavigationService(QObject):
             return
         
         if self.curr_view:
-            self.curr_view.hide()
+            self.views[self.curr_view].hide()
 
         self.views[view_name].show()
         self.curr_view = view_name

@@ -33,7 +33,7 @@ class UserModel:
                 if not row:
                     raise Exception("Користувач відсутній в системі. Спробуйте зареєструватися!")
                 print(row)
-                user_id, username, password_hash = row
+                user_id, username, password_hash = row[:3]
 
                 if not self._verify_password(password, password_hash):
                     raise Exception("Пароль введений неправильно. Спробуйте ще раз!")
@@ -55,6 +55,9 @@ class UserModel:
         return hashed.decode('utf-8')
     
     def _verify_password(self, password: str, stored_hash: str) -> bool:
+        if isinstance(stored_hash, str):
+            stored_hash = stored_hash.encode('utf-8')
+
         return bcrypt.checkpw(password, stored_hash)
 
 
