@@ -1,34 +1,34 @@
 from PySide6.QtCore import QObject, Signal, Slot
-import logging
+from mvc.models.users import UserModel
 
 class AuthController(QObject):
     registration_success = Signal(object)  
     registration_failed = Signal(str)     
     login_success = Signal(object)        
     login_failed = Signal(str)            
-    show_main_window = Signal(object)     
+    show_main_window = Signal()     
     
-    def __init__(self, user_model):
+    def __init__(self, user_model: UserModel) -> None:
         super().__init__()
         self.user_model = user_model
         self.current_user = None
     
     @Slot(str, str)
-    def register_user(self, username, password):
+    def register_user(self, username: str, password: str) -> None:
         success, message = self.user_model.create_user(username, password)
         if success:            
                 self.registration_success.emit(None) 
-                self.show_main_window.emit(None)
+                self.show_main_window.emit()
         else:
             self.registration_failed.emit(message)
     
     @Slot(str, str)
-    def authenticate_user(self, username, password):
+    def authenticate_user(self, username: str, password: str) -> None:
         success, result = self.user_model.authenticate(username, password)
         
         if success:
             self.login_success.emit(result)
-            self.show_main_window.emit(result)
+            self.show_main_window.emit()
         else:
             self.login_failed.emit(result)
     

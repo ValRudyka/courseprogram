@@ -1,11 +1,11 @@
 import bcrypt
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 
 class UserModel:
-    def __init__(self, engine):
+    def __init__(self, engine) -> None:
         self.engine = engine
         
-    def create_user(self, username: str, password: str) -> str | None:        
+    def create_user(self, username: str, password: str) -> tuple[bool, str]:        
         try:
             with self.engine.connect() as cursor:
                 transaction = cursor.begin()
@@ -22,14 +22,12 @@ class UserModel:
                 
         except BaseException as e:
             print(e)
-            return None, e
+            return False, e
         
-    def authenticate(self, username: str, password: str) -> str | dict:
+    def authenticate(self, username: str, password: str) -> tuple[bool, dict|str]:
         try:
             with self.engine.connect() as cursor:
-
                 result = cursor.execute(text("""SELECT * FROM "Users" WHERE username = :username;"""), {"username": username})
-
                 row = result.fetchone()
 
                 if not row:
@@ -42,10 +40,10 @@ class UserModel:
 
                 user = {'user_id': user_id, 'username': username}
 
-                return "Success", user
+                return True, user
         except BaseException as e:
             print(e)
-            return None, e
+            return False, e
         
     def _hash_password(self, password: str) -> str:
         if isinstance(password, str):

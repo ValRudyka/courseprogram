@@ -11,26 +11,20 @@ from mvc.views.navigate.navigation_service import NavigationService
 
 load_dotenv()
 
-def main():
+def main() -> int:
     app = QApplication(sys.argv)
     
     db_connector = DatabaseConnector()
     db_uri = f"""postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}:
                 {os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"""
-    connection_success = db_connector.connect_engine(db_uri)
-    
-    if not connection_success:
-        return 1
+    db_connector.connect_engine(db_uri)
     
     user_model = UserModel(db_connector.engine)
     auth_controller = AuthController(user_model)
     nav_service = NavigationService()
-    
     register_view = RegisterView()
     
     nav_service.register_view('register', register_view)
-    nav_service.register_view('main', register_view)
-
     
     register_view.register_requested.connect(auth_controller.register_user)
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
