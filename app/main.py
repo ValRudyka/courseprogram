@@ -5,7 +5,9 @@ from PySide6.QtWidgets import QApplication
 
 from mvc.models.database import DatabaseConnector
 from mvc.models.users import UserModel
+
 from mvc.controllers.authcontroller import AuthController
+
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
 from mvc.views.navigate.navigation_service import NavigationService

@@ -46,8 +46,7 @@ class UserModel:
             return False, e
         
     def _hash_password(self, password: str) -> str:
-        if isinstance(password, str):
-            password = password.encode('utf-8')
+        password = password.encode('utf-8')
         
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(password, salt)
@@ -55,8 +54,8 @@ class UserModel:
         return hashed.decode('utf-8')
     
     def _verify_password(self, password: str, stored_hash: str) -> bool:
-        if isinstance(stored_hash, str):
-            stored_hash = stored_hash.encode('utf-8')
+        password = password.encode('utf-8')
+        stored_hash = stored_hash.encode('utf-8')
 
         return bcrypt.checkpw(password, stored_hash)
 

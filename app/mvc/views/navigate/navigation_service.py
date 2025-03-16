@@ -26,4 +26,8 @@ class NavigationService(QObject):
         if not self.main_window or not self.main_window.isVisible():
            self.main_window = MainWindow()
 
+        if self.curr_view:
+            self.views[self.curr_view].close()
+            self.curr_view = None
+
         self.main_window.show()
