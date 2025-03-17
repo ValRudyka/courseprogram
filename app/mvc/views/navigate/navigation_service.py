@@ -12,11 +12,11 @@ class NavigationService(QObject):
     def register_view(self, view_name: str, view: QMainWindow) -> None:
         self.views[view_name] = view
 
-    def show_view(self, view_name: str) -> None:
+    def show_view(self, view_name: str, hide_all: bool = True) -> None:
         if view_name not in self.views:
             return
         
-        if self.curr_view:
+        if self.curr_view and hide_all:
             self.views[self.curr_view].hide()
 
         self.views[view_name].show()

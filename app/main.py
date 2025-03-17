@@ -10,6 +10,7 @@ from mvc.controllers.authcontroller import AuthController
 
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
+from mvc.views.mainwindow import MainWindow
 from mvc.views.navigate.navigation_service import NavigationService
 
 load_dotenv()
@@ -27,9 +28,13 @@ def main() -> int:
     nav_service = NavigationService()
     register_view = RegisterView()
     login_view = LoginView()
+    main_view = MainWindow()
     
     nav_service.register_view('register', register_view)
     nav_service.register_view('login', login_view)
+    nav_service.register_view('criminals', ...)
+    nav_service.register_view('gangs', ...)
+    nav_service.register_view('archive', ...)
     
     register_view.register_requested.connect(auth_controller.register_user)
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
@@ -42,6 +47,10 @@ def main() -> int:
     auth_controller.show_main_window.connect(nav_service.show_main_window)
     register_view.switch_to_login.connect(lambda: nav_service.show_view('login'))
     login_view.switch_to_register.connect(lambda: nav_service.show_view('register'))
+
+    main_view.open_criminals_requested.connect(lambda: nav_service.show_view('criminals'))
+    main_view.open_groups_requested.connect(lambda: nav_service.show_view('gangs'))
+    main_view.open_archive_requested.connect(lambda: nav_service.show_view('archive'))
     
     nav_service.show_view('login')
     
