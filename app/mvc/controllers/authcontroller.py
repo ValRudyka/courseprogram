@@ -17,7 +17,7 @@ class AuthController(QObject):
     def register_user(self, username: str, password: str) -> None:
         success, message = self.user_model.create_user(username, password)
         if success:            
-                self.registration_success.emit(None) 
+                self.registration_success.emit() 
                 self.show_main_window.emit()
         else:
             self.registration_failed.emit(message)
@@ -31,6 +31,3 @@ class AuthController(QObject):
             self.show_main_window.emit()
         else:
             self.login_failed.emit(result)
-    
-    def is_authenticated(self):
-        return self.current_user is not None

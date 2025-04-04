@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QMainWindow
-from .archive_info import Ui_MainWindow
+from .archive_source import Ui_MainWindow
 
-class CriminalsView(QMainWindow):
+class ArchiveView(QMainWindow):
 
     def __init__(self):
         super().__init__()

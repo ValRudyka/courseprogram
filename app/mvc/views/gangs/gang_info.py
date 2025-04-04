@@ -1,8 +1,7 @@
 from PySide6.QtWidgets import QMainWindow
-from .gang_info import Ui_MainWindow
+from .gangs_source import Ui_MainWindow
 
-class CriminalsView(QMainWindow):
-
+class GangsView(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
