@@ -102,4 +102,91 @@ class CriminalsView(QMainWindow):
     def on_delete_criminal(self):
         """Handle delete button click."""
         if self.selected_criminal_id is None:
-            QMessageBox
+            QMessageBox.warning(self, "Warning", "Виберіть злочинця для видалення")
+            return
+        
+        reply = QMessageBox.warning(
+            self, 
+            "Підтвердження видалення", 
+            "Ви впевнені, що хочете видалити цього злочинця? Ця дія не може бути скасована.",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            self.delete_criminal_requested.emit(self.selected_criminal_id)
+    
+    def on_search(self):
+        """Handle search button click."""
+        # Get search field and text
+        search_field = self.ui.comboBox.currentText()
+        search_text = self.ui.textEdit.toPlainText().strip()
+        
+        if not search_text:
+            # If search text is empty, clear any filtering
+            self.set_criminals_data(self.full_data)
+            return
+        
+        # Map search field to model column
+        field_map = {
+            "Ім'я": "first_name",
+            "Прізвище": "last_name",
+            "Кличка": "nickname",
+            "Місце народження": "birth_place",
+            "Місце проживання": "residence"
+        }
+        
+        if search_field in field_map:
+            field_key = field_map[search_field]
+            # Filter the data
+            filtered_data = [
+                criminal for criminal in self.full_data
+                if search_text.lower() in str(criminal.get(field_key, "")).lower()
+            ]
+            # Update the table with filtered data
+            self.ui.tableView.model().update_data(filtered_data)
+        else:
+            # If field not recognized, do nothing
+            pass
+    
+    def on_table_clicked(self, index):
+        """Handle table click to select a criminal."""
+        if not index.isValid():
+            return
+            
+        # Get the ID from the first column
+        id_index = self.ui.tableView.model().index(index.row(), 0)
+        self.selected_criminal_id = int(self.ui.tableView.model().data(id_index))
+    
+    def set_criminals_data(self, criminals):
+        """Set data for the criminals table."""
+        # Store the full data for filtering
+        self.full_data = criminals
+        
+        # Create and set table model
+        model = CriminalTableModel(criminals)
+        self.ui.tableView.setModel(model)
+        
+        # Enable sorting
+        self.ui.tableView.setSortingEnabled(True)
+        
+        # Set column widths
+        self.ui.tableView.setColumnWidth(0, 50)   # ID
+        self.ui.tableView.setColumnWidth(1, 120)  # First name
+        self.ui.tableView.setColumnWidth(2, 120)  # Last name
+        self.ui.tableView.setColumnWidth(3, 120)  # Nickname
+        self.ui.tableView.setColumnWidth(4, 100)  # Birth date
+        self.ui.tableView.setColumnWidth(5, 150)  # Birth place
+        self.ui.tableView.setColumnWidth(6, 150)  # Residence
+        self.ui.tableView.setColumnWidth(7, 70)   # Height
+        self.ui.tableView.setColumnWidth(8, 70)   # Weight
+        
+        # Hide vertical header
+        self.ui.tableView.verticalHeader().setVisible(False)
+        
+        # Set selection behavior
+        self.ui.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.ui.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
+        
+        # Clear selection
+        self.selected_criminal_id = None
