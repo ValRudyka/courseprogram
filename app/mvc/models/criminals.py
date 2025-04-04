@@ -464,7 +464,7 @@ class CriminalModel:
                 # Get all languages
                 lang_result = conn.execute(
                     text("""
-                    SELECT l.id_language, l.language_name
+                    SELECT l.id_language, l.name
                     FROM "Languages" l
                     JOIN "Criminals_Languages" cl ON l.id_language = cl.Languages_id_language
                     WHERE cl.Criminals_id_criminal = :id
@@ -547,7 +547,7 @@ class CriminalModel:
                 SELECT 
                     g.group_id, g.name, g.founding_date, g.number_of_members,
                     g.main_activity, c.city_name AS base_location,
-                    cr.first_name || ' ' || cr.last_name AS leader_name
+                    CONCAT(cr.first_name, ' ', cr.last_name) AS leader_name
                 FROM "Criminal_groups" g
                 LEFT JOIN "Cities" c ON g.id_base = c.id_city
                 LEFT JOIN "Criminals" cr ON g.id_leader = cr.id_criminal
