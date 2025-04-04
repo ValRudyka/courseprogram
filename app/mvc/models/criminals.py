@@ -278,7 +278,6 @@ class CriminalModel:
             raise e
     
     def archive_criminal(self, criminal_id):
-        """Archive a criminal by setting the is_archived flag and creating an archive record."""
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
