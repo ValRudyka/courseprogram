@@ -590,7 +590,6 @@ class CriminalModel:
                         "id": row[0],
                         "name": row[1]
                     })
-                
                 return languages
                 
         except Exception as e:

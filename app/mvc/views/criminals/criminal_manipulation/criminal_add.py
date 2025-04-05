@@ -226,30 +226,6 @@ class Ui_MainWindow(object):
 
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
-        ___qlistwidgetitem = self.listWidget.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem1 = self.listWidget.item(1)
-        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0433\u043b\u0456\u0439\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem2 = self.listWidget.item(2)
-        ___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0456\u043c\u0435\u0446\u044c\u043a\u0430", None));
-        ___qlistwidgetitem3 = self.listWidget.item(3)
-        ___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0440\u0430\u043d\u0446\u0443\u0437\u044c\u043a\u0430", None));
-        ___qlistwidgetitem4 = self.listWidget.item(4)
-        ___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"\u0406\u0441\u043f\u0430\u043d\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem5 = self.listWidget.item(5)
-        ___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"\u0406\u0442\u0430\u043b\u0456\u0439\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem6 = self.listWidget.item(6)
-        ___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043b\u044c\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem7 = self.listWidget.item(7)
-        ___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0438\u0442\u0430\u0439\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem8 = self.listWidget.item(8)
-        ___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"\u042f\u043f\u043e\u043d\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem9 = self.listWidget.item(9)
-        ___qlistwidgetitem9.setText(QCoreApplication.translate("MainWindow", u"\u0428\u0432\u0435\u0434\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem10 = self.listWidget.item(10)
-        ___qlistwidgetitem10.setText(QCoreApplication.translate("MainWindow", u"\u0427\u0435\u0441\u044c\u043a\u0430", None));
-        ___qlistwidgetitem11 = self.listWidget.item(11)
-        ___qlistwidgetitem11.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0440\u0442\u0443\u0433\u0430\u043b\u044c\u0441\u044c\u043a\u0430", None));
         self.listWidget.setSortingEnabled(__sortingEnabled)
 
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"\u0427\u043e\u0440\u043d\u0438\u0439", None))

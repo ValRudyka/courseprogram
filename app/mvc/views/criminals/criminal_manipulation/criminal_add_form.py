@@ -60,7 +60,6 @@ class CriminalAddForm(QMainWindow):
         self.ui.pushButton.clicked.connect(self.on_save)
     
     def load_reference_data(self, cities, professions, gangs, languages):
-        # Clear existing items
         self.ui.comboBox_5.clear()  
         self.ui.comboBox_6.clear()  
         self.ui.comboBox_7.clear()  
