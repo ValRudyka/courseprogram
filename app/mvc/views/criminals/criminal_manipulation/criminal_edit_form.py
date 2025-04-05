@@ -87,8 +87,9 @@ class CriminalEditForm(QMainWindow):
         self.ui.lineEdit_16.setText(data.get("distinguishing_features", ""))  
         self.ui.lineEdit_18.setText(data.get("last_case", ""))   
         
-        self.ui.spinBox_3.setValue(data.get("height", 170))
-        self.ui.spinBox_4.setValue(data.get("weight", 70))
+
+        self.ui.spinBox_3.setValue(170)
+        self.ui.spinBox_4.setValue(70)
         
         self.set_combobox_by_id(self.ui.comboBox_8, data.get("place_of_birth_id"))
         self.set_combobox_by_id(self.ui.comboBox_9, data.get("last_live_place_id"))

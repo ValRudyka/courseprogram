@@ -260,14 +260,16 @@ class CriminalModel:
                     )
                 
                 if data.get("last_case"):
+                    next_crime_id = self.get_next_id("Crimes", "id_crime")
+
                     conn.execute(
                         text("""
                         INSERT INTO "Crimes" (
-                            crime_name, commitment_date, id_location,
+                            id_crime, crime_name, commitment_date, id_location,
                             court_sentence, id_criminal
                         ) 
                         VALUES (
-                            :crime_name, :date, :location_id,
+                            :id_crime, :crime_name, :date, :location_id,
                             :court_sentence, :criminal_id
                         )
                         """), 
@@ -275,8 +277,9 @@ class CriminalModel:
                             "crime_name": data.get("last_case"),
                             "date": data.get("last_case_date"),
                             "location_id": data.get("last_case_location_id"),
-                            "court_sentence": data.get("court_sentence", ""),
-                            "criminal_id": criminal_id
+                            "court_sentence": 1,
+                            "criminal_id": criminal_id,
+                            "id_crime": next_crime_id,
                         }
                     )
                 

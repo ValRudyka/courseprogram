@@ -25,7 +25,6 @@ load_dotenv()
 def main() -> int:
     app = QApplication(sys.argv)
     
-    # Database connection
     db_connector = DatabaseConnector()
     db_uri = f"""postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}:{os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"""
     connected = db_connector.connect_engine(db_uri)
@@ -34,15 +33,12 @@ def main() -> int:
         QMessageBox.critical(None, "Database Error", "Could not connect to database. Please check your connection settings.")
         return 1
     
-    # Create models
     user_model = UserModel(db_connector.engine)
     criminal_model = CriminalModel(db_connector.engine)
     
-    # Create controllers
     auth_controller = AuthController(user_model)
     criminal_controller = CriminalController(criminal_model)
     
-    # Create views
     register_view = RegisterView()
     login_view = LoginView()
     criminals_view = CriminalsView()
@@ -50,21 +46,17 @@ def main() -> int:
     archive_view = ArchiveView()
     main_view = MainWindow()
     
-    # Create criminal manipulation forms
     criminal_add_form = CriminalAddForm()
     criminal_edit_form = CriminalEditForm()
     
-    # Connect login signals
     login_view.login_requested.connect(auth_controller.authenticate_user)
     auth_controller.login_success.connect(lambda _: login_view.clear())
     auth_controller.login_failed.connect(login_view.show_error)
     
-    # Connect registration signals
     register_view.register_requested.connect(auth_controller.register_user)
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
     auth_controller.registration_failed.connect(register_view.show_error)
     
-    # Connect main window navigation
     auth_controller.show_main_window.connect(lambda: (login_view.hide(), main_view.show()))
     register_view.switch_to_login.connect(lambda: (register_view.hide(), login_view.show()))
     login_view.switch_to_register.connect(lambda: (login_view.hide(), register_view.show()))

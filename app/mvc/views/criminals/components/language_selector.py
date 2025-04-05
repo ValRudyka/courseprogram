@@ -1,4 +1,3 @@
-# mvc/views/criminals/components/language_selector.py
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QListWidget, QLabel,
                               QAbstractItemView)
 from PySide6.QtCore import Signal
