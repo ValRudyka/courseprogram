@@ -196,7 +196,7 @@ class CriminalModel:
                 conn.execute(
                     text("""
                     DELETE FROM "Criminals_Professions"
-                    WHERE Criminals_id_criminal = :criminal_id
+                    WHERE id_criminal = :criminal_id
                     """),
                     {"criminal_id": criminal_id}
                 )
@@ -205,7 +205,7 @@ class CriminalModel:
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Professions" (
-                            Criminals_id_criminal, Professions_id_profession
+                            id_criminal, id_profession
                         ) 
                         VALUES (:criminal_id, :profession_id)
                         """),
@@ -218,7 +218,7 @@ class CriminalModel:
                 conn.execute(
                     text("""
                     DELETE FROM "Criminals_Criminal_groups"
-                    WHERE Criminals_id_criminal = :criminal_id
+                    WHERE id_criminal = :criminal_id
                     """),
                     {"criminal_id": criminal_id}
                 )
@@ -227,7 +227,7 @@ class CriminalModel:
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Criminal_groups" (
-                            Criminals_id_criminal, Criminal_groups_group_id
+                            id_criminal, group_id
                         ) 
                         VALUES (:criminal_id, :group_id)
                         """),
@@ -240,7 +240,7 @@ class CriminalModel:
                 conn.execute(
                     text("""
                     DELETE FROM "Criminals_Languages"
-                    WHERE Criminals_id_criminal = :criminal_id
+                    WHERE id_criminal = :criminal_id
                     """),
                     {"criminal_id": criminal_id}
                 )
@@ -249,7 +249,7 @@ class CriminalModel:
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Languages" (
-                            Criminals_id_criminal, Languages_id_language
+                            id_criminal, id_language
                         ) 
                         VALUES (:criminal_id, :language_id)
                         """),
@@ -443,8 +443,8 @@ class CriminalModel:
                     text("""
                     SELECT p.id_profession, p.profession_name
                     FROM "Professions" p
-                    JOIN "Criminals_Professions" cp ON p.id_profession = cp.Professions_id_profession
-                    WHERE cp.Criminals_id_criminal = :id
+                    JOIN "Criminals_Professions" cp ON p.id_profession = cp.id_profession
+                    WHERE cp.id_criminal = :id
                     """),
                     {"id": criminal_id}
                 )
@@ -457,8 +457,8 @@ class CriminalModel:
                     text("""
                     SELECT g.group_id, g.name
                     FROM "Criminal_groups" g
-                    JOIN "Criminals_Criminal_groups" cg ON g.group_id = cg.Criminal_groups_group_id
-                    WHERE cg.Criminals_id_criminal = :id
+                    JOIN "Criminals_Criminal_groups" cg ON g.group_id = cg.id_group
+                    WHERE cg.id_criminal = :id
                     """),
                     {"id": criminal_id}
                 )
@@ -471,8 +471,8 @@ class CriminalModel:
                     text("""
                     SELECT l.id_language, l.name
                     FROM "Languages" l
-                    JOIN "Criminals_Languages" cl ON l.id_language = cl.Languages_id_language
-                    WHERE cl.Criminals_id_criminal = :id
+                    JOIN "Criminals_Languages" cl ON l.id_language = cl.id_language
+                    WHERE cl.id_criminal = :id
                     """),
                     {"id": criminal_id}
                 )
