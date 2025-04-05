@@ -66,6 +66,8 @@ class CriminalEditForm(QMainWindow):
         self.ui.comboBox_8.clear() 
         self.ui.comboBox_9.clear()  
         self.ui.comboBox_10.clear()  
+        self.language_selector.language_list.clear()
+        self.language_selector.language_ids.clear()
         
         for city in cities:
             display_text = f"{city['name']}, {city['country']}"
