@@ -28,9 +28,11 @@ class LanguageSelector(QWidget):
     
     def load_languages(self, languages):
         """Load available languages into the list widget."""
+        # Ensure we start with a clean slate
         self.language_list.clear()
         self.language_ids = {}
         
+        # Add languages from database
         for language in languages:
             self.language_list.addItem(language["name"])
             self.language_ids[language["name"]] = language["id"]
