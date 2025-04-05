@@ -125,14 +125,18 @@ class CriminalModel:
                     )
                 
                 for language_id in data.get("language_ids", []):
+                    next_language_id = self.get_next_id("Criminals_Languages", "id")
+                    print(next_language_id)
+
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Languages" (
-                            id_criminal, id_language
+                            id, id_criminal, id_language
                         ) 
-                        VALUES (:criminal_id, :language_id)
+                        VALUES (:id, :criminal_id, :language_id)
                         """),
                         {
+                            "id": next_language_id,
                             "criminal_id": criminal_id,
                             "language_id": language_id
                         }

@@ -49,13 +49,9 @@ class CriminalEditForm(QMainWindow):
         language_layout = QVBoxLayout(self.language_container)
         language_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.language_selector = LanguageSelector()
-        language_layout.addWidget(self.language_selector)
-        
-        parent_layout = self.ui.listWidget_2.parentWidget().layout()
-        if parent_layout:
-            parent_layout.replaceWidget(self.ui.listWidget_2, self.language_container)
-            self.ui.listWidget_2.hide()
+        self.language_selector = LanguageSelector(self)
+        self.language_selector.language_list = self.ui.listWidget_2
+        self.ui.listWidget_2.clear()
     
     def setup_connections(self):
         """Connect UI elements to their corresponding actions."""
@@ -77,7 +73,13 @@ class CriminalEditForm(QMainWindow):
         
         self.profession_selector.load_professions(professions)
         self.gang_selector.load_gangs(gangs)
-        self.language_selector.load_languages(languages)
+        self.ui.listWidget_2.clear()
+    
+        if languages:
+            print(f"Loading {len(languages)} languages")
+            self.language_selector.load_languages(languages)
+        else:
+            print("No languages data provided")
     
     def set_criminal_data(self, criminal_id, data):
         """Set form data for editing a criminal."""
@@ -124,7 +126,10 @@ class CriminalEditForm(QMainWindow):
             self.gang_selector.set_selected_gangs(data["groups"])
         
         if "languages" in data:
+            print(f"Setting {len(data['languages'])} languages in criminal data")
             self.language_selector.set_selected_languages(data["languages"])
+        else:
+            print("No languages data in criminal record")
     
     def set_combobox_by_id(self, combobox, item_id):
         """Set the selected item in a combo box by its data ID."""

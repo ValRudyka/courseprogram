@@ -47,13 +47,10 @@ class CriminalAddForm(QMainWindow):
         language_layout = QVBoxLayout(self.language_container)
         language_layout.setContentsMargins(0, 0, 0, 0)
         
-        self.language_selector = LanguageSelector()
-        language_layout.addWidget(self.language_selector)
-        
-        parent_layout = self.ui.listWidget.parentWidget().layout()
-        if parent_layout:
-            parent_layout.replaceWidget(self.ui.listWidget, self.language_container)
-            self.ui.listWidget.hide()
+        self.language_selector = LanguageSelector(self)
+    
+        self.language_selector.language_list = self.ui.listWidget
+        self.ui.listWidget.clear()
     
     def setup_connections(self):
         """Connect UI elements to their corresponding actions."""
@@ -72,7 +69,13 @@ class CriminalAddForm(QMainWindow):
         
         self.profession_selector.load_professions(professions)
         self.gang_selector.load_gangs(gangs)
-        self.language_selector.load_languages(languages)
+        self.ui.listWidget.clear()
+    
+        if languages:
+            print(f"Loading {len(languages)} languages")
+            self.language_selector.load_languages(languages)
+        else:
+            print("No languages data provided")
     
     def on_save(self):
         """Handle save button click."""
