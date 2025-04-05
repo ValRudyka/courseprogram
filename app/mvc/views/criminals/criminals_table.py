@@ -33,7 +33,6 @@ class CriminalTableModel(QAbstractTableModel):
         criminal = self._data[row]
         
         if role == Qt.DisplayRole:
-            # Return formatted data based on column
             if col == 0:  # ID
                 return str(criminal.get("id_criminal", ""))
             elif col == 1:  # First name
@@ -54,12 +53,10 @@ class CriminalTableModel(QAbstractTableModel):
                 return f"{criminal.get('weight', '')} кг" if criminal.get('weight') else ""
         
         elif role == Qt.TextAlignmentRole:
-            # Center align numeric columns
             if col in [0, 7, 8]:  # ID, Height, Weight
                 return Qt.AlignCenter
         
         elif role == Qt.BackgroundRole:
-            # Highlight archived criminals
             if criminal.get("is_archived"):
                 return Qt.lightGray
         
@@ -74,7 +71,6 @@ class CriminalTableModel(QAbstractTableModel):
         """Sort table by given column and order."""
         self.layoutAboutToBeChanged.emit()
         
-        # Map column to sorting key
         sort_keys = [
             "id_criminal", "first_name", "last_name", "nickname", 
             "date_of_birth", "birth_place", "residence", "height", "weight"

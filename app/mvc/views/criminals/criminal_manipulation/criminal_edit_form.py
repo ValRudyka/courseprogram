@@ -167,7 +167,6 @@ class CriminalEditForm(QMainWindow):
     
     def validate_form(self):
         """Validate form input before updating."""
-        # Check required fields
         if not self.ui.lineEdit_17.text().strip():  # First name
             QMessageBox.warning(self, "Validation Error", "Ім'я є обов'язковим")
             return False
@@ -175,8 +174,6 @@ class CriminalEditForm(QMainWindow):
         if not self.ui.lineEdit_11.text().strip():  # Last name
             QMessageBox.warning(self, "Validation Error", "Прізвище є обов'язковим")
             return False
-        
-        # More validation as needed
         
         return True
     

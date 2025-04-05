@@ -73,9 +73,7 @@ def main() -> int:
     main_view.open_groups_requested.connect(lambda: (main_view.hide(), gangs_view.show()))
     main_view.open_archive_requested.connect(lambda: (main_view.hide(), archive_view.show()))
     
-    # Connect criminal view actions
     criminals_view.add_criminal_requested.connect(lambda: (
-        # Load reference data for form dropdowns
         criminal_add_form.load_reference_data(
             criminal_controller.get_cities(),
             criminal_controller.get_professions(),

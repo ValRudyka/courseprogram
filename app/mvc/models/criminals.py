@@ -5,30 +5,41 @@ class CriminalModel:
     def __init__(self, engine):
         self.engine = engine
     
+    def get_next_id(self, table_name, id_column):
+        try:
+            with self.engine.connect() as conn:
+                query = f"SELECT COALESCE(MAX({id_column}), 0) + 1 FROM \"{table_name}\""
+                result = conn.execute(text(query))
+                return result.scalar()
+        except Exception as e:
+            raise e
+
     def create_criminal(self, data):
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
                 
-                # Insert main criminal record
+                next_id = self.get_next_id("Criminals", "id_criminal")
+                
                 result = conn.execute(
                     text("""
                     INSERT INTO "Criminals" (
-                        first_name, last_name, nickname, 
+                        id_criminal, first_name, last_name, nickname, 
                         place_of_birth_id, date_of_birth, last_live_place_id, 
                         is_archived
                     ) 
                     VALUES (
-                        :first_name, :last_name, :nickname, 
+                        :id_criminal, :first_name, :last_name, :nickname, 
                         :birth_place_id, :birth_date, :last_residence_id, 
                         FALSE
                     )
                     RETURNING id_criminal
                     """), 
                     {
+                        "id_criminal": next_id,
                         "first_name": data.get("first_name"),
                         "last_name": data.get("last_name"),
-                        "nickname": data.get("nickname"),
+                        "nickname": data.get("nickname", ""),
                         "birth_place_id": data.get("birth_place_id"),
                         "birth_date": data.get("birth_date"),
                         "last_residence_id": data.get("last_residence_id")
@@ -37,19 +48,21 @@ class CriminalModel:
                 
                 criminal_id = result.fetchone()[0]
                 
-                # Insert physical characteristics
+                next_char_id = self.get_next_id("Physical_characteristics", "id_characteristic")
+
                 conn.execute(
                     text("""
                     INSERT INTO "Physical_characteristics" (
-                        id_criminal, height, weight, 
+                        id_characteristic, id_criminal, height, weight, 
                         hair_color, eye_color, distinguishing_features
                     ) 
                     VALUES (
-                        :criminal_id, :height, :weight, 
+                        :id_characteristic, :criminal_id, :height, :weight, 
                         :hair_color, :eye_color, :features
                     )
                     """), 
                     {
+                        "id_characteristic": next_char_id,
                         "criminal_id": criminal_id,
                         "height": data.get("height"),
                         "weight": data.get("weight"),
@@ -59,34 +72,35 @@ class CriminalModel:
                     }
                 )
                 
-                # Insert crime record if provided
                 if data.get("last_case"):
+                    next_crime_id = self.get_next_id("Crimes", "id_crime")
+
                     conn.execute(
                         text("""
                         INSERT INTO "Crimes" (
-                            crime_name, commitment_date, id_location, 
+                            id_crime, crime_name, commitment_date, id_location, 
                             court_sentence, id_criminal
                         ) 
                         VALUES (
-                            :crime_name, :date, :location_id,
+                            :id_crime, :crime_name, :date, :location_id,
                             :court_sentence, :criminal_id
                         )
                         """), 
                         {
+                            "id_crime": next_crime_id,
                             "crime_name": data.get("last_case"),
                             "date": data.get("last_case_date"),
                             "location_id": data.get("last_case_location_id"),
-                            "court_sentence": data.get("court_sentence", ""),
+                            "court_sentence": data.get("court_sentence", 1),
                             "criminal_id": criminal_id
                         }
                     )
                 
-                # Insert profession relationships
                 for profession_id in data.get("profession_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Professions" (
-                            Criminals_id_criminal, Professions_id_profession
+                            id_criminal, id_profession
                         ) 
                         VALUES (:criminal_id, :profession_id)
                         """),
@@ -96,12 +110,11 @@ class CriminalModel:
                         }
                     )
                 
-                # Insert criminal group relationships
                 for group_id in data.get("group_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Criminal_groups" (
-                            Criminals_id_criminal, Criminal_groups_group_id
+                           id_criminal, id_group
                         ) 
                         VALUES (:criminal_id, :group_id)
                         """),
@@ -111,12 +124,11 @@ class CriminalModel:
                         }
                     )
                 
-                # Insert language relationships
                 for language_id in data.get("language_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Languages" (
-                            Criminals_id_criminal, Languages_id_language
+                            id_criminal, id_language
                         ) 
                         VALUES (:criminal_id, :language_id)
                         """),
@@ -128,14 +140,13 @@ class CriminalModel:
                 
                 transaction.commit()
                 return criminal_id
-                
+
         except Exception as e:
             if 'transaction' in locals():
                 transaction.rollback()
             raise e
     
     def update_criminal(self, criminal_id, data):
-        """Update an existing criminal record and all related information."""
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
@@ -366,7 +377,6 @@ class CriminalModel:
         """Get complete criminal data including all related information by ID."""
         try:
             with self.engine.connect() as conn:
-                # Get main criminal data and physical characteristics
                 result = conn.execute(
                     text("""
                     SELECT 
@@ -387,7 +397,6 @@ class CriminalModel:
                 if not row:
                     return None
                 
-                # Build the criminal data dictionary with all fields
                 criminal_data = {
                     "id_criminal": row[0],
                     "first_name": row[1],
@@ -406,7 +415,6 @@ class CriminalModel:
                     "last_place_name": row[14]
                 }
                 
-                # Get latest crime information
                 crime_result = conn.execute(
                     text("""
                     SELECT 
@@ -431,7 +439,6 @@ class CriminalModel:
                         "last_case_location_name": crime_row[4]
                     })
                 
-                # Get all professions
                 prof_result = conn.execute(
                     text("""
                     SELECT p.id_profession, p.profession_name
@@ -446,7 +453,6 @@ class CriminalModel:
                     {"id": row[0], "name": row[1]} for row in prof_result.fetchall()
                 ]
                 
-                # Get all criminal groups
                 group_result = conn.execute(
                     text("""
                     SELECT g.group_id, g.name
@@ -461,7 +467,6 @@ class CriminalModel:
                     {"id": row[0], "name": row[1]} for row in group_result.fetchall()
                 ]
                 
-                # Get all languages
                 lang_result = conn.execute(
                     text("""
                     SELECT l.id_language, l.name
@@ -574,7 +579,7 @@ class CriminalModel:
         """Get all available languages for dropdown selection."""
         try:
             with self.engine.connect() as conn:
-                result = conn.execute(text("SELECT id_language, language_name FROM \"Languages\""))
+                result = conn.execute(text("SELECT id_language, name FROM \"Languages\""))
                 
                 languages = []
                 for row in result.fetchall():
