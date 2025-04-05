@@ -124,11 +124,10 @@ class CriminalModel:
                         }
                     )
                 
+                next_language_id = self.get_next_id("Criminals_Languages", "id")
                 for language_id in data.get("language_ids", []):
-                    next_language_id = self.get_next_id("Criminals_Languages", "id")
-                    print(next_language_id)
 
-                    conn.execute(
+                    result = conn.execute(
                         text("""
                         INSERT INTO "Criminals_Languages" (
                             id, id_criminal, id_language
@@ -141,6 +140,7 @@ class CriminalModel:
                             "language_id": language_id
                         }
                     )
+                    next_language_id += 1
                 
                 transaction.commit()
                 return criminal_id
@@ -249,19 +249,23 @@ class CriminalModel:
                     {"criminal_id": criminal_id}
                 )
                 
+                next_language_id = self.get_next_id('Criminals_Languages', 'id')
                 for language_id in data.get("language_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Languages" (
-                            id_criminal, id_language
+                            id, id_criminal, id_language
                         ) 
-                        VALUES (:criminal_id, :language_id)
+                        VALUES (:id, :criminal_id, :language_id)
                         """),
                         {
+                            'id': next_language_id,
                             "criminal_id": criminal_id,
                             "language_id": language_id
                         }
                     )
+
+                    next_language_id += 1
                 
                 if data.get("last_case"):
                     next_crime_id = self.get_next_id("Crimes", "id_crime")
