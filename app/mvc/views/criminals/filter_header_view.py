@@ -12,20 +12,16 @@ class FilterHeaderView(QHeaderView):
     def __init__(self, orientation, parent=None):
         super().__init__(orientation, parent)
         
-        self.setSectionResizeMode(QHeaderView.ResizeToContents)
-        self.setSectionsClickable(True)
-        
         self.filter_widgets = []
         self.filter_containers = []
         
-        # Configure section resize behaviors
+        self.filter_visible = True
+        
+        self.setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.setSectionsClickable(True)
         self.setSectionsMovable(True)
         self.setStretchLastSection(True)
         
-        # Set up initial state
-        self.filter_visible = True
-        
-        # Track when the mouse is over the header section (for hover effects)
         self.hover_section = -1
         self.setMouseTracking(True)
         
@@ -33,18 +29,15 @@ class FilterHeaderView(QHeaderView):
         """Show or hide the filter row."""
         self.filter_visible = visible
         
-        # Show/hide all filter widgets
         for container in self.filter_containers:
             container.setVisible(visible)
             
-        # Update section sizes
         self.updateGeometries()
     
     def setModel(self, model):
         """Override to create filter widgets when model is set."""
         super().setModel(model)
         
-        # Clear existing filters
         for widget in self.filter_widgets:
             widget.deleteLater()
         
@@ -54,56 +47,44 @@ class FilterHeaderView(QHeaderView):
         self.filter_widgets = []
         self.filter_containers = []
         
-        # Create filter widgets for each column
         if model:
             for col in range(model.columnCount()):
-                # Create container widget
                 container = QWidget(self.parent())
                 layout = QHBoxLayout(container)
                 layout.setContentsMargins(0, 0, 0, 0)
                 
-                # Create line edit for filtering
                 filter_widget = QLineEdit(container)
                 filter_widget.setPlaceholderText("Фільтр...")
                 
-                # Connect signal
                 filter_widget.textChanged.connect(lambda text, col=col: self.filterChanged.emit(col, text))
                 
-                # Add to layout
                 layout.addWidget(filter_widget)
                 
-                # Store references
                 self.filter_widgets.append(filter_widget)
                 self.filter_containers.append(container)
                 
-                # Position the container
                 self._updateFilterPosition(col)
     
     def sectionResized(self, logicalIndex, oldSize, newSize):
         """Handle section resize events."""
         super().sectionResized(logicalIndex, oldSize, newSize)
         
-        # Update positions of filter widgets
         for col in range(len(self.filter_widgets)):
             self._updateFilterPosition(col)
     
     def _updateFilterPosition(self, col):
         """Update the position of a filter widget."""
-        if col >= len(self.filter_widgets) or not self.filter_visible:
+        if not self.filter_widgets or col >= len(self.filter_widgets) or not self.filter_visible:
             return
             
-        # Get the section geometry
         section_rect = self.sectionViewportPosition(col)
         
-        # Calculate position and size for filter
         x = self.sectionViewportPosition(col)
         width = self.sectionSize(col)
         
-        # Adjust for last section stretch
         if col == len(self.filter_widgets) - 1 and self.stretchLastSection():
             width = max(width, self.width() - x)
         
-        # Set geometry - important: the filter should be positioned below the header
         header_height = self.height() // 2 if self.filter_visible else self.height()
         
         self.filter_containers[col].setGeometry(
@@ -119,8 +100,9 @@ class FilterHeaderView(QHeaderView):
         super().updateGeometries()
         
         # Update positions of all filter widgets
-        for col in range(len(self.filter_widgets)):
-            self._updateFilterPosition(col)
+        if self.filter_widgets:
+            for col in range(len(self.filter_widgets)):
+                self._updateFilterPosition(col)
     
     def sectionSizeFromContents(self, logicalIndex):
         """Override to account for filter widgets in size calculation."""
@@ -144,14 +126,15 @@ class FilterHeaderView(QHeaderView):
     
     def filterText(self, column):
         """Get the filter text for a specific column."""
-        if 0 <= column < len(self.filter_widgets):
+        if self.filter_widgets and 0 <= column < len(self.filter_widgets):
             return self.filter_widgets[column].text()
         return ""
     
     def clearFilters(self):
         """Clear all filter inputs."""
-        for widget in self.filter_widgets:
-            widget.clear()
+        if self.filter_widgets:
+            for widget in self.filter_widgets:
+                widget.clear()
     
     def eventFilter(self, obj, event):
         """Filter events for child widgets."""

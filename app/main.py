@@ -128,8 +128,7 @@ def main() -> int:
     )
     
     def handle_main_close():
-        main_view.hide()
-        login_view.show()
+        app.quit()
     
     def handle_criminals_close():
         criminals_view.hide()
