@@ -4,6 +4,7 @@ from .criminal_edit import Ui_MainWindow
 from ..components.profession_selector import ProfessionSelector
 from ..components.gang_selector import GangSelector
 from ..components.language_selector import LanguageSelector
+from utils.spinbox_utils import set_spinbox_with_data, safe_get_spinbox_value
 
 class CriminalEditForm(QMainWindow):
     update_requested = Signal(int, dict)
@@ -93,22 +94,9 @@ class CriminalEditForm(QMainWindow):
         
         self.gang_selector.set_selected_gang(data.get("id_group"), data.get("role", ""))
 
-        # Set the height and weight
-        if data.get("height"):
-            self.ui.spinBox_3.setValue(data.get("height", 170))
-        else:
-            self.ui.spinBox_3.setValue(170)
-            
-        if data.get("weight"):
-            self.ui.spinBox_4.setValue(data.get("weight", 70))
-        else:
-            self.ui.spinBox_4.setValue(70)
-            
-        # Set the court sentence
-        if data.get("court_sentence"):
-            self.ui.spinBox.setValue(data.get("court_sentence", 1))
-        else:
-            self.ui.spinBox.setValue(1)
+        set_spinbox_with_data(self.ui.spinBox_3, data, "height", default_value=170)
+        set_spinbox_with_data(self.ui.spinBox_4, data, "weight", default_value=70)
+        set_spinbox_with_data(self.ui.spinBox, data, "court_sentence", default_value=1)
         
         self.set_combobox_by_id(self.ui.comboBox_8, data.get("place_of_birth_id"))
         self.set_combobox_by_id(self.ui.comboBox_9, data.get("last_live_place_id"))
@@ -187,8 +175,8 @@ class CriminalEditForm(QMainWindow):
             "birth_place_id": self.ui.comboBox_8.currentData(),
             "birth_date": self.ui.dateEdit_4.date().toString("yyyy-MM-dd"),
             "last_residence_id": self.ui.comboBox_9.currentData(),
-            "height": self.ui.spinBox_3.value(),
-            "weight": self.ui.spinBox_4.value(),
+            "height": safe_get_spinbox_value(self.ui.spinBox_3, 170),
+            "weight": safe_get_spinbox_value(self.ui.spinBox_4, 70),
             "eye_color": self.ui.comboBox_4.currentText(),
             "hair_color": self.ui.comboBox_3.currentText(),
             "distinguishing_features": self.ui.lineEdit_16.text().strip(),
@@ -199,7 +187,7 @@ class CriminalEditForm(QMainWindow):
             "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
             "language_ids": self.language_selector.get_selected_language_ids(),
-            "court_sentence": self.ui.spinBox.value()  # Add court sentence field
+            "court_sentence": safe_get_spinbox_value(self.ui.spinBox, 1) 
         }
         
         return data

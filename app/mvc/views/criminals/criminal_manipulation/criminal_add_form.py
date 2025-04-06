@@ -4,6 +4,7 @@ from .criminal_add import Ui_MainWindow
 from ..components.profession_selector import ProfessionSelector
 from ..components.gang_selector import GangSelector
 from ..components.language_selector import LanguageSelector
+from utils.spinbox_utils import safe_set_spinbox_value, safe_get_spinbox_value
 
 class CriminalAddForm(QMainWindow):
     save_requested = Signal(dict)
@@ -106,8 +107,8 @@ class CriminalAddForm(QMainWindow):
             "birth_place_id": self.ui.comboBox_5.currentData(),
             "birth_date": self.ui.dateEdit.date().toString("yyyy-MM-dd"),
             "last_residence_id": self.ui.comboBox_6.currentData(),
-            "height": self.ui.spinBox.value(),
-            "weight": self.ui.spinBox_2.value(),
+            "height": safe_get_spinbox_value(self.ui.spinBox, 170),
+            "weight": safe_get_spinbox_value(self.ui.spinBox_2, 70),
             "eye_color": self.ui.comboBox.currentText(),
             "hair_color": self.ui.comboBox_2.currentText(),
             "distinguishing_features": self.ui.lineEdit_6.text().strip(),
@@ -118,7 +119,7 @@ class CriminalAddForm(QMainWindow):
             "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
             "language_ids": self.language_selector.get_selected_language_ids(),
-            "court_sentence": self.ui.spinBox_3.value() 
+            "court_sentence": safe_get_spinbox_value(self.ui.spinBox_3, 1) 
         }
         
         return data
@@ -131,9 +132,9 @@ class CriminalAddForm(QMainWindow):
         self.ui.lineEdit_6.clear()  
         self.ui.lineEdit_8.clear() 
         
-        self.ui.spinBox.setValue(170) 
-        self.ui.spinBox_2.setValue(70)
-        self.ui.spinBox_3.setValue(1)  # Reset court sentence to default (1 year)
+        safe_set_spinbox_value(self.ui.spinBox, 170)
+        safe_set_spinbox_value(self.ui.spinBox_2, 70)
+        safe_set_spinbox_value(self.ui.spinBox_3, 1) 
         
         current_date = QDate.currentDate()
         self.ui.dateEdit.setDate(current_date)
