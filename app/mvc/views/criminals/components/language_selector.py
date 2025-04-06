@@ -5,11 +5,15 @@ from PySide6.QtCore import Signal
 class LanguageSelector(QWidget):
     selection_changed = Signal()
     
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, use_internal_list=True):
         super().__init__(parent)
-        self.setup_ui()
         self.language_ids = {}
         self.language_names = {}
+        self.language_list = None
+        
+        # Only create the internal UI if instructed to do so
+        if use_internal_list:
+            self.setup_ui()
     
     def setup_ui(self):
         """Create the UI layout with a list widget for multiple selection."""
@@ -27,6 +31,10 @@ class LanguageSelector(QWidget):
     
     def load_languages(self, languages):
         """Load available languages into the list widget."""
+        if not self.language_list:
+            print("Error: language_list is not set")
+            return
+            
         self.language_list.clear()
         self.language_ids = {}
         self.language_names = {}  
@@ -45,6 +53,9 @@ class LanguageSelector(QWidget):
     
     def get_selected_language_ids(self):
         """Get list of selected language IDs."""
+        if not self.language_list:
+            return []
+            
         selected_ids = []
         for i in range(self.language_list.count()):
             item = self.language_list.item(i)
@@ -56,7 +67,7 @@ class LanguageSelector(QWidget):
     
     def set_selected_languages(self, languages):
         """Set preselected languages (for editing)."""
-        if not languages:
+        if not self.language_list or not languages:
             return
             
         self.clear_selection()
@@ -73,6 +84,9 @@ class LanguageSelector(QWidget):
     
     def clear_selection(self):
         """Clear all selected languages."""
+        if not self.language_list:
+            return
+            
         for i in range(self.language_list.count()):
             item = self.language_list.item(i)
             if item:

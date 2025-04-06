@@ -20,6 +20,7 @@ class CriminalAddForm(QMainWindow):
     
     def setup_custom_components(self):
         """Replace standard combo boxes with custom components for many-to-many relationships."""
+        # Setup profession selector
         self.profession_container = QWidget()
         profession_layout = QVBoxLayout(self.profession_container)
         profession_layout.setContentsMargins(0, 0, 0, 0)
@@ -32,6 +33,7 @@ class CriminalAddForm(QMainWindow):
             parent_layout.replaceWidget(self.ui.comboBox_13, self.profession_container)
             self.ui.comboBox_13.hide()
         
+        # Setup gang selector
         self.gang_container = QWidget()
         gang_layout = QVBoxLayout(self.gang_container)
         gang_layout.setContentsMargins(0, 0, 0, 0)
@@ -43,13 +45,11 @@ class CriminalAddForm(QMainWindow):
         if parent_layout:
             parent_layout.replaceWidget(self.ui.comboBox_11, self.gang_container)
             self.ui.comboBox_11.hide()
-            
-        self.language_container = QWidget()
-
         
-        self.language_selector = LanguageSelector(self)
-    
+        # Setup language selector - using external list widget only
+        self.language_selector = LanguageSelector(self, use_internal_list=False)
         self.language_selector.language_list = self.ui.listWidget
+        self.language_selector.language_list.itemSelectionChanged.connect(self.language_selector.on_selection_changed)
         self.ui.listWidget.clear()
     
     def setup_connections(self):
