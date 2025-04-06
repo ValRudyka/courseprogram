@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>955</width>
-    <height>679</height>
+    <width>903</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -121,8 +121,8 @@
    <widget class="QComboBox" name="comboBox_10">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>420</y>
+      <x>620</x>
+      <y>500</y>
       <width>191</width>
       <height>21</height>
      </rect>
@@ -134,8 +134,8 @@
    <widget class="QLabel" name="label_27">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>210</y>
+      <x>620</x>
+      <y>290</y>
       <width>211</width>
       <height>31</height>
      </rect>
@@ -170,8 +170,8 @@
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>390</y>
+      <x>30</x>
+      <y>420</y>
       <width>211</width>
       <height>31</height>
      </rect>
@@ -254,7 +254,7 @@
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>290</y>
+      <y>350</y>
       <width>201</width>
       <height>21</height>
      </rect>
@@ -340,8 +340,8 @@
    <widget class="QDateEdit" name="dateEdit_3">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>330</y>
+      <x>620</x>
+      <y>410</y>
       <width>141</width>
       <height>31</height>
      </rect>
@@ -364,7 +364,7 @@
     <property name="geometry">
      <rect>
       <x>320</x>
-      <y>350</y>
+      <y>290</y>
       <width>201</width>
       <height>21</height>
      </rect>
@@ -462,8 +462,8 @@
    <widget class="QComboBox" name="comboBox_12">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>430</y>
+      <x>370</x>
+      <y>460</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -478,8 +478,8 @@
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>290</y>
+      <x>620</x>
+      <y>370</y>
       <width>211</width>
       <height>31</height>
      </rect>
@@ -514,8 +514,8 @@
    <widget class="QLineEdit" name="lineEdit_18">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>250</y>
+      <x>620</x>
+      <y>330</y>
       <width>231</width>
       <height>21</height>
      </rect>
@@ -555,8 +555,8 @@
    <widget class="QListWidget" name="listWidget_2">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>440</y>
+      <x>30</x>
+      <y>470</y>
       <width>301</width>
       <height>131</height>
      </rect>
@@ -659,8 +659,8 @@
    <widget class="QLabel" name="label_34">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>390</y>
+      <x>370</x>
+      <y>420</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -677,8 +677,8 @@
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>380</y>
+      <x>620</x>
+      <y>460</y>
       <width>211</width>
       <height>31</height>
      </rect>
@@ -731,8 +731,8 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>550</y>
+      <x>620</x>
+      <y>640</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -761,8 +761,8 @@ border-radius: 3px;</string>
    <widget class="QLabel" name="label_35">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>480</y>
+      <x>370</x>
+      <y>540</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -779,8 +779,8 @@ border-radius: 3px;</string>
    <widget class="QLabel" name="label_36">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>460</y>
+      <x>620</x>
+      <y>540</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -797,8 +797,8 @@ border-radius: 3px;</string>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>520</y>
+      <x>370</x>
+      <y>580</y>
       <width>161</width>
       <height>21</height>
      </rect>
@@ -807,8 +807,8 @@ border-radius: 3px;</string>
    <widget class="QSpinBox" name="spinBox">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>500</y>
+      <x>620</x>
+      <y>580</y>
       <width>191</width>
       <height>21</height>
      </rect>
@@ -826,7 +826,7 @@ border-radius: 3px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>955</width>
+     <width>903</width>
      <height>26</height>
     </rect>
    </property>
