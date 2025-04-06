@@ -2,7 +2,6 @@ from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox
 from PySide6.QtCore import Signal, QDate, QRect
 from .criminal_add import Ui_MainWindow
 from ..components.profession_selector import ProfessionSelector
-from ..components.gang_selector import GangSelector
 from ..components.language_selector import LanguageSelector
 from utils.spinbox_utils import safe_set_spinbox_value, safe_get_spinbox_value
 
@@ -34,20 +33,6 @@ class CriminalAddForm(QMainWindow):
         
         self.ui.comboBox_13.hide()
         
-        self.gang_container = QWidget(self.ui.centralwidget)
-        gang_layout = QVBoxLayout(self.gang_container)
-        gang_layout.setContentsMargins(0, 0, 0, 0)
-        
-        self.gang_selector = GangSelector()
-        gang_layout.addWidget(self.gang_selector)
-        
-        orig_geom = self.ui.comboBox_11.geometry()
-        expanded_geom = QRect(orig_geom.x(), orig_geom.y(), 
-                            orig_geom.width(), orig_geom.height() * 4) 
-        self.gang_container.setGeometry(expanded_geom)
-        
-        self.ui.comboBox_11.hide()
-        
         self.language_selector = LanguageSelector(self, use_internal_list=False)
         self.language_selector.language_list = self.ui.listWidget
         self.language_selector.language_list.itemSelectionChanged.connect(self.language_selector.on_selection_changed)
@@ -69,9 +54,12 @@ class CriminalAddForm(QMainWindow):
             self.ui.comboBox_7.addItem(display_text, city['id'])
         
         self.profession_selector.load_professions(professions)
-        self.gang_selector.load_gangs(gangs)
+        
+        # Load gangs directly
+        self.load_gangs(gangs)
+        
+        # Load languages
         self.ui.listWidget.clear()
-    
         if languages:
             print(f"Loading {len(languages)} languages")
             self.language_selector.load_languages(languages)
@@ -116,8 +104,8 @@ class CriminalAddForm(QMainWindow):
             "last_case": self.ui.lineEdit_8.text().strip(),
             "last_case_date": self.ui.dateEdit_2.date().toString("yyyy-MM-dd"),
             "last_case_location_id": self.ui.comboBox_7.currentData(),
-            "id_group": self.gang_selector.get_selected_gang_id(),
-            "role": self.gang_selector.get_role(),
+            "id_group": self.get_selected_gang_id(),
+            "role": self.get_gang_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
             "language_ids": self.language_selector.get_selected_language_ids(),
             "court_sentence": safe_get_spinbox_value(self.ui.spinBox_3, 1) 
@@ -142,10 +130,42 @@ class CriminalAddForm(QMainWindow):
         self.ui.dateEdit_2.setDate(current_date)
         
         self.profession_selector.clear_selection()
-        self.gang_selector.clear_selection()
+        
+        if self.ui.comboBox_11.count() > 0:
+            self.ui.comboBox_11.setCurrentIndex(0)
+
+        self.ui.lineEdit.clear()
         self.language_selector.clear_selection()
         
         if self.ui.comboBox.count() > 0:
             self.ui.comboBox.setCurrentIndex(0)
         if self.ui.comboBox_2.count() > 0:
             self.ui.comboBox_2.setCurrentIndex(0)
+
+    def load_gangs(self, gangs):
+        """Load gangs directly into the existing combobox."""
+        combo = self.ui.comboBox_11
+        combo.clear()
+        combo.addItem("Немає", None)
+        for gang in gangs:
+            combo.addItem(gang["name"], gang["id"])
+
+    def get_selected_gang_id(self):
+        """Get the selected gang ID from the combobox."""
+        return self.ui.comboBox_11.currentData()  
+
+    def get_gang_role(self):
+        """Get the role from the text field."""
+        return self.ui.lineEdit.text().strip() 
+
+    def set_selected_gang(self, gang_id, role=""):
+        """Set preselected gang."""
+        combo = self.ui.comboBox_11 
+        index = combo.findData(gang_id)
+        if index >= 0:
+            combo.setCurrentIndex(index)
+        else:
+            combo.setCurrentIndex(0)
+    
+        if hasattr(self.ui, 'lineEdit'):
+            self.ui.lineEdit.setText(role)

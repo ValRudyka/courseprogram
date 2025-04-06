@@ -32,7 +32,7 @@ class CriminalsView(QMainWindow):
         self.setup_connections()
         self.setup_context_menu()
         
-        self.ui.pushButton.setText("Фільтрувати")
+        self.ui.pushButton.setText("Схвати фільтри")
         self.ui.pushButton.clicked.connect(self.toggle_filters)
     
     def setup_connections(self):

@@ -21,7 +21,6 @@ class CriminalFilterProxyModel(QSortFilterProxyModel):
         else:
             self.column_filters[column] = text
             
-        # Trigger filter update
         self.invalidateFilter()
         
     def clearFilters(self):

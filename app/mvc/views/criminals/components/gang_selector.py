@@ -1,5 +1,4 @@
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, 
-                               QComboBox, QLineEdit, QLabel)
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QComboBox
 from PySide6.QtCore import Signal
 
 class GangSelector(QWidget):
@@ -10,27 +9,16 @@ class GangSelector(QWidget):
         self.setup_ui()
         
     def setup_ui(self):
-        """Create the UI layout with combo box for single gang selection and role field."""
+        """Create the UI layout with just an editable combo box for gang selection."""
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         
-        gang_layout = QHBoxLayout()
-        self.label_gang = QLabel("Угрупування")
         self.gang_combo = QComboBox()
-        gang_layout.addWidget(self.label_gang)
-        gang_layout.addWidget(self.gang_combo)
-        
-        role_layout = QHBoxLayout()
-        self.label_role = QLabel("Роль в угрупованні")
-        self.role_edit = QLineEdit()
-        role_layout.addWidget(self.label_role)
-        role_layout.addWidget(self.role_edit)
-        
-        main_layout.addLayout(gang_layout)
-        main_layout.addLayout(role_layout)
+        self.gang_combo.setEditable(True)
+        main_layout.addWidget(self.gang_combo)
 
         self.gang_combo.currentIndexChanged.connect(self.on_selection_changed)
-        self.role_edit.textChanged.connect(self.on_selection_changed)
+        self.gang_combo.editTextChanged.connect(self.on_selection_changed)
     
     def load_gangs(self, gangs):
         """Load available criminal groups into combo box."""
@@ -48,21 +36,14 @@ class GangSelector(QWidget):
         """Get the selected gang ID."""
         return self.gang_combo.currentData()
     
-    def get_role(self):
-        """Get the role text."""
-        return self.role_edit.text().strip() if self.role_edit else ""
-    
     def set_selected_gang(self, gang_id, role=""):
-        """Set preselected gang and role (for editing)."""
+        """Set preselected gang (for editing)."""
         index = self.gang_combo.findData(gang_id)
         if index >= 0:
             self.gang_combo.setCurrentIndex(index)
         else:
             self.gang_combo.setCurrentIndex(0) 
-        
-        self.role_edit.setText(role)
     
     def clear_selection(self):
         """Clear the gang selection."""
-        self.gang_combo.setCurrentIndex(0) 
-        self.role_edit.clear()
+        self.gang_combo.setCurrentIndex(0)

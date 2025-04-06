@@ -92,14 +92,12 @@ class FilterHeaderView(QHeaderView):
             width, header_height
         )
         
-        # Show the filter widget
         self.filter_containers[col].setVisible(self.filter_visible)
     
     def updateGeometries(self):
         """Update the header geometry including filter positions."""
         super().updateGeometries()
         
-        # Update positions of all filter widgets
         if self.filter_widgets:
             for col in range(len(self.filter_widgets)):
                 self._updateFilterPosition(col)
@@ -108,7 +106,6 @@ class FilterHeaderView(QHeaderView):
         """Override to account for filter widgets in size calculation."""
         size = super().sectionSizeFromContents(logicalIndex)
         
-        # If filters are visible, make header taller
         if self.filter_visible:
             size.setHeight(size.height() * 2)
             
@@ -118,7 +115,6 @@ class FilterHeaderView(QHeaderView):
         """Override to provide a proper size hint for the header."""
         size = super().sizeHint()
         
-        # If filters are visible, make header taller
         if self.filter_visible:
             size.setHeight(size.height() * 2)
             

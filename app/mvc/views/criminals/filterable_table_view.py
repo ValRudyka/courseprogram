@@ -24,14 +24,11 @@ class FilterableTableView(QTableView):
         
     def setModel(self, model):
         """Override to insert a proxy model for filtering."""
-        # Create our custom filter proxy model
         self.filter_model = CriminalFilterProxyModel(self)
         self.filter_model.setSourceModel(model)
         
-        # Set the proxy model instead of the original
         super().setModel(self.filter_model)
         
-        # Update the header with the model
         self.filter_header.setModel(model)
         
     def applyFilter(self, column, text):
@@ -39,7 +36,6 @@ class FilterableTableView(QTableView):
         if not self.filter_model:
             return
             
-        # Apply column-specific filter
         self.filter_model.setColumnFilter(column, text)
         
     def clearFilters(self):
