@@ -44,8 +44,7 @@ class CriminalAddForm(QMainWindow):
             self.ui.comboBox_11.hide()
             
         self.language_container = QWidget()
-        language_layout = QVBoxLayout(self.language_container)
-        language_layout.setContentsMargins(0, 0, 0, 0)
+
         
         self.language_selector = LanguageSelector(self)
     
@@ -66,7 +65,7 @@ class CriminalAddForm(QMainWindow):
             self.ui.comboBox_5.addItem(display_text, city['id'])
             self.ui.comboBox_6.addItem(display_text, city['id'])
             self.ui.comboBox_7.addItem(display_text, city['id'])
-        
+        print(professions)
         self.profession_selector.load_professions(professions)
         self.gang_selector.load_gangs(gangs)
         self.ui.listWidget.clear()

@@ -69,7 +69,7 @@ def main() -> int:
         criminal_add_form.load_reference_data(
             criminal_controller.get_cities(),
             criminal_controller.get_professions(),
-            criminal_controller.get_criminal_groups(),
+            [],
             criminal_controller.get_languages()
         ),
         criminals_view.hide(),
@@ -80,7 +80,7 @@ def main() -> int:
         criminal_edit_form.load_reference_data(
             criminal_controller.get_cities(),
             criminal_controller.get_professions(),
-            criminal_controller.get_criminal_groups(),
+            [],
             criminal_controller.get_languages()
         ),
         criminal_edit_form.set_criminal_data(criminal_id, criminal_controller.get_criminal(criminal_id)),

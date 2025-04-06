@@ -110,20 +110,6 @@ class CriminalModel:
                         }
                     )
                 
-                for group_id in data.get("group_ids", []):
-                    conn.execute(
-                        text("""
-                        INSERT INTO "Criminals_Criminal_groups" (
-                           id_criminal, id_group
-                        ) 
-                        VALUES (:criminal_id, :group_id)
-                        """),
-                        {
-                            "criminal_id": criminal_id,
-                            "group_id": group_id
-                        }
-                    )
-                
                 next_language_id = self.get_next_id("Criminals_Languages", "id")
                 for language_id in data.get("language_ids", []):
 
@@ -144,7 +130,6 @@ class CriminalModel:
                 
                 transaction.commit()
                 return criminal_id
-
         except Exception as e:
             if 'transaction' in locals():
                 transaction.rollback()
@@ -219,27 +204,6 @@ class CriminalModel:
                         }
                     )
                 
-                conn.execute(
-                    text("""
-                    DELETE FROM "Criminals_Criminal_groups"
-                    WHERE id_criminal = :criminal_id
-                    """),
-                    {"criminal_id": criminal_id}
-                )
-                
-                for group_id in data.get("group_ids", []):
-                    conn.execute(
-                        text("""
-                        INSERT INTO "Criminals_Criminal_groups" (
-                            id_criminal, group_id
-                        ) 
-                        VALUES (:criminal_id, :group_id)
-                        """),
-                        {
-                            "criminal_id": criminal_id,
-                            "group_id": group_id
-                        }
-                    )
                 
                 conn.execute(
                     text("""
@@ -339,20 +303,11 @@ class CriminalModel:
                 transaction = conn.begin()
                 
                 conn.execute(
-                    text("DELETE FROM \"Criminals_Languages\" WHERE Criminals_id_criminal = :id"),
+                    text("DELETE FROM \"Criminals_Languages\" WHERE id_criminal = :id"),
                     {"id": criminal_id}
                 )
                 conn.execute(
-                    text("DELETE FROM \"Criminals_Professions\" WHERE Criminals_id_criminal = :id"),
-                    {"id": criminal_id}
-                )
-                conn.execute(
-                    text("DELETE FROM \"Criminals_Criminal_groups\" WHERE Criminals_id_criminal = :id"),
-                    {"id": criminal_id}
-                )
-                
-                conn.execute(
-                    text("UPDATE \"Criminal_groups\" SET id_leader = NULL WHERE id_leader = :id"),
+                    text("DELETE FROM \"Criminals_Professions\" WHERE id_criminal = :id"),
                     {"id": criminal_id}
                 )
                 
@@ -464,19 +419,6 @@ class CriminalModel:
                     {"id": row[0], "name": row[1]} for row in prof_result.fetchall()
                 ]
                 
-                group_result = conn.execute(
-                    text("""
-                    SELECT g.group_id, g.name
-                    FROM "Criminal_groups" g
-                    JOIN "Criminals_Criminal_groups" cg ON g.group_id = cg.id_group
-                    WHERE cg.id_criminal = :id
-                    """),
-                    {"id": criminal_id}
-                )
-                
-                criminal_data["groups"] = [
-                    {"id": row[0], "name": row[1]} for row in group_result.fetchall()
-                ]
                 
                 lang_result = conn.execute(
                     text("""

@@ -82,7 +82,6 @@ class CriminalController(QObject):
             self.operation_error.emit(f"Error retrieving archived criminals: {str(e)}")
             return []
     
-    # Reference data methods for populating form selections
     def get_professions(self):
         """Get all professions for selection."""
         try:
