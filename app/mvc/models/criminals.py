@@ -97,19 +97,22 @@ class CriminalModel:
                         }
                     )
                 
+                next_prof_id = self.get_next_id("Criminals_Professions", "id")
                 for profession_id in data.get("profession_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Professions" (
-                            id_criminal, id_profession
+                            id, id_criminal, id_profession
                         ) 
-                        VALUES (:criminal_id, :profession_id)
+                        VALUES (:id, :criminal_id, :profession_id)
                         """),
                         {
+                            "id": next_prof_id,
                             "criminal_id": criminal_id,
                             "profession_id": profession_id
                         }
                     )
+                    next_prof_id += 1
                 
                 next_language_id = self.get_next_id("Criminals_Languages", "id")
                 for language_id in data.get("language_ids", []):
@@ -196,19 +199,22 @@ class CriminalModel:
                     {"criminal_id": criminal_id}
                 )
                 
+                next_prof_id = self.get_next_id("Criminals_Professions", "id")
                 for profession_id in data.get("profession_ids", []):
                     conn.execute(
                         text("""
                         INSERT INTO "Criminals_Professions" (
-                            id_criminal, id_profession
+                            id, id_criminal, id_profession
                         ) 
-                        VALUES (:criminal_id, :profession_id)
+                        VALUES (:id, :criminal_id, :profession_id)
                         """),
                         {
+                            "id": next_prof_id,
                             "criminal_id": criminal_id,
                             "profession_id": profession_id
                         }
                     )
+                    next_prof_id += 1
                 
                 conn.execute(
                     text("""
@@ -272,7 +278,6 @@ class CriminalModel:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
                 
-                # Update is_archived flag
                 conn.execute(
                     text("""
                     UPDATE "Criminals" SET is_archived = TRUE
@@ -489,99 +494,6 @@ class CriminalModel:
                     })
                 
                 return criminals
-                
-        except Exception as e:
-            raise e
-    
-    def get_all_professions(self):
-        """Get all available professions for dropdown selection."""
-        try:
-            with self.engine.connect() as conn:
-                result = conn.execute(text("SELECT id_profession, profession_name FROM \"Professions\""))
-                
-                professions = []
-                for row in result.fetchall():
-                    professions.append({
-                        "id": row[0],
-                        "name": row[1]
-                    })
-                
-                return professions
-                
-        except Exception as e:
-            raise e
-    
-    def get_all_criminal_groups(self):
-        """Get all available criminal groups for dropdown selection."""
-        try:
-            with self.engine.connect() as conn:
-                result = conn.execute(text("""
-                SELECT 
-                    g.group_id, g.name, g.founding_date, g.number_of_members,
-                    g.main_activity, c.city_name AS base_location,
-                    CONCAT(cr.first_name, ' ', cr.last_name) AS leader_name
-                FROM "Criminal_groups" g
-                LEFT JOIN "Cities" c ON g.id_base = c.id_city
-                LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group
-                """))
-                
-                groups = []
-                for row in result.fetchall():
-                    groups.append({
-                        "id": row[0],
-                        "name": row[1],
-                        "founding_date": row[2].strftime("%Y-%m-%d") if row[2] else None,
-                        "number_of_members": row[3],
-                        "main_activity": row[4],
-                        "base_location": row[5],
-                        "leader_name": row[6]
-                    })
-                
-                return groups
-                
-        except Exception as e:
-            raise e
-    
-    def get_all_languages(self):
-        """Get all available languages for dropdown selection."""
-        try:
-            with self.engine.connect() as conn:
-                result = conn.execute(text("SELECT id_language, name FROM \"Languages\""))
-                
-                languages = []
-                for row in result.fetchall():
-                    languages.append({
-                        "id": row[0],
-                        "name": row[1]
-                    })
-                return languages
-                
-        except Exception as e:
-            raise e
-    
-    def get_all_cities(self):
-        """Get all available cities with country information for dropdown selection."""
-        try:
-            with self.engine.connect() as conn:
-                result = conn.execute(
-                    text("""
-                    SELECT c.id_city, c.city_name, co.country_name
-                    FROM "Cities" c
-                    JOIN "Countries" co ON c.id_country = co.id_country
-                    ORDER BY co.country_name, c.city_name
-                    """)
-                )
-                
-                cities = []
-                for row in result.fetchall():
-                    cities.append({
-                        "id": row[0],
-                        "name": row[1],
-                        "country": row[2],
-                        "display_name": f"{row[1]}, {row[2]}"
-                    })
-                
-                return cities
                 
         except Exception as e:
             raise e

@@ -7,9 +7,13 @@ class CriminalController(QObject):
     criminal_deleted = Signal(int) 
     operation_error = Signal(str)
     
-    def __init__(self, criminal_model):
+    def __init__(self, criminal_model, city_model, profession_model, language_model, criminal_group_model):
         super().__init__()
         self.criminal_model = criminal_model
+        self.city_model = city_model
+        self.profession_model = profession_model
+        self.language_model = language_model
+        self.criminal_group_model = criminal_group_model
     
     @Slot(dict)
     def add_criminal(self, data):
@@ -85,7 +89,7 @@ class CriminalController(QObject):
     def get_professions(self):
         """Get all professions for selection."""
         try:
-            return self.criminal_model.get_all_professions()
+            return self.profession_model.get_all_professions()
         except Exception as e:
             self.operation_error.emit(f"Error retrieving professions: {str(e)}")
             return []
@@ -93,7 +97,7 @@ class CriminalController(QObject):
     def get_criminal_groups(self):
         """Get all criminal groups for selection."""
         try:
-            return self.criminal_model.get_all_criminal_groups()
+            return self.criminal_group_model.get_all_criminal_groups()
         except Exception as e:
             self.operation_error.emit(f"Error retrieving criminal groups: {str(e)}")
             return []
@@ -101,7 +105,7 @@ class CriminalController(QObject):
     def get_languages(self):
         """Get all languages for selection."""
         try:
-            return self.criminal_model.get_all_languages()
+            return self.language_model.get_all_languages()
         except Exception as e:
             self.operation_error.emit(f"Error retrieving languages: {str(e)}")
             return []
@@ -109,7 +113,7 @@ class CriminalController(QObject):
     def get_cities(self):
         """Get all cities for selection."""
         try:
-            return self.criminal_model.get_all_cities()
+            return self.city_model.get_all_cities()
         except Exception as e:
             self.operation_error.emit(f"Error retrieving cities: {str(e)}")
             return []

@@ -6,6 +6,10 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from mvc.models.database import DatabaseConnector
 from mvc.models.users import UserModel
 from mvc.models.criminals import CriminalModel
+from mvc.models.cities import CityModel
+from mvc.models.languages import LanguageModel
+from mvc.models.professions import ProfessionModel
+from mvc.models.criminal_groups import CriminalGroupModel
 
 from mvc.controllers.authcontroller import AuthController
 from mvc.controllers.criminalcontroller import CriminalController
@@ -35,9 +39,19 @@ def main() -> int:
     
     user_model = UserModel(db_connector.engine)
     criminal_model = CriminalModel(db_connector.engine)
+    city_model = CityModel(db_connector.engine)
+    language_model = LanguageModel(db_connector.engine)
+    profession_model = ProfessionModel(db_connector.engine)
+    criminal_group_model = CriminalGroupModel(db_connector.engine)
     
     auth_controller = AuthController(user_model)
-    criminal_controller = CriminalController(criminal_model)
+    criminal_controller = CriminalController(
+        criminal_model,
+        city_model,
+        profession_model,
+        language_model,
+        criminal_group_model
+    )
     
     register_view = RegisterView()
     login_view = LoginView()
@@ -94,15 +108,12 @@ def main() -> int:
         )
     ))
     
-    # Connect archive and delete actions
     criminals_view.archive_criminal_requested.connect(criminal_controller.archive_criminal)
     criminals_view.delete_criminal_requested.connect(criminal_controller.delete_criminal)
     
-    # Connect save/update actions from forms
     criminal_add_form.save_requested.connect(criminal_controller.add_criminal)
     criminal_edit_form.update_requested.connect(criminal_controller.update_criminal)
     
-    # Connect controller result signals
     criminal_controller.criminal_added.connect(lambda _: (
         QMessageBox.information(criminal_add_form, "Success", "Злочинець успішно доданий"),
         criminal_add_form.reset_form(),
@@ -128,7 +139,6 @@ def main() -> int:
         criminals_view.set_criminals_data(criminal_controller.get_all_criminals())
     ))
     
-    # Connect error handling
     criminal_controller.operation_error.connect(lambda error_msg: 
         QMessageBox.critical(None, "Error", error_msg)
     )
@@ -156,12 +166,12 @@ def main() -> int:
         criminal_edit_form.hide()
         criminals_view.show()
     
-    main_view.closeEvent = lambda event: handle_main_close()
-    criminals_view.closeEvent = lambda event: handle_criminals_close()
-    gangs_view.closeEvent = lambda event: handle_gangs_close()
-    archive_view.closeEvent = lambda event: handle_archive_close()
-    criminal_add_form.closeEvent = lambda event: handle_add_form_close()
-    criminal_edit_form.closeEvent = lambda event: handle_edit_form_close()
+    main_view.closeEvent = lambda _: handle_main_close()
+    criminals_view.closeEvent = lambda _: handle_criminals_close()
+    gangs_view.closeEvent = lambda _: handle_gangs_close()
+    archive_view.closeEvent = lambda _: handle_archive_close()
+    criminal_add_form.closeEvent = lambda _: handle_add_form_close()
+    criminal_edit_form.closeEvent = lambda _: handle_edit_form_close()
     
     login_view.show()
     
