@@ -6,7 +6,6 @@ from datetime import datetime
 from .criminals_source import Ui_CriminalsWindow
 from .criminals_table import CriminalTableModel
 from .filterable_table_view import FilterableTableView
-
 from utils.export_utils import export_data_to_file
 
 class CriminalsView(QMainWindow):
@@ -37,7 +36,7 @@ class CriminalsView(QMainWindow):
         self.setup_connections()
         self.setup_context_menu()
         
-        self.ui.pushButton.setText("Схвати фільтри")
+        self.ui.pushButton.setText("Сховати фільтри")
         self.ui.pushButton.clicked.connect(self.toggle_filters)
     
     def setup_connections(self):

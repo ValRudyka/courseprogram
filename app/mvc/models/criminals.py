@@ -666,6 +666,31 @@ class CriminalModel:
                 
                 criminals_data = []
                 for row in result:
+                    criminal_id = row[0]
+                    prof_result = conn.execute(
+                        text("""
+                        SELECT p.profession_name
+                        FROM "Professions" p
+                        JOIN "Criminals_Professions" cp ON p.id_profession = cp.id_profession
+                        WHERE cp.id_criminal = :id
+                        ORDER BY p.profession_name
+                        """),
+                        {"id": criminal_id}
+                    )
+                    professions = ", ".join([prof[0] for prof in prof_result.fetchall()])
+                    
+                    lang_result = conn.execute(
+                        text("""
+                        SELECT l.name
+                        FROM "Languages" l
+                        JOIN "Criminals_Languages" cl ON l.id_language = cl.id_language
+                        WHERE cl.id_criminal = :id
+                        ORDER BY l.name
+                        """),
+                        {"id": criminal_id}
+                    )
+                    languages = ", ".join([lang[0] for lang in lang_result.fetchall()])
+                    
                     data = {
                         "ID": row[0],
                         "Ім'я": row[1],
@@ -673,21 +698,21 @@ class CriminalModel:
                         "Кличка": row[3] or "",
                         "Дата народження": row[4].strftime("%Y-%m-%d") if row[4] else "",
                         "В архіві": "Так" if row[5] else "Ні",
-                        "Місце народження": f"{row[6]}, {row[7]}" if row[6] else "",
-                        "Місце проживання": f"{row[8]}, {row[9]}" if row[8] else "",
-                        "Зріст (см)": row[10] or "",
-                        "Вага (кг)": row[11] or "",
-                        "Колір волосся": row[12] or "",
-                        "Колір очей": row[13] or "",
-                        "Особливі прикмети": row[14] or "",
-                        "Угруповання": row[15] or "",
-                        "Роль в угрупованні": row[16] or "",
-                        "Професії": row[17] or "",
-                        "Мови": row[18] or "",
-                        "Остання справа": row[19] or "",
-                        "Дата останньої справи": row[20].strftime("%Y-%m-%d") if row[20] else "",
-                        "Місце останньої справи": f"{row[21]}, {row[22]}" if row[21] else "",
-                        "Вирок (роки)": row[23] or ""
+                        "Місце народження": row[6] or "",
+                        "Місце проживання": row[7] or "",
+                        "Зріст (см)": row[8] or "",
+                        "Вага (кг)": row[9] or "",
+                        "Колір волосся": row[10] or "",
+                        "Колір очей": row[11] or "",
+                        "Особливі прикмети": row[12] or "",
+                        "Угруповання": row[13] or "",
+                        "Роль в угрупованні": row[14] or "",
+                        "Професії": professions,
+                        "Мови": languages,
+                        "Остання справа": row[15] or "",
+                        "Дата останньої справи": row[16].strftime("%Y-%m-%d") if row[16] else "",
+                        "Місце останньої справи": row[17] or "",
+                        "Вирок (роки)": row[18] or ""
                     }
                     criminals_data.append(data)
                 
