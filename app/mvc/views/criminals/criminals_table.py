@@ -69,7 +69,7 @@ class CriminalTableModel(QAbstractTableModel):
         
         sort_keys = [
             "id_criminal", "first_name", "last_name", "nickname", 
-            "date_of_birth", "birth_place", "residence", "height", "weight"
+            "date_of_birth", "birth_place", "residence", "height", "weight", "group_name"
         ]
         
         if 0 <= column < len(sort_keys):

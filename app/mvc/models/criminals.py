@@ -44,10 +44,9 @@ class CriminalModel:
                         "birth_date": data.get("birth_date"),
                         "last_residence_id": data.get("last_residence_id"),
                         "id_group": data.get("id_group"),
-                        "role": data.get("role", "")
+                        "role": data.get("role", "")  
                     }
                 )
-                
                 criminal_id = result.fetchone()[0]
                 
                 next_char_id = self.get_next_id("Physical_characteristics", "id_characteristic")
@@ -165,7 +164,7 @@ class CriminalModel:
                         "birth_date": data.get("birth_date"),
                         "last_residence_id": data.get("last_residence_id"),
                         "id_group": data.get("id_group"),
-                        "role": data.get("role", "")
+                        "role": data.get("role", "") 
                     }
                 )
                 
@@ -252,12 +251,12 @@ class CriminalModel:
                         )
                         """), 
                         {
+                            "id_crime": next_crime_id,
                             "crime_name": data.get("last_case"),
                             "date": data.get("last_case_date"),
                             "location_id": data.get("last_case_location_id"),
-                            "court_sentence": 1,
-                            "criminal_id": criminal_id,
-                            "id_crime": next_crime_id,
+                            "court_sentence": data.get("court_sentence", 1),
+                            "criminal_id": criminal_id
                         }
                     )
                 transaction.commit()

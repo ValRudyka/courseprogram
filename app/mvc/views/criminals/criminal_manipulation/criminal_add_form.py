@@ -65,7 +65,7 @@ class CriminalAddForm(QMainWindow):
             self.ui.comboBox_5.addItem(display_text, city['id'])
             self.ui.comboBox_6.addItem(display_text, city['id'])
             self.ui.comboBox_7.addItem(display_text, city['id'])
-        print(professions)
+        
         self.profession_selector.load_professions(professions)
         self.gang_selector.load_gangs(gangs)
         self.ui.listWidget.clear()
@@ -117,7 +117,8 @@ class CriminalAddForm(QMainWindow):
             "id_group": self.gang_selector.get_selected_gang_id(),
             "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
-            "language_ids": self.language_selector.get_selected_language_ids()
+            "language_ids": self.language_selector.get_selected_language_ids(),
+            "court_sentence": self.ui.spinBox_3.value() 
         }
         
         return data
@@ -132,6 +133,7 @@ class CriminalAddForm(QMainWindow):
         
         self.ui.spinBox.setValue(170) 
         self.ui.spinBox_2.setValue(70)
+        self.ui.spinBox_3.setValue(1)  # Reset court sentence to default (1 year)
         
         current_date = QDate.currentDate()
         self.ui.dateEdit.setDate(current_date)

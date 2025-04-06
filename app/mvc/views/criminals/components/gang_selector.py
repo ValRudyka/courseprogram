@@ -50,7 +50,7 @@ class GangSelector(QWidget):
     
     def get_role(self):
         """Get the role text."""
-        return self.role_edit.text().strip()
+        return self.role_edit.text().strip() if self.role_edit else ""
     
     def set_selected_gang(self, gang_id, role=""):
         """Set preselected gang and role (for editing)."""

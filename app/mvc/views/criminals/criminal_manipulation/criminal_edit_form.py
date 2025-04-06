@@ -93,8 +93,22 @@ class CriminalEditForm(QMainWindow):
         
         self.gang_selector.set_selected_gang(data.get("id_group"), data.get("role", ""))
 
-        self.ui.spinBox_3.setValue(170)
-        self.ui.spinBox_4.setValue(70)
+        # Set the height and weight
+        if data.get("height"):
+            self.ui.spinBox_3.setValue(data.get("height", 170))
+        else:
+            self.ui.spinBox_3.setValue(170)
+            
+        if data.get("weight"):
+            self.ui.spinBox_4.setValue(data.get("weight", 70))
+        else:
+            self.ui.spinBox_4.setValue(70)
+            
+        # Set the court sentence
+        if data.get("court_sentence"):
+            self.ui.spinBox.setValue(data.get("court_sentence", 1))
+        else:
+            self.ui.spinBox.setValue(1)
         
         self.set_combobox_by_id(self.ui.comboBox_8, data.get("place_of_birth_id"))
         self.set_combobox_by_id(self.ui.comboBox_9, data.get("last_live_place_id"))
@@ -122,9 +136,6 @@ class CriminalEditForm(QMainWindow):
         
         if "professions" in data:
             self.profession_selector.set_selected_professions(data["professions"])
-        
-        if "groups" in data:
-            self.gang_selector.set_selected_gangs(data["groups"])
         
         if "languages" in data:
             print(f"Setting {len(data['languages'])} languages in criminal data")
@@ -187,7 +198,8 @@ class CriminalEditForm(QMainWindow):
             "id_group": self.gang_selector.get_selected_gang_id(),
             "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
-            "language_ids": self.language_selector.get_selected_language_ids()
+            "language_ids": self.language_selector.get_selected_language_ids(),
+            "court_sentence": self.ui.spinBox.value()  # Add court sentence field
         }
         
         return data
