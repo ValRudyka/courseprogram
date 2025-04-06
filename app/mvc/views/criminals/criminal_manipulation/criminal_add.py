@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'criminal_manipulationClVHJT.ui'
+## Form generated from reading UI file 'criminal_manipulationRNBYOV.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -184,13 +184,29 @@ class Ui_MainWindow(object):
         self.comboBox_7.setEditable(True)
         self.pushButton = QPushButton(self.centralwidget)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(730, 510, 151, 51))
+        self.pushButton.setGeometry(QRect(590, 560, 151, 51))
         self.pushButton.setStyleSheet(u"background-color: #ffffff;\n"
 "border-radius: 3px;")
         self.label_11 = QLabel(self.centralwidget)
         self.label_11.setObjectName(u"label_11")
         self.label_11.setGeometry(QRect(590, 20, 211, 31))
         self.label_11.setFont(font)
+        self.label_34 = QLabel(self.centralwidget)
+        self.label_34.setObjectName(u"label_34")
+        self.label_34.setGeometry(QRect(360, 480, 181, 31))
+        self.label_34.setFont(font)
+        self.lineEdit = QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setGeometry(QRect(360, 520, 161, 21))
+        self.label_35 = QLabel(self.centralwidget)
+        self.label_35.setObjectName(u"label_35")
+        self.label_35.setGeometry(QRect(590, 460, 181, 31))
+        self.label_35.setFont(font)
+        self.spinBox_3 = QSpinBox(self.centralwidget)
+        self.spinBox_3.setObjectName(u"spinBox_3")
+        self.spinBox_3.setGeometry(QRect(590, 500, 151, 21))
+        self.spinBox_3.setMinimum(1)
+        self.spinBox_3.setMaximum(25)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -262,5 +278,7 @@ class Ui_MainWindow(object):
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0441\u0442\u0430\u043d\u043d\u0454 \u043c\u0456\u0441\u0446\u0435 \u043f\u0440\u043e\u0436\u0438\u0432\u0430\u043d\u043d\u044f", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0434\u0430\u0442\u0438", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0441\u043e\u0431\u043b\u0438\u0432\u0456 \u043f\u0440\u0438\u043a\u043c\u0435\u0442\u0438", None))
+        self.label_34.setText(QCoreApplication.translate("MainWindow", u"\u0420\u043e\u043b\u044c \u0432 \u0443\u0433\u0440\u0443\u043f\u043e\u0432\u0443\u0432\u0430\u043d\u043d\u0456", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0438\u0440\u043e\u043a (\u0443 \u0440\u043e\u043a\u0430\u0445)", None))
     # retranslateUi
 

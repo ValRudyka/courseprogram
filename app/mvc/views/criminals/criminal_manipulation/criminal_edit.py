@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'edit_criminalstgjTFK.ui'
+## Form generated from reading UI file 'edit_criminalsUHkKAs.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1106, 679)
+        MainWindow.resize(955, 679)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.comboBox_8 = QComboBox(self.centralwidget)
@@ -182,17 +182,33 @@ class Ui_MainWindow(object):
         self.label_30.setFont(font)
         self.pushButton_2 = QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(690, 480, 141, 41))
+        self.pushButton_2.setGeometry(QRect(610, 550, 151, 41))
         self.pushButton_2.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border-radius: 3px;")
         self.comboBox = QComboBox(self.centralwidget)
         self.comboBox.setObjectName(u"comboBox")
         self.comboBox.setGeometry(QRect(610, 160, 231, 21))
         self.comboBox.setEditable(True)
+        self.label_35 = QLabel(self.centralwidget)
+        self.label_35.setObjectName(u"label_35")
+        self.label_35.setGeometry(QRect(380, 480, 181, 31))
+        self.label_35.setFont(font)
+        self.label_36 = QLabel(self.centralwidget)
+        self.label_36.setObjectName(u"label_36")
+        self.label_36.setGeometry(QRect(610, 460, 181, 31))
+        self.label_36.setFont(font)
+        self.lineEdit = QLineEdit(self.centralwidget)
+        self.lineEdit.setObjectName(u"lineEdit")
+        self.lineEdit.setGeometry(QRect(380, 520, 161, 21))
+        self.spinBox = QSpinBox(self.centralwidget)
+        self.spinBox.setObjectName(u"spinBox")
+        self.spinBox.setGeometry(QRect(610, 500, 191, 21))
+        self.spinBox.setMinimum(1)
+        self.spinBox.setMaximum(25)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1106, 26))
+        self.menubar.setGeometry(QRect(0, 0, 955, 26))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -257,5 +273,7 @@ class Ui_MainWindow(object):
         self.label_32.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0430\u0433\u0430 (\u0443 \u043a\u0433)", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"\u0406\u043c'\u044f", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u041e\u043d\u043e\u0432\u0438\u0442\u0438", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"\u0420\u043e\u043b\u044c \u0432 \u0443\u0433\u0440\u0443\u043f\u043e\u0432\u0443\u0432\u0430\u043d\u043d\u0456", None))
+        self.label_36.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0438\u0440\u043e\u043a (\u0443 \u0440\u043e\u043a\u0430\u0445)", None))
     # retranslateUi
 
