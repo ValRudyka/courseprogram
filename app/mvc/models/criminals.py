@@ -618,3 +618,80 @@ class CriminalModel:
                 
         except Exception as e:
             raise e
+        
+    def get_criminals_for_export(self, include_archived=False):
+        """Get complete criminal data with all related information for export."""
+        try:
+            with self.engine.connect() as conn:
+                query = """
+                SELECT 
+                    c.id_criminal, 
+                    c.first_name, 
+                    c.last_name, 
+                    c.nickname,
+                    c.date_of_birth,
+                    c.is_archived,
+                    bc.city_name as birth_place, 
+                    lc.city_name as residence_place, 
+                    p.height, 
+                    p.weight, 
+                    p.hair_color, 
+                    p.eye_color, 
+                    p.distinguishing_features,
+                    g.name as group_name,
+                    c.role as role_in_group,
+                    cr.crime_name as last_crime,
+                    cr.commitment_date as last_crime_date,
+                    cr_city.city_name as last_crime_location,
+                    cr.court_sentence
+                FROM "Criminals" c
+                LEFT JOIN "Physical_characteristics" p ON c.id_criminal = p.id_criminal
+                LEFT JOIN "Cities" bc ON c.place_of_birth_id = bc.id_city
+                LEFT JOIN "Cities" lc ON c.last_live_place_id = lc.id_city
+                LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
+                LEFT JOIN (
+                    SELECT cr.id_criminal, cr.crime_name, cr.commitment_date, cr.id_location, cr.court_sentence,
+                        ROW_NUMBER() OVER (PARTITION BY cr.id_criminal ORDER BY cr.commitment_date DESC) as rn
+                    FROM "Crimes" cr
+                ) cr ON c.id_criminal = cr.id_criminal AND cr.rn = 1
+                LEFT JOIN "Cities" cr_city ON cr.id_location = cr_city.id_city
+                """
+                
+                if not include_archived:
+                    query += " WHERE c.is_archived = FALSE"
+                    
+                query += """ ORDER BY c.last_name, c.first_name """
+                
+                result = conn.execute(text(query))
+                
+                criminals_data = []
+                for row in result:
+                    data = {
+                        "ID": row[0],
+                        "Ім'я": row[1],
+                        "Прізвище": row[2],
+                        "Кличка": row[3] or "",
+                        "Дата народження": row[4].strftime("%Y-%m-%d") if row[4] else "",
+                        "В архіві": "Так" if row[5] else "Ні",
+                        "Місце народження": f"{row[6]}, {row[7]}" if row[6] else "",
+                        "Місце проживання": f"{row[8]}, {row[9]}" if row[8] else "",
+                        "Зріст (см)": row[10] or "",
+                        "Вага (кг)": row[11] or "",
+                        "Колір волосся": row[12] or "",
+                        "Колір очей": row[13] or "",
+                        "Особливі прикмети": row[14] or "",
+                        "Угруповання": row[15] or "",
+                        "Роль в угрупованні": row[16] or "",
+                        "Професії": row[17] or "",
+                        "Мови": row[18] or "",
+                        "Остання справа": row[19] or "",
+                        "Дата останньої справи": row[20].strftime("%Y-%m-%d") if row[20] else "",
+                        "Місце останньої справи": f"{row[21]}, {row[22]}" if row[21] else "",
+                        "Вирок (роки)": row[23] or ""
+                    }
+                    criminals_data.append(data)
+                
+                return criminals_data
+                    
+        except Exception as e:
+            raise e

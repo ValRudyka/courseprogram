@@ -87,6 +87,12 @@ def main() -> int:
         criminals_view.hide(),
         criminal_edit_form.show()
     ))
+
+    criminals_view.export_criminals_requested.connect(lambda include_archived: (
+        criminals_view.export_criminals_data(
+            criminal_controller.get_criminals_for_export(include_archived)
+        )
+    ))
     
     # Connect archive and delete actions
     criminals_view.archive_criminal_requested.connect(criminal_controller.archive_criminal)

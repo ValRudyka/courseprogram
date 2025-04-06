@@ -1,15 +1,20 @@
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QMenu, QAbstractItemView
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QAction, QCursor
+from datetime import datetime
+
 from .criminals_source import Ui_CriminalsWindow
 from .criminals_table import CriminalTableModel
 from .filterable_table_view import FilterableTableView
+
+from utils.export_utils import export_data_to_file
 
 class CriminalsView(QMainWindow):
     add_criminal_requested = Signal()
     edit_criminal_requested = Signal(int)  
     archive_criminal_requested = Signal(int) 
     delete_criminal_requested = Signal(int)
+    export_criminals_requested = Signal(bool)
     
     def __init__(self):
         super().__init__()
@@ -41,6 +46,7 @@ class CriminalsView(QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.on_edit_criminal)
         self.ui.pushButton_2.clicked.connect(self.on_archive_criminal)
         self.ui.pushButton_4.clicked.connect(self.on_delete_criminal)
+        self.ui.pushButton_6.clicked.connect(self.on_export_criminals)
         
         self.ui.tableView.clicked.connect(self.on_table_clicked)
     
@@ -174,3 +180,43 @@ class CriminalsView(QMainWindow):
         self.ui.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
         
         self.selected_criminal_id = None
+
+    def on_export_criminals(self):
+        """Handle export button click."""
+        from PySide6.QtWidgets import QCheckBox, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Експорт даних")
+        layout = QVBoxLayout(dialog)
+        
+        label = QLabel("Виберіть опції експорту:", dialog)
+        layout.addWidget(label)
+        
+        include_archived_checkbox = QCheckBox("Включити архівні записи", dialog)
+        layout.addWidget(include_archived_checkbox)
+        
+        buttons_layout = QHBoxLayout()
+        export_button = QPushButton("Експортувати", dialog)
+        cancel_button = QPushButton("Скасувати", dialog)
+        buttons_layout.addWidget(export_button)
+        buttons_layout.addWidget(cancel_button)
+        layout.addLayout(buttons_layout)
+        
+        export_button.clicked.connect(lambda: self._export_data(include_archived_checkbox.isChecked(), dialog))
+        cancel_button.clicked.connect(dialog.reject)
+        
+        dialog.setMinimumWidth(300)
+        dialog.exec_()
+    
+    def _export_data(self, include_archived, dialog):
+        """Emit signal to export data and close the dialog."""
+        dialog.accept()
+        self.export_criminals_requested.emit(include_archived)
+        
+    def export_criminals_data(self, data):
+        """Export criminal data to a file."""
+        if not data:
+            QMessageBox.warning(self, "Експорт", "Немає даних для експорту.")
+            return
+        
+        export_data_to_file(data, self, f"злочинці_{datetime.now().strftime('%Y%m%d')}")

@@ -113,3 +113,11 @@ class CriminalController(QObject):
         except Exception as e:
             self.operation_error.emit(f"Error retrieving cities: {str(e)}")
             return []
+        
+    def get_criminals_for_export(self, include_archived=False):
+        """Get complete criminal data with all related information for export."""
+        try:
+            return self.criminal_model.get_criminals_for_export(include_archived)
+        except Exception as e:
+            self.operation_error.emit(f"Error exporting criminals: {str(e)}")
+            return []
