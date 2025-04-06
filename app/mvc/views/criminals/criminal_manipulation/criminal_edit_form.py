@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox
-from PySide6.QtCore import Signal, QDate
+from PySide6.QtCore import Signal, QDate, QRect
 from .criminal_edit import Ui_MainWindow
 from ..components.profession_selector import ProfessionSelector
 from ..components.gang_selector import GangSelector
@@ -22,30 +22,33 @@ class CriminalEditForm(QMainWindow):
     
     def setup_custom_components(self):
         """Replace standard combo boxes with custom components for many-to-many relationships."""
-        # Setup profession selector
-        self.profession_container = QWidget()
+        self.profession_container = QWidget(self.ui.centralwidget)
         profession_layout = QVBoxLayout(self.profession_container)
         profession_layout.setContentsMargins(0, 0, 0, 0)
         
         self.profession_selector = ProfessionSelector()
         profession_layout.addWidget(self.profession_selector)
         
-        parent_layout = self.ui.comboBox.parentWidget().layout()
-        if parent_layout:
-            parent_layout.replaceWidget(self.ui.comboBox, self.profession_container)
-            self.ui.comboBox.hide()
+        orig_geom = self.ui.comboBox.geometry()
+        expanded_geom = QRect(orig_geom.x(), orig_geom.y(), 
+                            orig_geom.width(), orig_geom.height() * 5)
+        self.profession_container.setGeometry(expanded_geom)
         
-        self.gang_container = QWidget()
+        self.ui.comboBox.hide()
+        
+        self.gang_container = QWidget(self.ui.centralwidget)
         gang_layout = QVBoxLayout(self.gang_container)
         gang_layout.setContentsMargins(0, 0, 0, 0)
         
         self.gang_selector = GangSelector()
         gang_layout.addWidget(self.gang_selector)
         
-        parent_layout = self.ui.comboBox_12.parentWidget().layout()
-        if parent_layout:
-            parent_layout.replaceWidget(self.ui.comboBox_12, self.gang_container)
-            self.ui.comboBox_12.hide()
+        orig_geom = self.ui.comboBox_12.geometry()
+        expanded_geom = QRect(orig_geom.x(), orig_geom.y(), 
+                            orig_geom.width(), orig_geom.height() * 4) 
+        self.gang_container.setGeometry(expanded_geom)
+        
+        self.ui.comboBox_12.hide()
         
         self.language_selector = LanguageSelector(self, use_internal_list=False)
         self.language_selector.language_list = self.ui.listWidget_2

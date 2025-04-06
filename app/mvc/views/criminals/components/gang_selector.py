@@ -15,7 +15,7 @@ class GangSelector(QWidget):
         main_layout.setContentsMargins(0, 0, 0, 0)
         
         gang_layout = QHBoxLayout()
-        self.label_gang = QLabel("Угруповання")
+        self.label_gang = QLabel("Угрупування")
         self.gang_combo = QComboBox()
         gang_layout.addWidget(self.label_gang)
         gang_layout.addWidget(self.gang_combo)
