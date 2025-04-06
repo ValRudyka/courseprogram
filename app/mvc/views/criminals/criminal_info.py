@@ -34,10 +34,6 @@ class CriminalsView(QMainWindow):
         
         self.ui.pushButton.setText("Фільтрувати")
         self.ui.pushButton.clicked.connect(self.toggle_filters)
-        
-        self.ui.textEdit.setVisible(False)
-        self.ui.comboBox.setVisible(False)
-        self.ui.label.setVisible(False)
     
     def setup_connections(self):
         """Connect UI elements to their respective actions."""
