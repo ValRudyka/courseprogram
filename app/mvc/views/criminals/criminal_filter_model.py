@@ -46,22 +46,22 @@ class CriminalFilterProxyModel(QSortFilterProxyModel):
             data_str = str(data).lower()
             filter_text = filter_text.lower()
             
-            if column == 0:  # ID column
+            if column == 0:
                 if filter_text not in data_str:
                     return False
                     
-            elif column == 4:  # Birth date column
+            elif column == 4:
                 if not data_str:
                     return False
                     
                 if filter_text not in data_str:
                     return False
                     
-            elif column in [7, 8]:  # Height/Weight columns
+            elif column in [7, 8]: 
                 try:
                     if column == 7: 
                         value = int(data_str.replace('см', '').strip())
-                    else:  # Weight
+                    else:  
                         value = int(data_str.replace('кг', '').strip())
                         
                     if '-' in filter_text:
@@ -76,7 +76,6 @@ class CriminalFilterProxyModel(QSortFilterProxyModel):
                         if value <= min_val:
                             return False
                     elif filter_text.startswith('<'):
-                        # Less than
                         max_val = int(filter_text[1:].strip())
                         if value >= max_val:
                             return False

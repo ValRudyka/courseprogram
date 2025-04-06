@@ -91,6 +91,7 @@ class CriminalEditForm(QMainWindow):
         self.ui.lineEdit_16.setText(data.get("distinguishing_features", ""))  
         self.ui.lineEdit_18.setText(data.get("last_case", ""))   
         
+        self.gang_selector.set_selected_gang(data.get("id_group"), data.get("role", ""))
 
         self.ui.spinBox_3.setValue(170)
         self.ui.spinBox_4.setValue(70)
@@ -183,8 +184,9 @@ class CriminalEditForm(QMainWindow):
             "last_case": self.ui.lineEdit_18.text().strip(),
             "last_case_date": self.ui.dateEdit_3.date().toString("yyyy-MM-dd"),
             "last_case_location_id": self.ui.comboBox_10.currentData(),
+            "id_group": self.gang_selector.get_selected_gang_id(),
+            "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
-            "group_ids": self.gang_selector.get_selected_gang_ids(),
             "language_ids": self.language_selector.get_selected_language_ids()
         }
         

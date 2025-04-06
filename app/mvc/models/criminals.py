@@ -25,13 +25,13 @@ class CriminalModel:
                     text("""
                     INSERT INTO "Criminals" (
                         id_criminal, first_name, last_name, nickname, 
-                        place_of_birth_id, date_of_birth, last_live_place_id, 
-                        is_archived
+                        place_of_birth_id, date_of_birth, last_live_place_id,
+                        is_archived, id_group, role
                     ) 
                     VALUES (
                         :id_criminal, :first_name, :last_name, :nickname, 
                         :birth_place_id, :birth_date, :last_residence_id, 
-                        FALSE
+                        FALSE, :id_group, :role
                     )
                     RETURNING id_criminal
                     """), 
@@ -42,7 +42,9 @@ class CriminalModel:
                         "nickname": data.get("nickname", ""),
                         "birth_place_id": data.get("birth_place_id"),
                         "birth_date": data.get("birth_date"),
-                        "last_residence_id": data.get("last_residence_id")
+                        "last_residence_id": data.get("last_residence_id"),
+                        "id_group": data.get("id_group"),
+                        "role": data.get("role", "")
                     }
                 )
                 
@@ -130,6 +132,7 @@ class CriminalModel:
                 
                 transaction.commit()
                 return criminal_id
+
         except Exception as e:
             if 'transaction' in locals():
                 transaction.rollback()
@@ -148,7 +151,9 @@ class CriminalModel:
                         nickname = :nickname,
                         place_of_birth_id = :birth_place_id,
                         date_of_birth = :birth_date,
-                        last_live_place_id = :last_residence_id
+                        last_live_place_id = :last_residence_id,
+                        id_group = :id_group,
+                        role = :role
                     WHERE id_criminal = :criminal_id
                     """), 
                     {
@@ -158,7 +163,9 @@ class CriminalModel:
                         "nickname": data.get("nickname"),
                         "birth_place_id": data.get("birth_place_id"),
                         "birth_date": data.get("birth_date"),
-                        "last_residence_id": data.get("last_residence_id")
+                        "last_residence_id": data.get("last_residence_id"),
+                        "id_group": data.get("id_group"),
+                        "role": data.get("role", "")
                     }
                 )
                 
@@ -203,7 +210,6 @@ class CriminalModel:
                             "profession_id": profession_id
                         }
                     )
-                
                 
                 conn.execute(
                     text("""
@@ -254,7 +260,6 @@ class CriminalModel:
                             "id_crime": next_crime_id,
                         }
                     )
-                
                 transaction.commit()
                 return True
                 
@@ -348,12 +353,15 @@ class CriminalModel:
                     SELECT 
                         c.id_criminal, c.first_name, c.last_name, c.nickname,
                         c.place_of_birth_id, c.date_of_birth, c.last_live_place_id, c.is_archived,
+                        c.id_group, c.role,
                         p.height, p.weight, p.hair_color, p.eye_color, p.distinguishing_features,
-                        bp.city_name as birth_place, lp.city_name as last_place
+                        bp.city_name as birth_place, lp.city_name as last_place,
+                        g.name as group_name
                     FROM "Criminals" c
                     JOIN "Physical_characteristics" p ON c.id_criminal = p.id_criminal
                     LEFT JOIN "Cities" bp ON c.place_of_birth_id = bp.id_city
                     LEFT JOIN "Cities" lp ON c.last_live_place_id = lp.id_city
+                    LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
                     WHERE c.id_criminal = :id
                     """),
                     {"id": criminal_id}
@@ -372,13 +380,16 @@ class CriminalModel:
                     "date_of_birth": row[5].strftime("%Y-%m-%d") if row[5] else None,
                     "last_live_place_id": row[6],
                     "is_archived": row[7],
-                    "height": row[8],
-                    "weight": row[9],
-                    "hair_color": row[10],
-                    "eye_color": row[11],
-                    "distinguishing_features": row[12],
-                    "birth_place_name": row[13],
-                    "last_place_name": row[14]
+                    "id_group": row[8],
+                    "role": row[9],
+                    "height": row[10],
+                    "weight": row[11],
+                    "hair_color": row[12],
+                    "eye_color": row[13],
+                    "distinguishing_features": row[14],
+                    "birth_place_name": row[15],
+                    "last_place_name": row[16],
+                    "group_name": row[17]
                 }
                 
                 crime_result = conn.execute(
@@ -419,7 +430,6 @@ class CriminalModel:
                     {"id": row[0], "name": row[1]} for row in prof_result.fetchall()
                 ]
                 
-                
                 lang_result = conn.execute(
                     text("""
                     SELECT l.id_language, l.name
@@ -447,11 +457,13 @@ class CriminalModel:
                 SELECT 
                     c.id_criminal, c.first_name, c.last_name, c.nickname, c.is_archived,
                     bp.city_name AS birth_place, lp.city_name AS residence,
-                    c.date_of_birth, pc.height, pc.weight
+                    c.date_of_birth, pc.height, pc.weight,
+                    c.id_group, c.role, g.name AS group_name
                 FROM "Criminals" c
                 LEFT JOIN "Cities" bp ON c.place_of_birth_id = bp.id_city
                 LEFT JOIN "Cities" lp ON c.last_live_place_id = lp.id_city
                 LEFT JOIN "Physical_characteristics" pc ON c.id_criminal = pc.id_criminal
+                LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
                 """
                 
                 if not include_archived:
@@ -471,7 +483,10 @@ class CriminalModel:
                         "residence": row[6],
                         "date_of_birth": row[7].strftime("%Y-%m-%d") if row[7] else None,
                         "height": row[8],
-                        "weight": row[9]
+                        "weight": row[9],
+                        "id_group": row[10],
+                        "role": row[11],
+                        "group_name": row[12]
                     })
                 
                 return criminals
@@ -508,7 +523,7 @@ class CriminalModel:
                     CONCAT(cr.first_name, ' ', cr.last_name) AS leader_name
                 FROM "Criminal_groups" g
                 LEFT JOIN "Cities" c ON g.id_base = c.id_city
-                LEFT JOIN "Criminals" cr ON g.id_leader = cr.id_criminal
+                LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group
                 """))
                 
                 groups = []

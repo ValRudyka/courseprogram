@@ -114,9 +114,9 @@ class CriminalAddForm(QMainWindow):
             "last_case": self.ui.lineEdit_8.text().strip(),
             "last_case_date": self.ui.dateEdit_2.date().toString("yyyy-MM-dd"),
             "last_case_location_id": self.ui.comboBox_7.currentData(),
-            # Many-to-many relationships
+            "id_group": self.gang_selector.get_selected_gang_id(),
+            "role": self.gang_selector.get_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
-            "group_ids": self.gang_selector.get_selected_gang_ids(),
             "language_ids": self.language_selector.get_selected_language_ids()
         }
         

@@ -13,7 +13,8 @@ class CriminalTableModel(QAbstractTableModel):
             "Місце народження", 
             "Місце проживання",
             "Зріст",
-            "Вага"
+            "Вага",
+            "Угруповання"
         ]
     
     def rowCount(self, parent=QModelIndex()):
@@ -24,8 +25,8 @@ class CriminalTableModel(QAbstractTableModel):
     
     def data(self, index, role=Qt.DisplayRole):
         if not index.isValid() or \
-           not (0 <= index.row() < len(self._data)) or \
-           not (0 <= index.column() < len(self._headers)):
+        not (0 <= index.row() < len(self._data)) or \
+        not (0 <= index.column() < len(self._headers)):
             return None
         
         row = index.row()
@@ -33,34 +34,29 @@ class CriminalTableModel(QAbstractTableModel):
         criminal = self._data[row]
         
         if role == Qt.DisplayRole:
-            if col == 0:  # ID
+            if col == 0:
                 return str(criminal.get("id_criminal", ""))
-            elif col == 1:  # First name
+            elif col == 1:
                 return criminal.get("first_name", "")
-            elif col == 2:  # Last name
+            elif col == 2: 
                 return criminal.get("last_name", "")
-            elif col == 3:  # Nickname
+            elif col == 3:
                 return criminal.get("nickname", "")
-            elif col == 4:  # Birth date
+            elif col == 4:
                 return criminal.get("date_of_birth", "")
-            elif col == 5:  # Birth place
+            elif col == 5: 
                 return criminal.get("birth_place", "")
-            elif col == 6:  # Residence
+            elif col == 6: 
                 return criminal.get("residence", "")
-            elif col == 7:  # Height
+            elif col == 7:  
                 return f"{criminal.get('height', '')} см" if criminal.get('height') else ""
-            elif col == 8:  # Weight
+            elif col == 8:
                 return f"{criminal.get('weight', '')} кг" if criminal.get('weight') else ""
-        
-        elif role == Qt.TextAlignmentRole:
-            if col in [0, 7, 8]:  # ID, Height, Weight
-                return Qt.AlignCenter
-        
-        elif role == Qt.BackgroundRole:
-            if criminal.get("is_archived"):
-                return Qt.lightGray
-        
-        return None
+            elif col == 9:
+                if criminal.get("group_name"):
+                    role_info = f" ({criminal.get('role')})" if criminal.get('role') else ""
+                    return f"{criminal.get('group_name')}{role_info}"
+                return ""
     
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.DisplayRole and orientation == Qt.Horizontal:

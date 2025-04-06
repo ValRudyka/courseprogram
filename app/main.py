@@ -66,21 +66,21 @@ def main() -> int:
     main_view.open_archive_requested.connect(lambda: (main_view.hide(), archive_view.show()))
     
     criminals_view.add_criminal_requested.connect(lambda: (
-        criminal_add_form.load_reference_data(
-            criminal_controller.get_cities(),
-            criminal_controller.get_professions(),
-            [],
-            criminal_controller.get_languages()
-        ),
+    criminal_add_form.load_reference_data(
+        criminal_controller.get_cities(),
+        criminal_controller.get_professions(),
+        criminal_controller.get_criminal_groups(),
+        criminal_controller.get_languages()
+    ),
         criminals_view.hide(),
         criminal_add_form.show()
     ))
-    
+
     criminals_view.edit_criminal_requested.connect(lambda criminal_id: (
         criminal_edit_form.load_reference_data(
             criminal_controller.get_cities(),
             criminal_controller.get_professions(),
-            [],
+            criminal_controller.get_criminal_groups(),
             criminal_controller.get_languages()
         ),
         criminal_edit_form.set_criminal_data(criminal_id, criminal_controller.get_criminal(criminal_id)),
