@@ -9,7 +9,7 @@ from mvc.models.criminals import CriminalModel
 from mvc.models.cities import CityModel
 from mvc.models.languages import LanguageModel
 from mvc.models.professions import ProfessionModel
-from mvc.models.criminal_groups import CriminalGroupModel
+from mvc.models.criminal_gangs import CriminalGroupModel
 
 from mvc.controllers.authcontroller import AuthController
 from mvc.controllers.criminalcontroller import CriminalController
