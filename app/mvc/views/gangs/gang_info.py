@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QMessageBox, QMenu, QAbstractItemView
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QMenu, QAbstractItemView, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtGui import QAction, QCursor
 from datetime import datetime
@@ -41,6 +41,7 @@ class GangsView(QMainWindow):
         self.ui.pushButton_3.clicked.connect(self.on_edit_gang)
         self.ui.pushButton_4.clicked.connect(self.on_delete_gang)
         self.ui.pushButton.clicked.connect(self.toggle_filters)
+        self.ui.pushButton_2.clicked.connect(self.on_export_gangs)
         
         self.ui.tableView.clicked.connect(self.on_table_clicked)
     
@@ -55,7 +56,6 @@ class GangsView(QMainWindow):
             return
             
         context_menu = QMenu()
-        # Add actions
         edit_action = QAction("Редагувати", self)
         edit_action.triggered.connect(self.on_edit_gang)
         
@@ -136,13 +136,13 @@ class GangsView(QMainWindow):
         
         self.ui.tableView.setModel(model)
         
-        self.ui.tableView.setColumnWidth(0, 60)  
-        self.ui.tableView.setColumnWidth(1, 150) 
-        self.ui.tableView.setColumnWidth(2, 120) 
-        self.ui.tableView.setColumnWidth(3, 100)  
-        self.ui.tableView.setColumnWidth(4, 200) 
-        self.ui.tableView.setColumnWidth(5, 170)  
-        self.ui.tableView.setColumnWidth(6, 80)  
+        self.ui.tableView.setColumnWidth(0, 60)  # ID
+        self.ui.tableView.setColumnWidth(1, 150) # Name
+        self.ui.tableView.setColumnWidth(2, 120) # Founding Date
+        self.ui.tableView.setColumnWidth(3, 100) # Member Count
+        self.ui.tableView.setColumnWidth(4, 200) # Main Activity
+        self.ui.tableView.setColumnWidth(5, 170) # Base Location
+        self.ui.tableView.setColumnWidth(6, 80)  # Active Members
         
         self.ui.tableView.verticalHeader().setVisible(False)
         
@@ -152,7 +152,35 @@ class GangsView(QMainWindow):
         self.selected_gang_id = None
         
     def on_export_gangs(self):
-        """Handle export button click."""
+        """Handle export button click and open export dialog."""
+        # Create a simple export dialog
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Експорт даних")
+        layout = QVBoxLayout(dialog)
+        
+        label = QLabel("Експорт даних угруповань:", dialog)
+        layout.addWidget(label)
+        
+        # Create buttons
+        buttons_layout = QHBoxLayout()
+        export_button = QPushButton("Експортувати", dialog)
+        cancel_button = QPushButton("Скасувати", dialog)
+        
+        buttons_layout.addWidget(export_button)
+        buttons_layout.addWidget(cancel_button)
+        
+        layout.addLayout(buttons_layout)
+        
+        # Connect button signals
+        export_button.clicked.connect(lambda: self._perform_export(dialog))
+        cancel_button.clicked.connect(dialog.reject)
+        
+        dialog.setMinimumWidth(300)
+        dialog.exec_()
+    
+    def _perform_export(self, dialog):
+        """Emit signal to export data and close the dialog."""
+        dialog.accept()
         self.export_gangs_requested.emit()
         
     def export_gangs_data(self, data):

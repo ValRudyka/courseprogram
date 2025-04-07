@@ -22,14 +22,23 @@ class CriminalGroupModel:
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(text("""
+                WITH leader_info AS (
+                    SELECT 
+                        c.id_group,
+                        CONCAT(c.first_name,' ',c.last_name) AS leader_name
+                    FROM "Criminals" c
+                    WHERE c.role = 'лідер' AND c.is_archived = FALSE
+                )
                 SELECT 
                     g.group_id, g.name, g.founding_date, g.number_of_members,
                     g.main_activity, c.city_name AS base_location, c.id_city AS base_id,
+                    l.leader_name,
                     COUNT(cr.id_criminal) AS active_members
                 FROM "Criminal_groups" g
                 LEFT JOIN "Cities" c ON g.id_base = c.id_city
                 LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group AND cr.is_archived = FALSE
-                GROUP BY g.group_id, c.city_name, c.id_city
+                LEFT JOIN leader_info l ON g.group_id = l.id_group
+                GROUP BY g.group_id, c.city_name, c.id_city, l.leader_name
                 ORDER BY g.name
                 """))
                 
@@ -43,7 +52,8 @@ class CriminalGroupModel:
                         "main_activity": row[4],
                         "base_location": row[5],
                         "base_id": row[6],
-                        "active_members": row[7]
+                        "leader_name": row[7] or 'Невідомо',
+                        "active_members": row[8]
                     })
                 
                 return groups
@@ -225,19 +235,28 @@ class CriminalGroupModel:
             raise e
     
     def get_groups_for_export(self):
-        """Get complete criminal group data with all related information for export."""
+        """Get complete criminal group data with all related information for export, including leader information."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(
                     text("""
+                    WITH leader_info AS (
+                        SELECT 
+                            c.id_group,
+                            CONCAT(c.first_name,' ',c.last_name) AS leader_name
+                        FROM "Criminals" c
+                        WHERE c.role = 'лідер' AND c.is_archived = FALSE
+                    )
                     SELECT 
                         g.group_id, g.name, g.founding_date, g.number_of_members,
                         g.main_activity, g.status, c.city_name AS base_location,
+                        l.leader_name,
                         COUNT(cr.id_criminal) AS active_members
                     FROM "Criminal_groups" g
                     LEFT JOIN "Cities" c ON g.id_base = c.id_city
                     LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group AND cr.is_archived = FALSE
-                    GROUP BY g.group_id, c.city_name
+                    LEFT JOIN leader_info l ON g.group_id = l.id_group
+                    GROUP BY g.group_id, c.city_name, l.leader_name
                     ORDER BY g.name
                     """)
                 )
@@ -252,7 +271,8 @@ class CriminalGroupModel:
                         "Основна діяльність": row[4] or "",
                         "Статус": row[5] or "",
                         "Місце бази": row[6] or "",
-                        "Активних членів": row[7] or 0
+                        "Лідер": row[7] or "Невідомо",
+                        "Активних членів": row[8] or 0
                     }
                     groups_data.append(data)
                 

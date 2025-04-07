@@ -11,7 +11,8 @@ class GangTableModel(QAbstractTableModel):
             "Кількість членів", 
             "Основна діяльність", 
             "Місце бази",
-            "Кількість ув'язнених членів"
+            "Активних членів",
+            "Лідер"
         ]
     
     def rowCount(self, parent=QModelIndex()):
@@ -45,6 +46,8 @@ class GangTableModel(QAbstractTableModel):
                 return gang.get("base_location", "")
             elif col == 6: 
                 return str(gang.get("active_members", ""))
+            elif col == 7:
+                return gang.get("leader_name", "Невідомо")
     
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.DisplayRole and orientation == Qt.Horizontal:
@@ -57,7 +60,7 @@ class GangTableModel(QAbstractTableModel):
         
         sort_keys = [
             "id", "name", "founding_date", "number_of_members", 
-            "main_activity", "base_location", "active_members"
+            "main_activity", "base_location", "active_members", "leader_name"
         ]
         
         if 0 <= column < len(sort_keys):

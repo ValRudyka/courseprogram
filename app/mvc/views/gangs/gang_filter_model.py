@@ -46,7 +46,7 @@ class GangFilterProxyModel(QSortFilterProxyModel):
             data_str = str(data).lower()
             filter_text = filter_text.lower()
             
-            if column in [0, 1, 4, 5]:
+            if column in [0, 1, 4, 5, 7]:
                 if filter_text not in data_str:
                     return False
             
