@@ -43,7 +43,13 @@ class MainWindow(QMainWindow):
         full_text = f"{date_text}\n{time_text}"
         
         self.ui.label_2.setText(full_text)
-        
+
+    def closeEvent(self, event):
+        """Handle window close event to properly clean up timer."""
+        if hasattr(self, 'timer'):
+            self.timer.stop()
+        event.accept()
+
     def _on_criminals_action(self):
         self.open_criminals_requested.emit()
 
