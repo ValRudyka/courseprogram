@@ -286,12 +286,14 @@ class CriminalModel:
                     {"criminal_id": criminal_id}
                 )
                 
+                next_archive_id = self.get_next_id("Archive", "id_archive")
                 conn.execute(
                     text("""
-                    INSERT INTO "Archive" (id_criminal, archive_date)
-                    VALUES (:criminal_id, :archive_date)
+                    INSERT INTO "Archive"
+                    VALUES (:id_archive, :criminal_id, :archive_date)
                     """),
                     {
+                        "id_archive": next_archive_id,
                         "criminal_id": criminal_id,
                         "archive_date": datetime.now().date()
                     }
