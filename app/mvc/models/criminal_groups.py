@@ -14,7 +14,6 @@ class CriminalGroupModel:
                 SELECT 
                     g.group_id, g.name, g.founding_date, g.number_of_members,
                     g.main_activity, c.city_name AS base_location,
-                    CONCAT(cr.first_name, ' ', cr.last_name) AS leader_name
                 FROM "Criminal_groups" g
                 LEFT JOIN "Cities" c ON g.id_base = c.id_city
                 LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group
@@ -29,7 +28,6 @@ class CriminalGroupModel:
                         "number_of_members": row[3],
                         "main_activity": row[4],
                         "base_location": row[5],
-                        "leader_name": row[6]
                     })
                 
                 return groups
@@ -45,7 +43,6 @@ class CriminalGroupModel:
                 SELECT 
                     g.group_id, g.name, g.founding_date, g.number_of_members,
                     g.main_activity, c.city_name AS base_location,
-                    CONCAT(cr.first_name, ' ', cr.last_name) AS leader_name
                 FROM "Criminal_groups" g
                 LEFT JOIN "Cities" c ON g.id_base = c.id_city
                 LEFT JOIN "Criminals" cr ON g.group_id = cr.id_group
@@ -61,7 +58,6 @@ class CriminalGroupModel:
                         "number_of_members": row[3],
                         "main_activity": row[4],
                         "base_location": row[5],
-                        "leader_name": row[6]
                     }
                 return None
                 
