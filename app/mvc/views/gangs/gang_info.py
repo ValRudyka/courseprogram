@@ -136,13 +136,13 @@ class GangsView(QMainWindow):
         
         self.ui.tableView.setModel(model)
         
-        self.ui.tableView.setColumnWidth(0, 60)  # ID
-        self.ui.tableView.setColumnWidth(1, 150)  # Name
-        self.ui.tableView.setColumnWidth(2, 120)  # Founding Date
-        self.ui.tableView.setColumnWidth(3, 100)  # Member Count
-        self.ui.tableView.setColumnWidth(4, 200)  # Main Activity
-        self.ui.tableView.setColumnWidth(5, 150)  # Base Location
-        self.ui.tableView.setColumnWidth(6, 100)  # Active Members
+        self.ui.tableView.setColumnWidth(0, 60)  
+        self.ui.tableView.setColumnWidth(1, 150) 
+        self.ui.tableView.setColumnWidth(2, 120) 
+        self.ui.tableView.setColumnWidth(3, 100)  
+        self.ui.tableView.setColumnWidth(4, 200) 
+        self.ui.tableView.setColumnWidth(5, 170)  
+        self.ui.tableView.setColumnWidth(6, 80)  
         
         self.ui.tableView.verticalHeader().setVisible(False)
         

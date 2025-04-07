@@ -11,7 +11,7 @@ class GangTableModel(QAbstractTableModel):
             "Кількість членів", 
             "Основна діяльність", 
             "Місце бази",
-            "Активних членів"
+            "Кількість ув'язнених членів"
         ]
     
     def rowCount(self, parent=QModelIndex()):
