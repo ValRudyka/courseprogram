@@ -13,6 +13,7 @@ from mvc.models.criminal_gangs import CriminalGroupModel
 
 from mvc.controllers.authcontroller import AuthController
 from mvc.controllers.criminalcontroller import CriminalController
+from mvc.controllers.gangcontroller import GangController
 
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
@@ -23,6 +24,8 @@ from mvc.views.mainwindow import MainWindow
 
 from mvc.views.criminals.criminal_manipulation.criminal_add_form import CriminalAddForm
 from mvc.views.criminals.criminal_manipulation.criminal_edit_form import CriminalEditForm
+from mvc.views.gangs.gang_manipulation.gang_add_form import GangAddForm
+from mvc.views.gangs.gang_manipulation.gang_edit_form import GangEditForm
 
 load_dotenv()
 
@@ -37,6 +40,7 @@ def main() -> int:
         QMessageBox.critical(None, "Database Error", "Could not connect to database. Please check your connection settings.")
         return 1
     
+    # Initialize models
     user_model = UserModel(db_connector.engine)
     criminal_model = CriminalModel(db_connector.engine)
     city_model = CityModel(db_connector.engine)
@@ -44,6 +48,7 @@ def main() -> int:
     profession_model = ProfessionModel(db_connector.engine)
     criminal_group_model = CriminalGroupModel(db_connector.engine)
     
+    # Initialize controllers
     auth_controller = AuthController(user_model)
     criminal_controller = CriminalController(
         criminal_model,
@@ -52,7 +57,9 @@ def main() -> int:
         language_model,
         criminal_group_model
     )
+    gang_controller = GangController(criminal_group_model, city_model)
     
+    # Initialize views
     register_view = RegisterView()
     login_view = LoginView()
     criminals_view = CriminalsView()
@@ -60,9 +67,13 @@ def main() -> int:
     archive_view = ArchiveView()
     main_view = MainWindow()
     
+    # Initialize manipulation forms
     criminal_add_form = CriminalAddForm()
     criminal_edit_form = CriminalEditForm()
+    gang_add_form = GangAddForm()
+    gang_edit_form = GangEditForm()
     
+    # Connect authentication signals
     login_view.login_requested.connect(auth_controller.authenticate_user)
     auth_controller.login_success.connect(lambda _: login_view.clear())
     auth_controller.login_failed.connect(login_view.show_error)
@@ -75,17 +86,22 @@ def main() -> int:
     register_view.switch_to_login.connect(lambda: (register_view.hide(), login_view.show()))
     login_view.switch_to_register.connect(lambda: (login_view.hide(), register_view.show()))
     
+    # Connect main view navigation signals
     main_view.open_criminals_requested.connect(lambda: (main_view.hide(), criminals_view.show()))
-    main_view.open_groups_requested.connect(lambda: (main_view.hide(), gangs_view.show()))
+    main_view.open_groups_requested.connect(lambda: (
+        main_view.hide(), 
+        gangs_view.set_gangs_data(gang_controller.get_all_gangs()),
+        gangs_view.show()
+    ))
     main_view.open_archive_requested.connect(lambda: (main_view.hide(), archive_view.show()))
     
     criminals_view.add_criminal_requested.connect(lambda: (
-    criminal_add_form.load_reference_data(
-        criminal_controller.get_cities(),
-        criminal_controller.get_professions(),
-        criminal_controller.get_criminal_groups(),
-        criminal_controller.get_languages()
-    ),
+        criminal_add_form.load_reference_data(
+            criminal_controller.get_cities(),
+            criminal_controller.get_professions(),
+            criminal_controller.get_criminal_groups(),
+            criminal_controller.get_languages()
+        ),
         criminals_view.hide(),
         criminal_add_form.show()
     ))
@@ -114,6 +130,30 @@ def main() -> int:
     criminal_add_form.save_requested.connect(criminal_controller.add_criminal)
     criminal_edit_form.update_requested.connect(criminal_controller.update_criminal)
     
+    # Connect gang view signals
+    gangs_view.add_gang_requested.connect(lambda: (
+        gang_add_form.load_reference_data(gang_controller.get_cities()),
+        gangs_view.hide(),
+        gang_add_form.show()
+    ))
+    
+    gangs_view.edit_gang_requested.connect(lambda gang_id: (
+        gang_edit_form.load_reference_data(gang_controller.get_cities()),
+        gang_edit_form.set_gang_data(gang_id, gang_controller.get_gang(gang_id)),
+        gangs_view.hide(),
+        gang_edit_form.show()
+    ))
+    
+    gangs_view.delete_gang_requested.connect(gang_controller.delete_gang)
+    
+    gangs_view.export_gangs_requested.connect(lambda: (
+        gangs_view.export_gangs_data(gang_controller.get_gangs_for_export())
+    ))
+    
+    gang_add_form.save_requested.connect(gang_controller.add_gang)
+    gang_edit_form.update_requested.connect(gang_controller.update_gang)
+    
+    # Connect controller response signals for criminals
     criminal_controller.criminal_added.connect(lambda _: (
         QMessageBox.information(criminal_add_form, "Success", "Злочинець успішно доданий"),
         criminal_add_form.reset_form(),
@@ -143,6 +183,32 @@ def main() -> int:
         QMessageBox.critical(None, "Error", error_msg)
     )
     
+    # Connect controller response signals for gangs
+    gang_controller.gang_added.connect(lambda _: (
+        QMessageBox.information(gang_add_form, "Success", "Угруповання успішно додане"),
+        gang_add_form.reset_form(),
+        gang_add_form.hide(),
+        gangs_view.set_gangs_data(gang_controller.get_all_gangs()),
+        gangs_view.show()
+    ))
+    
+    gang_controller.gang_updated.connect(lambda _: (
+        QMessageBox.information(gang_edit_form, "Success", "Інформація про угруповання успішно оновлена"),
+        gang_edit_form.hide(),
+        gangs_view.set_gangs_data(gang_controller.get_all_gangs()),
+        gangs_view.show()
+    ))
+    
+    gang_controller.gang_deleted.connect(lambda _: (
+        QMessageBox.information(gangs_view, "Success", "Угруповання видалене"),
+        gangs_view.set_gangs_data(gang_controller.get_all_gangs())
+    ))
+    
+    gang_controller.operation_error.connect(lambda error_msg: 
+        QMessageBox.critical(None, "Error", error_msg)
+    )
+    
+    # Define window close handlers
     def handle_main_close():
         app.quit() 
     
@@ -158,20 +224,30 @@ def main() -> int:
         archive_view.hide()
         main_view.show()
     
-    def handle_add_form_close():
+    def handle_criminal_add_form_close():
         criminal_add_form.hide()
         criminals_view.show()
     
-    def handle_edit_form_close():
+    def handle_criminal_edit_form_close():
         criminal_edit_form.hide()
         criminals_view.show()
+        
+    def handle_gang_add_form_close():
+        gang_add_form.hide()
+        gangs_view.show()
+    
+    def handle_gang_edit_form_close():
+        gang_edit_form.hide()
+        gangs_view.show()
     
     main_view.closeEvent = lambda _: handle_main_close()
     criminals_view.closeEvent = lambda _: handle_criminals_close()
     gangs_view.closeEvent = lambda _: handle_gangs_close()
     archive_view.closeEvent = lambda _: handle_archive_close()
-    criminal_add_form.closeEvent = lambda _: handle_add_form_close()
-    criminal_edit_form.closeEvent = lambda _: handle_edit_form_close()
+    criminal_add_form.closeEvent = lambda _: handle_criminal_add_form_close()
+    criminal_edit_form.closeEvent = lambda _: handle_criminal_edit_form_close()
+    gang_add_form.closeEvent = lambda _: handle_gang_add_form_close()
+    gang_edit_form.closeEvent = lambda _: handle_gang_edit_form_close()
     
     login_view.show()
     
