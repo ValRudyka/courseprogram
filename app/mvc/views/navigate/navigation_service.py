@@ -39,7 +39,14 @@ class NavigationService(QObject):
         if from_view is None:
             from_view = self.current_view
             
-        if from_view is None or to_view not in self.views:
+        if from_view is None:
+            if to_view in self.views:
+                self.views[to_view].show()
+                self.current_view = to_view
+                return True
+            return False
+            
+        if to_view not in self.views:
             return False
             
         if from_view in self.window_transitions:
