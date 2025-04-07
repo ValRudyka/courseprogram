@@ -14,6 +14,8 @@ from mvc.models.criminal_gangs import CriminalGroupModel
 from mvc.controllers.authcontroller import AuthController
 from mvc.controllers.criminalcontroller import CriminalController
 from mvc.controllers.gangcontroller import GangController
+from mvc.controllers.archivecontroller import ArchiveController
+
 
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
@@ -64,6 +66,8 @@ def main() -> int:
         criminal_group_model
     )
     gang_controller = GangController(criminal_group_model, city_model)
+    archive_controller = ArchiveController(criminal_model)
+
     
     # Initialize views
     register_view = RegisterView()
@@ -231,6 +235,22 @@ def main() -> int:
     gang_controller.operation_error.connect(lambda error_msg: 
         QMessageBox.critical(None, "Error", error_msg)
     )
+
+    archive_view.delete_archived_criminal_requested.connect(archive_controller.delete_archived_criminal)
+
+    archive_controller.criminal_deleted.connect(lambda _: (
+        QMessageBox.information(archive_view, "Success", "Злочинець повністю видалений з архіву"),
+        archive_view.set_archive_data(archive_controller.get_archived_criminals())
+    ))
+    
+    archive_controller.operation_error.connect(lambda error_msg: 
+        QMessageBox.critical(None, "Error", error_msg)
+    )
+    
+    main_view.open_archive_requested.connect(lambda: (
+        archive_view.set_archive_data(archive_controller.get_archived_criminals()),
+        navigation_service.navigate_to("archive", "main")
+    ))
 
     navigation_service.setup_close_handlers(app)
     
