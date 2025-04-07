@@ -501,17 +501,25 @@ class CriminalModel:
             raise e
     
     def get_archived_criminals(self):
-        """Get list of archived criminals with archive date."""
+        """Get list of archived criminals with complete information."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(
                     text("""
                     SELECT 
                         c.id_criminal, c.first_name, c.last_name, c.nickname,
-                        a.archive_date, bp.city_name AS birth_place
+                        bp.city_name AS birth_place, 
+                        lp.city_name AS residence,
+                        c.date_of_birth,
+                        p.height, p.weight,
+                        g.name AS group_name,
+                        a.archive_date
                     FROM "Criminals" c
                     JOIN "Archive" a ON c.id_criminal = a.id_criminal
                     LEFT JOIN "Cities" bp ON c.place_of_birth_id = bp.id_city
+                    LEFT JOIN "Cities" lp ON c.last_live_place_id = lp.id_city
+                    LEFT JOIN "Physical_characteristics" p ON c.id_criminal = p.id_criminal
+                    LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
                     WHERE c.is_archived = TRUE
                     ORDER BY a.archive_date DESC
                     """)
@@ -524,8 +532,13 @@ class CriminalModel:
                         "first_name": row[1],
                         "last_name": row[2],
                         "nickname": row[3],
-                        "archive_date": row[4].strftime("%Y-%m-%d") if row[4] else None,
-                        "birth_place": row[5]
+                        "birth_place": row[4],
+                        "residence": row[5],
+                        "date_of_birth": row[6].strftime("%Y-%m-%d") if row[6] else None,
+                        "height": row[7],
+                        "weight": row[8],
+                        "group_name": row[9],
+                        "archive_date": row[10].strftime("%Y-%m-%d") if row[10] else None
                     })
                 
                 return archived
