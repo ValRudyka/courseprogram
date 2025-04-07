@@ -1,8 +1,168 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QMessageBox, QMenu, QAbstractItemView
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtGui import QAction, QCursor
+from datetime import datetime
+
 from .gangs_source import Ui_MainWindow
+from .gang_table_model import GangTableModel
+from mvc.views.criminals.filterable_table_view import FilterableTableView
+from utils.export_utils import export_data_to_file
 
 class GangsView(QMainWindow):
+    add_gang_requested = Signal()
+    edit_gang_requested = Signal(int)
+    delete_gang_requested = Signal(int)
+    export_gangs_requested = Signal()
+    
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        self.original_table_view = self.ui.tableView
+        
+        self.filterable_table_view = FilterableTableView(self.ui.centralwidget)
+        self.filterable_table_view.setObjectName("tableView")
+        
+        self.filterable_table_view.setGeometry(self.original_table_view.geometry())
+        self.filterable_table_view.setSortingEnabled(True)
+        
+        self.ui.tableView = self.filterable_table_view
+        self.original_table_view.setVisible(False)
+        
+        self.selected_gang_id = None
+        
+        self.setup_connections()
+        self.setup_context_menu()
+    
+    def setup_connections(self):
+        """Connect UI elements to their respective actions."""
+        self.ui.pushButton_5.clicked.connect(self.on_add_gang)
+        self.ui.pushButton_3.clicked.connect(self.on_edit_gang)
+        self.ui.pushButton_4.clicked.connect(self.on_delete_gang)
+        self.ui.pushButton.clicked.connect(self.toggle_filters)
+        
+        self.ui.tableView.clicked.connect(self.on_table_clicked)
+    
+    def setup_context_menu(self):
+        """Create context menu for right-clicking in the table."""
+        self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.ui.tableView.customContextMenuRequested.connect(self.show_context_menu)
+    
+    def show_context_menu(self, position):
+        """Show context menu with actions for the selected gang."""
+        if self.selected_gang_id is None:
+            return
+            
+        context_menu = QMenu()
+        # Add actions
+        edit_action = QAction("Редагувати", self)
+        edit_action.triggered.connect(self.on_edit_gang)
+        
+        delete_action = QAction("Видалити", self)
+        delete_action.triggered.connect(self.on_delete_gang)
+        
+        context_menu.addAction(edit_action)
+        context_menu.addSeparator()
+        context_menu.addAction(delete_action)
+        
+        # Show menu
+        context_menu.exec_(QCursor.pos())
+    
+    def toggle_filters(self):
+        """Toggle visibility of filter inputs in the table header."""
+        if hasattr(self.ui.tableView, 'setFilterVisible'):
+            if hasattr(self.ui.tableView, 'filter_header') and hasattr(self.ui.tableView.filter_header, 'filter_visible'):
+                visible = not self.ui.tableView.filter_header.filter_visible
+                
+                self.ui.tableView.setFilterVisible(visible)
+                
+                self.ui.pushButton.setText("Сховати фільтри" if visible else "Показати фільтри")
+            else:
+                self.ui.tableView.setFilterVisible(True)
+                self.ui.pushButton.setText("Сховати фільтри")
+
+    def on_add_gang(self):
+        """Handle add button click."""
+        self.add_gang_requested.emit()
+    
+    def on_edit_gang(self):
+        """Handle edit button click."""
+        if self.selected_gang_id is None:
+            QMessageBox.warning(self, "Попередження", "Виберіть угруповання для редагування")
+            return
+        
+        self.edit_gang_requested.emit(self.selected_gang_id)
+    
+    def on_delete_gang(self):
+        """Handle delete button click."""
+        if self.selected_gang_id is None:
+            QMessageBox.warning(self, "Попередження", "Виберіть угруповання для видалення")
+            return
+        
+        reply = QMessageBox.warning(
+            self, 
+            "Підтвердження видалення", 
+            "Ви впевнені, що хочете видалити це угруповання? Ця дія не може бути скасована.",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No
+        )
+        
+        if reply == QMessageBox.Yes:
+            self.delete_gang_requested.emit(self.selected_gang_id)
+    
+    def on_table_clicked(self, index):
+        """Handle table click to select a gang."""
+        if not index.isValid():
+            return
+            
+        if hasattr(self.ui.tableView, 'filter_model') and self.ui.tableView.filter_model:
+            source_index = self.ui.tableView.filter_model.mapToSource(index)
+            source_row = source_index.row()
+            
+            source_model = self.ui.tableView.sourceModel()
+            if source_model:
+                id_index = source_model.index(source_row, 0)
+                self.selected_gang_id = int(source_model.data(id_index))
+        else:
+            id_index = self.ui.tableView.model().index(index.row(), 0)
+            self.selected_gang_id = int(self.ui.tableView.model().data(id_index))
+    
+    def set_gangs_data(self, gangs):
+        """Set data for the gangs table."""
+        self.full_data = gangs
+        
+        model = GangTableModel(gangs)
+        
+        self.ui.tableView.setModel(model)
+        
+        self.ui.tableView.setColumnWidth(0, 60)  # ID
+        self.ui.tableView.setColumnWidth(1, 150)  # Name
+        self.ui.tableView.setColumnWidth(2, 120)  # Founding Date
+        self.ui.tableView.setColumnWidth(3, 100)  # Member Count
+        self.ui.tableView.setColumnWidth(4, 200)  # Main Activity
+        self.ui.tableView.setColumnWidth(5, 150)  # Base Location
+        self.ui.tableView.setColumnWidth(6, 100)  # Active Members
+        
+        self.ui.tableView.verticalHeader().setVisible(False)
+        
+        self.ui.tableView.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.ui.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
+        
+        self.selected_gang_id = None
+        
+    def on_export_gangs(self):
+        """Handle export button click."""
+        self.export_gangs_requested.emit()
+        
+    def export_gangs_data(self, data):
+        """Export criminal group data to a file."""
+        if not data:
+            QMessageBox.warning(self, "Експорт", "Немає даних для експорту.")
+            return
+        
+        export_data_to_file(data, self, f"угруповання_{datetime.now().strftime('%Y%m%d')}")
+    
+    def closeEvent(self, event):
+        """Handle window close event."""
+        event.accept()
