@@ -176,25 +176,21 @@ class CriminalGroupModel:
         """Delete a criminal group (checks if there are still criminals in the group first)."""
         try:
             with self.engine.connect() as conn:
-                result = conn.execute(
-                    text("SELECT COUNT(*) FROM \"Criminals\" WHERE id_group = :id"),
-                    {"id": group_id}
-                )
-                count = result.scalar()
-                
-                if count > 0:
-                    return False, f"Неможливо видалити угрупування, оскільки до нього належать {count} злочинців"
-                
-                transaction = conn.begin()
-                
-                conn.execute(
-                    text("DELETE FROM \"Criminal_groups\" WHERE group_id = :id"),
-                    {"id": group_id}
-                )
-                
-                transaction.commit()
-                return True, ""
-                
+                with conn.begin() as transaction:
+                    result = conn.execute(
+                        text("SELECT COUNT(*) FROM \"Criminals\" WHERE id_group = :id"),
+                        {"id": group_id}
+                    )
+                    count = result.scalar()
+                    
+                    if count > 0:
+                        return False, f"Неможливо видалити угрупування, оскільки до нього належать {count} злочинців"
+                    
+                    conn.execute(
+                        text("DELETE FROM \"Criminal_groups\" WHERE group_id = :id"),
+                        {"id": group_id}
+                    )
+                    return True, ""
         except Exception as e:
             if 'transaction' in locals():
                 transaction.rollback()

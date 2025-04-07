@@ -23,25 +23,11 @@ class ArchiveController(QObject):
             return False
     
     def get_archived_criminals(self):
-        """Get list of archived criminals with complete information."""
+        """Get list of archived criminals."""
         try:
             archived_criminals = self.criminal_model.get_archived_criminals()
-            
-            enhanced_data = []
-            for criminal in archived_criminals:
-                criminal_id = criminal.get("id_criminal")
-                full_data = self.criminal_model.get_criminal_by_id(criminal_id)
-                
-                if full_data:
-                    archive_date = criminal.get("archive_date")
-                    full_data["archive_date"] = archive_date
-                    
-                    enhanced_data.append(full_data)
-                else:
-                    enhanced_data.append(criminal)
-            
-            self.criminal_loaded.emit(enhanced_data)
-            return enhanced_data
+            self.criminal_loaded.emit(archived_criminals)
+            return archived_criminals
         except Exception as e:
             self.operation_error.emit(f"Error retrieving archived criminals: {str(e)}")
             return []
