@@ -14,6 +14,7 @@ class CriminalsView(QMainWindow):
     archive_criminal_requested = Signal(int) 
     delete_criminal_requested = Signal(int)
     export_criminals_requested = Signal(bool)
+    show_criminal_details_requested = Signal(int)
     
     def __init__(self):
         super().__init__()
@@ -48,6 +49,7 @@ class CriminalsView(QMainWindow):
         self.ui.pushButton_6.clicked.connect(self.on_export_criminals)
         
         self.ui.tableView.clicked.connect(self.on_table_clicked)
+        self.ui.tableView.doubleClicked.connect(self.on_show_criminal_details)
     
     def setup_context_menu(self):
         """Create context menu for right-clicking in the table."""
@@ -60,7 +62,6 @@ class CriminalsView(QMainWindow):
             return
             
         context_menu = QMenu()
-        # Add actions
         edit_action = QAction("Редагувати", self)
         edit_action.triggered.connect(self.on_edit_criminal)
         
@@ -69,14 +70,25 @@ class CriminalsView(QMainWindow):
         
         delete_action = QAction("Видалити", self)
         delete_action.triggered.connect(self.on_delete_criminal)
+
+        view_details_action = QAction("Детальна інформація", self)
+        view_details_action.triggered.connect(self.on_show_criminal_details)
         
         context_menu.addAction(edit_action)
         context_menu.addAction(archive_action)
         context_menu.addSeparator()
         context_menu.addAction(delete_action)
-        
-        # Show menu
+        context_menu.addAction(view_details_action)
+
         context_menu.exec_(QCursor.pos())
+
+    def on_show_criminal_details(self):
+        """Handle showing detailed criminal information."""
+        if self.selected_criminal_id is None:
+            QMessageBox.warning(self, "Попередження", "Виберіть злочинця для перегляду деталей")
+            return
+            
+        self.show_criminal_details_requested.emit(self.selected_criminal_id)
     
     def toggle_filters(self):
         """Toggle visibility of filter inputs in the table header."""
