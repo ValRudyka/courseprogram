@@ -22,7 +22,9 @@ from mvc.views.auth.login.login import LoginView
 from mvc.views.criminals.criminal_info import CriminalsView
 from mvc.views.gangs.gang_info import GangsView
 from mvc.views.archive.archive_info import ArchiveView
+from mvc.views.criminals.criminal_detail import CriminalDetailView
 from mvc.views.mainwindow import MainWindow
+
 
 from mvc.views.criminals.criminal_manipulation.criminal_add_form import CriminalAddForm
 from mvc.views.criminals.criminal_manipulation.criminal_edit_form import CriminalEditForm
@@ -75,6 +77,7 @@ def main() -> int:
     criminals_view = CriminalsView()
     gangs_view = GangsView()
     archive_view = ArchiveView()
+    criminal_detail_view = CriminalDetailView()
     main_view = MainWindow()
     
     criminal_add_form = CriminalAddForm()
@@ -86,6 +89,7 @@ def main() -> int:
     navigation_service.register_view("register", register_view)
     navigation_service.register_view("main", main_view)
     navigation_service.register_view("criminals", criminals_view)
+    navigation_service.register_view("criminal_detail", criminal_detail_view)
     navigation_service.register_view("gangs", gangs_view)
     navigation_service.register_view("archive", archive_view)
     navigation_service.register_view("criminal_add", criminal_add_form)
@@ -103,6 +107,8 @@ def main() -> int:
     
     navigation_service.register_transition("criminals", "criminal_add")
     navigation_service.register_transition("criminals", "criminal_edit")
+    navigation_service.register_transition("criminals", "criminal_detail")
+    navigation_service.register_transition("criminal_detail", "criminals")
     navigation_service.register_transition("criminal_add", "criminals")
     navigation_service.register_transition("criminal_edit", "criminals")
     
@@ -153,6 +159,11 @@ def main() -> int:
         ),
         criminal_edit_form.set_criminal_data(criminal_id, criminal_controller.get_criminal(criminal_id)),
         navigation_service.navigate_to("criminal_edit", "criminals")
+    ))
+
+    criminals_view.show_criminal_details_requested.connect(lambda criminal_id: (
+        criminal_detail_view.set_criminal_data(criminal_controller.get_criminal(criminal_id)),
+        navigation_service.navigate_to("criminal_detail", "criminals")
     ))
 
     criminals_view.export_criminals_requested.connect(lambda include_archived: (
