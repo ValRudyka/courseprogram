@@ -6,6 +6,7 @@ class CriminalController(QObject):
     criminal_archived = Signal(int) 
     criminal_deleted = Signal(int) 
     operation_error = Signal(str)
+    criminal_details_loaded = Signal(int, object)
     
     def __init__(self, criminal_model, city_model, profession_model, language_model, criminal_group_model):
         super().__init__()
@@ -125,3 +126,14 @@ class CriminalController(QObject):
         except Exception as e:
             self.operation_error.emit(f"Error exporting criminals: {str(e)}")
             return []
+        
+    def show_criminal_details(self, criminal_id):
+        """Get and display detailed information about a criminal."""
+        try:
+            criminal_data = self.get_criminal(criminal_id)
+            if criminal_data:
+                self.criminal_details_loaded.emit(criminal_id, criminal_data)
+            return criminal_data
+        except Exception as e:
+            self.operation_error.emit(f"Error retrieving criminal details: {str(e)}")
+            return None
