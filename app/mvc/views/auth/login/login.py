@@ -12,7 +12,7 @@ class LoginView(QMainWindow):
         self.ui.setupUi(self)
         
         self.status_label = QLabel(self.ui.centralwidget)
-        self.status_label.setGeometry(60, 430, 300, 30)
+        self.status_label.setGeometry(60, 430, 500, 30)
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setVisible(False)
         
@@ -39,6 +39,7 @@ class LoginView(QMainWindow):
         self.login_requested.emit(username, password)
     
     def _on_switch_to_register(self):
+        self.clear()
         self.switch_to_register.emit()
     
     def show_error(self, message):
@@ -76,4 +77,6 @@ class LoginView(QMainWindow):
         self.ui.username_edit.clear()
         self.ui.password_edit.clear()
         self.status_label.setVisible(False)
+        self.status_label.setText("")
+        self.status_label.setVisible(True)
         self.ui.login_btn.setEnabled(True)

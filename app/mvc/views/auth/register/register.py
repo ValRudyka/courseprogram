@@ -29,6 +29,7 @@ class RegisterView(QMainWindow):
         self.register_requested.emit(username, password)
     
     def _on_switch_to_login(self) -> None:
+        self.clear()
         self.switch_to_login.emit()
     
     def show_error(self, message) -> None:

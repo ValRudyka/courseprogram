@@ -82,7 +82,10 @@ class NavigationService(QObject):
             if view_name != 'main':
                 def create_close_handler(view_name):
                     def handle_close(event):
-                        if 'main' in self.views:
+                        if view_name in ['login', 'register']:
+                            app.quit()
+                            event.accept()
+                        elif 'main' in self.views:
                             self.navigate_to('main', view_name)
                             event.ignore()  
                         else:
