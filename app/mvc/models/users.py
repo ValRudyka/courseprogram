@@ -1,4 +1,3 @@
-# Update to app/mvc/models/users.py
 import bcrypt
 from sqlalchemy import text
 from datetime import datetime, timedelta
