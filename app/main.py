@@ -31,6 +31,9 @@ from mvc.views.criminals.criminal_manipulation.criminal_edit_form import Crimina
 from mvc.views.gangs.gang_manipulation.gang_add_form import GangAddForm
 from mvc.views.gangs.gang_manipulation.gang_edit_form import GangEditForm
 
+from mvc.controllers.usercontroller import UserController
+from mvc.views.auth.changepassword.changepassword import ChangePasswordView
+
 from mvc.views.navigate.navigation_service import NavigationService
 
 load_dotenv()
@@ -69,6 +72,7 @@ def main() -> int:
     )
     gang_controller = GangController(criminal_group_model, city_model)
     archive_controller = ArchiveController(criminal_model)
+    user_controller = UserController(user_model)
 
     
     # Initialize views
@@ -79,6 +83,8 @@ def main() -> int:
     archive_view = ArchiveView()
     criminal_detail_view = CriminalDetailView()
     main_view = MainWindow()
+    change_password_view = ChangePasswordView()
+
     
     criminal_add_form = CriminalAddForm()
     criminal_edit_form = CriminalEditForm()
@@ -96,10 +102,14 @@ def main() -> int:
     navigation_service.register_view("criminal_edit", criminal_edit_form)
     navigation_service.register_view("gang_add", gang_add_form)
     navigation_service.register_view("gang_edit", gang_edit_form)
+    navigation_service.register_view("change_password", change_password_view)
+
     
     navigation_service.register_transition("main", "criminals")
     navigation_service.register_transition("main", "gangs")
     navigation_service.register_transition("main", "archive")
+    navigation_service.register_transition("main", "change_password")
+    navigation_service.register_transition("change_password", "main")
     
     navigation_service.register_transition("criminals", "main")
     navigation_service.register_transition("gangs", "main")
@@ -138,6 +148,15 @@ def main() -> int:
         gangs_view.set_gangs_data(gang_controller.get_all_gangs()),
         navigation_service.navigate_to("gangs", "main")
     ))
+
+    main_view.open_change_password_requested.connect(lambda: navigation_service.navigate_to("change_password", "main"))
+    change_password_view.change_password_requested.connect(user_controller.change_password)
+    user_controller.password_changed.connect(lambda success, message: (
+        change_password_view.show_success(message) if success else change_password_view.show_error(message),
+        navigation_service.navigate_to("main", "change_password") if success else None
+    ))
+    
+
     main_view.open_archive_requested.connect(lambda: navigation_service.navigate_to("archive", "main"))
     
     criminals_view.add_criminal_requested.connect(lambda: (
@@ -262,6 +281,8 @@ def main() -> int:
         archive_view.set_archive_data(archive_controller.get_archived_criminals()),
         navigation_service.navigate_to("archive", "main")
     ))
+
+    auth_controller.login_success.connect(lambda user: user_controller.set_current_user(user['username']))
 
     navigation_service.setup_close_handlers(app)
     

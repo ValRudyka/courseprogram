@@ -108,3 +108,29 @@ class UserModel:
         stored_hash = stored_hash.encode('utf-8')
 
         return bcrypt.checkpw(password, stored_hash)
+    
+    def change_password(self, username: str, new_password: str) -> tuple[bool, str]:
+        try:
+            password_hash = self._hash_password(new_password)
+            
+            with self.engine.connect() as cursor:
+                transaction = cursor.begin()
+                cursor.execute(
+                    text("""
+                    UPDATE "Users" 
+                    SET password_hash = :password_hash
+                    WHERE username = :username
+                    """), 
+                    {"username": username, "password_hash": password_hash}
+                )
+                
+                if cursor.rowcount == 0:
+                    transaction.rollback()
+                    return False, "Користувача не знайдено"
+                    
+                transaction.commit()
+                return True, "Пароль успішно змінено!"
+                
+        except Exception as e:
+            print(f"Error changing password: {e}")
+            return False, str(e)

@@ -6,6 +6,7 @@ class MainWindow(QMainWindow):
     open_criminals_requested = Signal()
     open_groups_requested = Signal()
     open_archive_requested = Signal()
+    open_change_password_requested = Signal()
     
     def __init__(self):
         super().__init__()
@@ -15,6 +16,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_2.clicked.connect(self._on_criminals_action)
         self.ui.pushButton_3.clicked.connect(self._on_groups_action)
         self.ui.pushButton_4.clicked.connect(self._on_archive_action)
+        self.ui.pushButton_6.clicked.connect(self._on_change_password_action) 
         
         self.setup_time_display()
     
@@ -58,6 +60,9 @@ class MainWindow(QMainWindow):
 
     def _on_archive_action(self):
         self.open_archive_requested.emit()
+        
+    def _on_change_password_action(self):
+        self.open_change_password_requested.emit()
         
     def _on_add_criminal(self):
         self.open_criminals_requested.emit()
