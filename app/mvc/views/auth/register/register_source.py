@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'registernmORXi.ui'
+## Form generated from reading UI file 'registerPRIbKm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -13,7 +13,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 
-class Ui_RegisterWindow(object):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -27,7 +27,7 @@ class Ui_RegisterWindow(object):
         font.setFamily(u"Nirmala UI")
         font.setPointSize(16)
         font.setBold(False)
-        font.setWeight(font.Weight.Normal)
+        font.setWeight(50)
         self.title.setFont(font)
         self.title.setAlignment(Qt.AlignCenter)
         self.title.setIndent(-2)
@@ -53,12 +53,6 @@ class Ui_RegisterWindow(object):
         self.register_btn = QPushButton(self.centralwidget)
         self.register_btn.setObjectName(u"register_btn")
         self.register_btn.setGeometry(QRect(50, 390, 121, 51))
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(40, 480, 341, 61))
-        self.pushButton_2 = QPushButton(self.centralwidget)
-        self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(390, 490, 101, 41))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -81,7 +75,5 @@ class Ui_RegisterWindow(object):
         self.password_edit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"1234...", None))
         self.password_label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:9pt;\">\u0412\u0432\u0435\u0434\u0456\u0442\u044c \u0441\u0432\u0456\u0439 \u043f\u0430\u0440\u043e\u043b\u044c:</span></p></body></html>", None))
         self.register_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0440\u0435\u0454\u0441\u0442\u0440\u0443\u0432\u0430\u0442\u0438\u0441\u044f", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:9pt;\">\u0412\u0436\u0435 \u043c\u0430\u0454\u0442\u0435 \u0430\u043a\u0430\u0443\u043d\u0442? \u041f\u0435\u0440\u0435\u0439\u0434\u0456\u0442\u044c \u0434\u043e \u0432\u0456\u043a\u043d\u0430 \u0432\u0445\u043e\u0434\u0443</span></p></body></html>", None))
-        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0445\u0456\u0434", None))
     # retranslateUi
 
