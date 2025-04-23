@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
 "background-color: white;\n"
 "border-radius: 2px;")
         icon = QIcon()
-        icon.addFile(u"../../../icons/icons8-sun-64.png", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u"../../icons/icons8-sun-64.png", QSize(), QIcon.Normal, QIcon.On)
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(QSize(30, 30))
         self.pushButton_2 = QPushButton(self.centralwidget)

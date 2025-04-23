@@ -141,6 +141,11 @@ def main() -> int:
     auth_controller.login_failed.connect(login_view.show_error)
     
     register_view.register_requested.connect(auth_controller.register_user)
+
+    register_view.return_to_users_view_requested.connect(lambda: (
+        navigation_service.navigate_to("users", "register")
+    ))
+    
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
     auth_controller.registration_failed.connect(register_view.show_error)
 
