@@ -113,24 +113,35 @@ class UserModel:
         try:
             password_hash = self._hash_password(new_password)
             
-            with self.engine.connect() as cursor:
-                transaction = cursor.begin()
-                cursor.execute(
-                    text("""
-                    UPDATE "Users" 
-                    SET password_hash = :password_hash
-                    WHERE username = :username
-                    """), 
-                    {"username": username, "password_hash": password_hash}
-                )
-                
-                if cursor.rowcount == 0:
-                    transaction.rollback()
-                    return False, "Користувача не знайдено"
+            with self.engine.connect() as conn:
+                transaction = conn.begin()
+                try:
+                    result = conn.execute(
+                        text("SELECT COUNT(*) FROM \"Users\" WHERE username = :username"),
+                        {"username": username}
+                    )
+                    user_count = result.scalar()
                     
-                transaction.commit()
-                return True, "Пароль успішно змінено!"
-                
+                    if user_count == 0:
+                        transaction.rollback()
+                        return False, "Користувача не знайдено"
+                    
+                    conn.execute(
+                        text("""
+                        UPDATE "Users" 
+                        SET password_hash = :password_hash
+                        WHERE username = :username
+                        """), 
+                        {"username": username, "password_hash": password_hash}
+                    )
+                    
+                    transaction.commit()
+                    return True, "Пароль успішно змінено!"
+                    
+                except Exception as e:
+                    transaction.rollback()
+                    raise e
+                    
         except Exception as e:
             print(f"Error changing password: {e}")
             return False, str(e)

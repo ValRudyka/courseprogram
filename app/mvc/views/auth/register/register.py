@@ -12,7 +12,6 @@ class RegisterView(QMainWindow):
         self.ui.setupUi(self)
             
         self.ui.register_btn.clicked.connect(self._on_register)
-        self.ui.pushButton_2.clicked.connect(self._on_switch_to_login)
     
     def _on_register(self) -> None:
         username = self.ui.username_edit.text().strip()

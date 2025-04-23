@@ -13,7 +13,7 @@ from PySide6.QtGui import *
 from PySide6.QtWidgets import *
 
 
-class Ui_MainWindow(object):
+class Ui_RegisterWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
         font.setFamily(u"Nirmala UI")
         font.setPointSize(16)
         font.setBold(False)
-        font.setWeight(50)
+        font.setWeight(QFont.Normal)
         self.title.setFont(font)
         self.title.setAlignment(Qt.AlignCenter)
         self.title.setIndent(-2)

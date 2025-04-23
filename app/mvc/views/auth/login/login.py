@@ -17,7 +17,6 @@ class LoginView(QMainWindow):
         self.status_label.setVisible(False)
         
         self.ui.login_btn.clicked.connect(self._on_login)
-        self.ui.pushButton_2.clicked.connect(self._on_switch_to_register)
         
         self.ui.password_edit.returnPressed.connect(self._on_login)
     

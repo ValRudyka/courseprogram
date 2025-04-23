@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         font1.setFamily(u"Nirmala UI")
         font1.setPointSize(16)
         font1.setBold(False)
-        font1.setWeight(50)
+        font1.setWeight(QFont.Normal)
         self.title.setFont(font1)
         self.title.setAlignment(Qt.AlignCenter)
         self.title.setIndent(-2)
