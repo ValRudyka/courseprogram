@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainsJKzjV.ui'
+## Form generated from reading UI file 'mainZioehk.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         font.setFamily(u"Segoe UI")
         font.setPointSize(14)
         font.setBold(True)
-        font.setWeight(font.Weight.Bold)
+        font.setWeight(QFont.Bold)
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignCenter)
         self.label_2 = QLabel(self.centralwidget)
@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.label_2.setGeometry(QRect(50, 100, 271, 51))
         font1 = QFont()
         font1.setFamily(u"Segoe UI")
-        font1.setPointSize(12)
+        font1.setPointSize(10)
         self.label_2.setFont(font1)
         self.pushButton = QPushButton(self.centralwidget)
         self.pushButton.setObjectName(u"pushButton")
@@ -97,7 +97,7 @@ class Ui_MainWindow(object):
         self.label_4.setGeometry(QRect(40, 180, 361, 191))
         font2 = QFont()
         font2.setFamily(u"Segoe UI")
-        font2.setPointSize(12)
+        font2.setPointSize(10)
         font2.setStyleStrategy(QFont.PreferDefault)
         self.label_4.setFont(font2)
         self.label_4.setTabletTracking(False)
@@ -131,6 +131,22 @@ class Ui_MainWindow(object):
 "border-radius: 2px;")
         self.pushButton_5.setIcon(icon3)
         self.pushButton_5.setIconSize(QSize(30, 30))
+        self.pushButton_6 = QPushButton(self.centralwidget)
+        self.pushButton_6.setObjectName(u"pushButton_6")
+        self.pushButton_6.setGeometry(QRect(50, 420, 171, 61))
+        self.pushButton_6.setStyleSheet(u"border-width: 5px;\n"
+"background-color: white;\n"
+"border-radius: 2px;")
+        self.pushButton_6.setIcon(icon2)
+        self.pushButton_6.setIconSize(QSize(30, 30))
+        self.pushButton_7 = QPushButton(self.centralwidget)
+        self.pushButton_7.setObjectName(u"pushButton_7")
+        self.pushButton_7.setGeometry(QRect(260, 420, 191, 61))
+        self.pushButton_7.setStyleSheet(u"border-width: 5px;\n"
+"background-color: white;\n"
+"border-radius: 2px;")
+        self.pushButton_7.setIcon(icon2)
+        self.pushButton_7.setIconSize(QSize(30, 30))
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -161,13 +177,14 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0430\u0440\u0442\u043e\u0442\u0435\u043a\u0430 \u0437\u043b\u043e\u0447\u0438\u043d\u0446\u0456\u0432 \u0442\u0430  \u0443\u0433\u0440\u0443\u043f\u043e\u0432\u0443\u0432\u0430\u043d\u044c", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0443\u0442 \u0431\u0443\u0434\u0435 \u0447\u0430\u0441", None))
-        self.pushButton.setText("")
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u0406\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0456\u044f", None))
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u0417\u043b\u043e\u0447\u0438\u043d\u0446\u0456", None))
         self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"\u0423\u0433\u0440\u0443\u043f\u0443\u0432\u0430\u043d\u043d\u044f", None))
         self.pushButton_4.setText(QCoreApplication.translate("MainWindow", u"\u0410\u0440\u0445\u0456\u0432", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043b\u044f \u0434\u0435\u0442\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u043e\u0437\u043d\u0430\u0439\u043e\u043c\u043b\u0435\u043d\u043d\u044f \u0437 \u043c\u043e\u0436\u043b\u0438\u0432\u043e\u0441\u0442\u044f\u043c\u0438 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u0438, \u043c\u043e\u0436\u043d\u0430 \u0437\u0430\u0439\u0442\u0438 \u0434\u043e \u0456\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0456\u0457, \u044f\u043a\u0430 \u0432\u0456\u0434\u043a\u0440\u0438\u0432\u0430\u0454\u0442\u044c\u0441\u044f \u0447\u0435\u0440\u0435\u0437 \u043f\u0443\u043d\u043a\u0442 \u0433\u043e\u043b\u043e\u0432\u043d\u043e\u0433\u043e \u043c\u0435\u043d\u044e (\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u0430 - \u0406\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0456\u044f). \u0417\u0430\u0433\u0430\u043b\u043e\u043c, \u043c\u043e\u0436\u043d\u0430 \u043f\u043e\u0442\u0438\u043a\u0430\u0442\u0438 \u043d\u0430 \u043a\u043d\u043e\u043f\u043a\u0438 \u0442\u0430 \u043c\u0435\u043d\u044e \u0456 \u0441\u043f\u0440\u043e\u0431\u0443"
-                        "\u0432\u0430\u0442\u0438 \u0441\u0430\u043c\u043e\u0441\u0442\u0456\u0439\u043d\u043e \u0440\u043e\u0437\u0456\u0431\u0440\u0430\u0442\u0438\u0441\u044f \u0449\u043e \u0434\u043e \u0447\u043e\u0433\u043e.", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043b\u044f \u0434\u0435\u0442\u0430\u043b\u044c\u043d\u043e\u0433\u043e \u0440\u043e\u0437\u0433\u043b\u044f\u0434\u0443 \u0440\u043e\u0431\u043e\u0442\u0438 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u0438 \u0432\u0430\u0440\u0442\u043e \u043e\u0437\u043d\u0430\u0439\u043e\u043c\u0438\u0442\u0438\u0441\u044f \u0437 \u0456\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0456\u0454\u044e, \u044f\u043a\u0443 \u043c\u043e\u0436\u043d\u0430 \u043e\u0442\u0440\u0438\u043c\u0430\u0442\u0438 \u043f\u0440\u0438 \u043d\u0430\u0442\u0438\u0441\u043d\u0435\u043d\u043d\u0456 \u043a\u043d\u043e\u043f\u043a\u0438 \"\u0406\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0456\u044f\" \u043d\u0430 \u0433\u043e\u043b\u043e\u0432\u043d\u0456\u0439 \u0444\u043e\u0440\u043c\u0456. \u0412\u043e\u043d\u0430 \u0437\u043d\u0430\u0445\u043e\u0434\u0438\u0442\u044c\u0441\u044f \u0443 \u0432\u0435\u0440\u0445\u043d\u044c\u043e\u043c\u0443 \u043f\u0440\u0430\u0432\u043e\u043c\u0443 \u043a\u0443\u0442\u043a\u0443", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u043d\u0430 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u0430 \u0441\u043b\u0443\u0433\u0443\u0454 \u0441\u0445\u043e\u0432\u0438\u0449\u0435\u043c \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u0457 \u043f\u0440\u043e \u0432\u0441\u0456\u0445 \u0437\u043b\u043e\u0447\u0438\u043d\u0446\u0456\u0432, \u0443\u0433\u0440\u0443\u043f\u043e\u0432\u0443\u0432\u0430\u043d\u044c \u0443 \u0440\u0456\u0437\u043d\u0438\u0445 \u0432'\u044f\u0437\u043d\u0438\u0446\u044f\u0445 \u0441\u0432\u0456\u0442\u0443. \u0412\u043e\u043d\u0430 \u0434\u043e\u043f\u043e\u043c\u0430\u0433\u0430\u0454 \u043e\u0437\u043d\u0430\u0439\u043c\u043e\u043b\u044e\u0432\u0430\u0442\u0438\u0441\u044f \u0437 \u0430\u043a\u0442\u0443\u0430\u043b\u044c\u043d\u043e\u044e \u0456\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0456\u0454\u044e \u043f\u0440\u043e \u043a\u0440\u0438\u043c\u0456\u043d\u0430\u043b\u044c\u043d\u0438\u0439 \u0441\u0432\u0456\u0442 \u043d\u0430 \u0441\u044c\u043e\u0433\u043e\u0434\u043d\u0456.", None))
         self.pushButton_5.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0448\u0431\u043e\u0440\u0434 \u0437\u043b\u043e\u0447\u0438\u043d\u0446\u0456\u0432", None))
+        self.pushButton_6.setText(QCoreApplication.translate("MainWindow", u"\u041e\u043d\u043e\u0432\u0438\u0442\u0438 \u043f\u0430\u0440\u043e\u043b\u044c", None))
+        self.pushButton_7.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0435\u0440\u0443\u0432\u0430\u0442\u0438 \u043a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447\u0430\u043c\u0438", None))
     # retranslateUi
 
