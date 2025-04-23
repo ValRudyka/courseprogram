@@ -3,6 +3,7 @@ from mvc.models.users import UserModel
 
 class UserController(QObject):
     password_changed = Signal(bool, str)
+    user_role_changed = Signal(str, bool)
     
     def __init__(self, user_model: UserModel) -> None:
         super().__init__()
@@ -26,3 +27,11 @@ class UserController(QObject):
             
         success, message = self.user_model.change_password(self.current_username, new_password)
         self.password_changed.emit(success, message)
+
+    def set_current_user(self, username: str) -> None:
+        self.current_username = username
+        is_admin = (username == 'admin')
+        self.user_role_changed.emit(username, is_admin)
+    
+    def is_admin(self):
+        return self.current_username == 'admin'

@@ -2,6 +2,7 @@ import sys
 import os
 from dotenv import load_dotenv
 from PySide6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtCore import QTimer
 
 from mvc.models.database import DatabaseConnector
 from mvc.models.users import UserModel
@@ -16,7 +17,6 @@ from mvc.controllers.criminalcontroller import CriminalController
 from mvc.controllers.gangcontroller import GangController
 from mvc.controllers.archivecontroller import ArchiveController
 
-
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
 from mvc.views.criminals.criminal_info import CriminalsView
@@ -25,7 +25,6 @@ from mvc.views.archive.archive_info import ArchiveView
 from mvc.views.criminals.criminal_detail import CriminalDetailView
 from mvc.views.mainwindow import MainWindow
 
-
 from mvc.views.criminals.criminal_manipulation.criminal_add_form import CriminalAddForm
 from mvc.views.criminals.criminal_manipulation.criminal_edit_form import CriminalEditForm
 from mvc.views.gangs.gang_manipulation.gang_add_form import GangAddForm
@@ -33,6 +32,9 @@ from mvc.views.gangs.gang_manipulation.gang_edit_form import GangEditForm
 
 from mvc.controllers.usercontroller import UserController
 from mvc.views.auth.changepassword.changepassword import ChangePasswordView
+
+from mvc.controllers.userlistcontroller import UserListController
+from mvc.views.users.users import UsersView
 
 from mvc.views.navigate.navigation_service import NavigationService
 
@@ -73,7 +75,7 @@ def main() -> int:
     gang_controller = GangController(criminal_group_model, city_model)
     archive_controller = ArchiveController(criminal_model)
     user_controller = UserController(user_model)
-
+    user_list_controller = UserListController(user_model)
     
     # Initialize views
     register_view = RegisterView()
@@ -84,7 +86,7 @@ def main() -> int:
     criminal_detail_view = CriminalDetailView()
     main_view = MainWindow()
     change_password_view = ChangePasswordView()
-
+    users_view = UsersView()
     
     criminal_add_form = CriminalAddForm()
     criminal_edit_form = CriminalEditForm()
@@ -103,8 +105,8 @@ def main() -> int:
     navigation_service.register_view("gang_add", gang_add_form)
     navigation_service.register_view("gang_edit", gang_edit_form)
     navigation_service.register_view("change_password", change_password_view)
+    navigation_service.register_view("users", users_view)
 
-    
     navigation_service.register_transition("main", "criminals")
     navigation_service.register_transition("main", "gangs")
     navigation_service.register_transition("main", "archive")
@@ -130,6 +132,11 @@ def main() -> int:
     navigation_service.register_transition("login", "register")
     navigation_service.register_transition("register", "login")
     navigation_service.register_transition("login", "main")
+
+    navigation_service.register_transition("main", "users")
+    navigation_service.register_transition("users", "main")
+    navigation_service.register_transition("users", "register")
+    navigation_service.register_transition("register", "users")
     
     login_view.login_requested.connect(auth_controller.authenticate_user)
     auth_controller.login_success.connect(lambda _: login_view.clear())
@@ -138,10 +145,54 @@ def main() -> int:
     register_view.register_requested.connect(auth_controller.register_user)
     auth_controller.registration_success.connect(lambda _: register_view.show_success())
     auth_controller.registration_failed.connect(register_view.show_error)
+
+    main_view.open_users_requested.connect(lambda: (
+        user_list_controller.get_all_users(),
+        navigation_service.navigate_to("users", "main")
+    ) if user_controller.is_admin() else None)
+
+    users_view.add_user_requested.connect(lambda: (
+        register_view.clear(),
+        navigation_service.navigate_to("register", "users")
+    ))
+
+    users_view.add_user_requested.connect(lambda: (
+        register_view.clear(),
+        navigation_service.navigate_to("register", "users")
+    ))
+
+    auth_controller.registration_success.connect(lambda _: (
+        register_view.show_success("Користувача успішно додано!"),
+        QTimer.singleShot(1000, lambda: (
+            navigation_service.navigate_to("users", "register"),
+            user_list_controller.get_all_users()
+        ))
+    ))
+
+    users_view.delete_user_requested.connect(user_list_controller.delete_user)
+    users_view.search_user_requested.connect(user_list_controller.search_users)
+
+    user_list_controller.users_loaded.connect(users_view.set_users_data)
+    user_list_controller.user_deleted.connect(lambda _: (
+        QMessageBox.information(users_view, "Успіх", "Користувача успішно видалено"),
+        user_list_controller.get_all_users()
+    ))
     
+    user_list_controller.operation_error.connect(lambda message: 
+        QMessageBox.critical(users_view, "Помилка", message)
+    )
+
+
+    auth_controller.login_success.connect(lambda user: (
+        user_controller.set_current_user(user['username']),
+        user_list_controller.set_current_user(user['username'])
+    ))
+
+    user_controller.user_role_changed.connect(lambda username, is_admin: (
+        main_view.set_user_role(username)
+    ))
+
     auth_controller.show_main_window.connect(lambda: navigation_service.navigate_to("main", "login"))
-    register_view.switch_to_login.connect(lambda: navigation_service.navigate_to("login", "register"))
-    login_view.switch_to_register.connect(lambda: navigation_service.navigate_to("register", "login"))
     
     main_view.open_criminals_requested.connect(lambda: navigation_service.navigate_to("criminals", "main"))
     main_view.open_groups_requested.connect(lambda: (

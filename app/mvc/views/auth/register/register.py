@@ -5,6 +5,7 @@ from .register_source import Ui_RegisterWindow
 class RegisterView(QMainWindow):
     register_requested = Signal(str, str)
     switch_to_login = Signal()           
+    return_to_users_view_requested = Signal()
     
     def __init__(self) -> None:
         super().__init__()
@@ -40,6 +41,11 @@ class RegisterView(QMainWindow):
             
         QMessageBox.information(self, "Успішна реєстрація", message)
     
+    def return_to_users_view(self):
+        self.clear()
+        self.return_to_users_view_requested.emit()
+
+
     def clear(self) -> None:
         self.ui.username_edit.clear()
         self.ui.password_edit.clear()

@@ -1,6 +1,6 @@
 import bcrypt
 from sqlalchemy import text
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class UserModel:
     def __init__(self, engine) -> None:
@@ -76,7 +76,6 @@ class UserModel:
             return False, str(e)
     
     def _increment_failed_attempt(self, username):
-        """Increment the failed login attempts counter for a username"""
         if username not in self.login_attempts:
             self.login_attempts[username] = {"count": 0, "timestamp": datetime.now()}
         
@@ -144,4 +143,67 @@ class UserModel:
                     
         except Exception as e:
             print(f"Error changing password: {e}")
+            return False, str(e)
+        
+    def get_all_users(self, search_filter=None):
+        """Get all users from the database."""
+        try:
+            with self.engine.connect() as cursor:
+                query = """
+                SELECT user_id, username, last_login, failed_attempts 
+                FROM "Users"
+                """
+                
+                params = {}
+                if search_filter:
+                    query += " WHERE username LIKE :search"
+                    params["search"] = f"%{search_filter}%"
+                
+                query += " ORDER BY username"
+                
+                result = cursor.execute(text(query), params)
+                
+                users = []
+                for row in result.fetchall():
+                    users.append({
+                        "user_id": row[0],
+                        "username": row[1],
+                        "last_login": row[2].strftime("%Y-%m-%d %H:%M:%S") if row[2] else "Ніколи",
+                        "failed_attempts": row[3]
+                    })
+                
+                return users
+                
+        except Exception as e:
+            print(f"Error getting users: {e}")
+            raise e
+
+    def delete_user(self, user_id):
+        """Delete a user from the database."""
+        try:
+            with self.engine.connect() as cursor:
+                transaction = cursor.begin()
+                
+                result = cursor.execute(
+                    text("SELECT username FROM \"Users\" WHERE user_id = :id"),
+                    {"id": user_id}
+                )
+                user = result.fetchone()
+                
+                if not user:
+                    transaction.rollback()
+                    return False, "Користувача не знайдено"
+                
+                cursor.execute(
+                    text("DELETE FROM \"Users\" WHERE user_id = :id"),
+                    {"id": user_id}
+                )
+                
+                transaction.commit()
+                return True, "Користувача успішно видалено"
+                
+        except Exception as e:
+            if 'transaction' in locals():
+                transaction.rollback()
+            print(f"Error deleting user: {e}")
             return False, str(e)
