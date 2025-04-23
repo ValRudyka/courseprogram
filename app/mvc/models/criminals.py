@@ -308,7 +308,6 @@ class CriminalModel:
             raise e
     
     def delete_criminal(self, criminal_id):
-        """Delete a criminal record completely from the database, removing all related records."""
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
@@ -455,7 +454,6 @@ class CriminalModel:
             raise e
     
     def get_all_criminals(self, include_archived=False):
-        """Get a list of all criminals with basic information for display in a table."""
         try:
             with self.engine.connect() as conn:
                 query = """
@@ -500,7 +498,6 @@ class CriminalModel:
             raise e
     
     def get_archived_criminals(self):
-        """Get list of archived criminals with complete information."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(

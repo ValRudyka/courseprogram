@@ -2,7 +2,7 @@ from PySide6.QtCore import QObject, Signal, Slot, QTimer
 from mvc.models.users import UserModel
 
 class AuthController(QObject):
-    registration_success = Signal(object)  
+    registration_success = Signal()  
     registration_failed = Signal(str)     
     login_success = Signal(object)        
     login_failed = Signal(str)            
@@ -18,8 +18,6 @@ class AuthController(QObject):
         success, message = self.user_model.create_user(username, password)
         if success:            
                 self.registration_success.emit() 
-                
-                QTimer.singleShot(1000, lambda: self.show_main_window.emit())
         else:
             self.registration_failed.emit(message)
     

@@ -146,7 +146,6 @@ class UserModel:
             return False, str(e)
         
     def get_all_users(self, search_filter=None):
-        """Get all users from the database."""
         try:
             with self.engine.connect() as cursor:
                 query = """
@@ -179,7 +178,6 @@ class UserModel:
             raise e
 
     def delete_user(self, user_id):
-        """Delete a user from the database."""
         try:
             with self.engine.connect() as cursor:
                 transaction = cursor.begin()

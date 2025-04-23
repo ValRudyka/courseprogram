@@ -43,10 +43,8 @@ load_dotenv()
 def main() -> int:
     app = QApplication(sys.argv)
     
-    # Initialize the NavigationService
     navigation_service = NavigationService()
     
-    # Database connection
     db_connector = DatabaseConnector()
     db_uri = f"""postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@{os.getenv("DB_HOST")}:{os.getenv("DB_PORT")}/{os.getenv("DB_NAME")}"""
     connected = db_connector.connect_engine(db_uri)
@@ -161,7 +159,7 @@ def main() -> int:
         navigation_service.navigate_to("register", "users")
     ))
 
-    auth_controller.registration_success.connect(lambda _: (
+    auth_controller.registration_success.connect(lambda: (
         register_view.show_success("Користувача успішно додано!"),
         QTimer.singleShot(1000, lambda: (
             navigation_service.navigate_to("users", "register"),

@@ -1,13 +1,10 @@
 from sqlalchemy import text
 
 class CityModel:
-    """Model for handling city and location-related database operations."""
-    
     def __init__(self, engine):
         self.engine = engine
     
     def get_all_cities(self):
-        """Get all available cities with country information for dropdown selection."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(
@@ -34,7 +31,6 @@ class CityModel:
             raise e
     
     def get_city_by_id(self, city_id):
-        """Get information about a specific city."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(

@@ -22,14 +22,12 @@ class UsersView(QMainWindow):
         self.ui.tableView.setSelectionMode(QAbstractItemView.SingleSelection)
     
     def setup_connections(self):
-        """Connect UI elements to their respective actions."""
         self.ui.pushButton_3.clicked.connect(self.on_add_user)
         self.ui.pushButton_2.clicked.connect(self.on_delete_user)
         self.ui.lineEdit.textChanged.connect(self.on_search_text_changed)
         self.ui.tableView.clicked.connect(self.on_table_clicked)
     
     def on_table_clicked(self, index):
-        """Handle table click to select a user."""
         if not index.isValid():
             return
             
@@ -37,16 +35,13 @@ class UsersView(QMainWindow):
         self.selected_user_id = int(self.ui.tableView.model().data(id_index))
     
     def on_search_text_changed(self):
-        """Handle search text changed."""
         search_text = self.ui.lineEdit.text().strip()
         self.search_user_requested.emit(search_text)
     
     def on_add_user(self):
-        """Handle add user button click."""
         self.add_user_requested.emit()
     
     def on_delete_user(self):
-        """Handle delete user button click."""
         if self.selected_user_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть користувача для видалення")
             return

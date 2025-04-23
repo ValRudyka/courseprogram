@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>876</width>
-    <height>600</height>
+    <width>682</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,18 +17,18 @@
    <widget class="QTableView" name="tableView">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>120</y>
-      <width>811</width>
-      <height>411</height>
+      <x>20</x>
+      <y>150</y>
+      <width>561</width>
+      <height>431</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>30</y>
+      <x>370</x>
+      <y>80</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -44,8 +44,8 @@ border-radius: 3px;</string>
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>30</y>
+      <x>370</x>
+      <y>10</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -55,13 +55,13 @@ border-radius: 3px;</string>
 border-radius: 3px;</string>
     </property>
     <property name="text">
-     <string>Додати</string>
+     <string>Зареєструвати</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>10</y>
       <width>261</width>
       <height>31</height>
@@ -79,7 +79,7 @@ border-radius: 3px;</string>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>30</x>
       <y>60</y>
       <width>291</width>
       <height>31</height>
@@ -92,7 +92,7 @@ border-radius: 3px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>876</width>
+     <width>682</width>
      <height>26</height>
     </rect>
    </property>

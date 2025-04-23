@@ -1,13 +1,10 @@
 from sqlalchemy import text
 
 class ProfessionModel:
-    """Model for handling profession-related database operations."""
-    
     def __init__(self, engine):
         self.engine = engine
     
     def get_all_professions(self):
-        """Get all available professions for dropdown selection."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(text("SELECT id_profession, profession_name FROM \"Professions\""))
@@ -25,7 +22,6 @@ class ProfessionModel:
             raise e
     
     def get_professions_for_criminal(self, criminal_id):
-        """Get professions of a specific criminal."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(

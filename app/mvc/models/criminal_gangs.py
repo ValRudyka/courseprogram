@@ -1,14 +1,10 @@
 from sqlalchemy import text
-from datetime import datetime
 
 class CriminalGroupModel:
-    """Model for handling criminal group-related database operations."""
-    
     def __init__(self, engine):
         self.engine = engine
     
     def get_next_id(self, table_name, id_column):
-        """Get the next available ID for a given table."""
         try:
             with self.engine.connect() as conn:
                 query = f"SELECT COALESCE(MAX({id_column}), 0) + 1 FROM \"{table_name}\""
@@ -18,7 +14,6 @@ class CriminalGroupModel:
             raise e
     
     def get_all_criminal_groups(self):
-        """Get all available criminal groups for display and selection."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(text("""
@@ -62,7 +57,6 @@ class CriminalGroupModel:
             raise e
     
     def get_group_by_id(self, group_id):
-        """Get complete information about a specific criminal group."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(text("""
@@ -97,7 +91,6 @@ class CriminalGroupModel:
             raise e
     
     def create_criminal_group(self, data):
-        """Create a new criminal group with the provided data."""
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
@@ -137,7 +130,6 @@ class CriminalGroupModel:
             raise e
     
     def update_criminal_group(self, group_id, data):
-        """Update an existing criminal group with the provided data."""
         try:
             with self.engine.connect() as conn:
                 transaction = conn.begin()
@@ -173,7 +165,6 @@ class CriminalGroupModel:
             raise e
     
     def delete_criminal_group(self, group_id):
-        """Delete a criminal group (checks if there are still criminals in the group first)."""
         try:
             with self.engine.connect() as conn:
                 with conn.begin() as transaction:
@@ -197,7 +188,6 @@ class CriminalGroupModel:
             raise e
     
     def get_members_by_group_id(self, group_id):
-        """Get all active criminals that belong to a specific group."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(
