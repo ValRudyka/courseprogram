@@ -351,7 +351,6 @@ class CriminalModel:
             raise e
     
     def get_criminal_by_id(self, criminal_id):
-        """Get complete criminal data including all related information by ID."""
         try:
             with self.engine.connect() as conn:
                 result = conn.execute(
