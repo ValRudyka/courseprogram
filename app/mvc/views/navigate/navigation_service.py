@@ -2,8 +2,6 @@ from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QMainWindow
 
 class NavigationService(QObject):
-    """Service for managing navigation between application windows"""
-    
     def __init__(self):
         super().__init__()
         self.current_view = None
@@ -11,20 +9,10 @@ class NavigationService(QObject):
         self.window_transitions = {}
         
     def register_view(self, view_name: str, view: QMainWindow) -> None:
-        """Register a view with the navigation service"""
         self.views[view_name] = view
         
     def register_transition(self, from_view: str, to_view: str, 
                            condition_func=None, before_show_func=None) -> None:
-        """
-        Register a transition between views
-        
-        Args:
-            from_view: Name of the source view
-            to_view: Name of the destination view
-            condition_func: Optional function to call before transition, should return bool
-            before_show_func: Optional function to call before showing the destination view
-        """
         if from_view not in self.window_transitions:
             self.window_transitions[from_view] = []
             
@@ -35,7 +23,6 @@ class NavigationService(QObject):
         })
     
     def navigate_to(self, to_view: str, from_view: str = None) -> bool:
-        """Navigate from current view (or specified view) to the target view"""
         if from_view is None:
             from_view = self.current_view
             
@@ -73,7 +60,6 @@ class NavigationService(QObject):
         return True
     
     def setup_close_handlers(self, app):
-        """Setup close event handlers for all views"""
         if 'main' in self.views:
             main_view = self.views['main']
             main_view.closeEvent = lambda _: app.quit()
@@ -82,9 +68,13 @@ class NavigationService(QObject):
             if view_name != 'main':
                 def create_close_handler(view_name):
                     def handle_close(event):
-                        if view_name in ['login', 'register']:
+                        if view_name == 'login':
                             app.quit()
                             event.accept()
+                        elif view_name == 'register' and 'users' in self.views:
+                            # Special case for register ->users transition
+                            self.navigate_to('users', 'register')
+                            event.ignore()
                         elif 'main' in self.views:
                             self.navigate_to('main', view_name)
                             event.ignore()  

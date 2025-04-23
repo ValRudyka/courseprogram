@@ -48,7 +48,7 @@ class RegisterView(QMainWindow):
     def closeEvent(self, event):
         self.clear()
         self.return_to_users_view_requested.emit()
-        event.accept()
+        event.ignore()
 
     def clear(self) -> None:
         self.ui.username_edit.clear()
