@@ -36,7 +36,6 @@ class GangsView(QMainWindow):
         self.setup_context_menu()
     
     def setup_connections(self):
-        """Connect UI elements to their respective actions."""
         self.ui.pushButton_5.clicked.connect(self.on_add_gang)
         self.ui.pushButton_3.clicked.connect(self.on_edit_gang)
         self.ui.pushButton_4.clicked.connect(self.on_delete_gang)
@@ -46,12 +45,10 @@ class GangsView(QMainWindow):
         self.ui.tableView.clicked.connect(self.on_table_clicked)
     
     def setup_context_menu(self):
-        """Create context menu for right-clicking in the table."""
         self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableView.customContextMenuRequested.connect(self.show_context_menu)
     
     def show_context_menu(self, position):
-        """Show context menu with actions for the selected gang."""
         if self.selected_gang_id is None:
             return
             
@@ -70,7 +67,6 @@ class GangsView(QMainWindow):
         context_menu.exec_(QCursor.pos())
     
     def toggle_filters(self):
-        """Toggle visibility of filter inputs in the table header."""
         if hasattr(self.ui.tableView, 'setFilterVisible'):
             if hasattr(self.ui.tableView, 'filter_header') and hasattr(self.ui.tableView.filter_header, 'filter_visible'):
                 visible = not self.ui.tableView.filter_header.filter_visible
@@ -83,11 +79,9 @@ class GangsView(QMainWindow):
                 self.ui.pushButton.setText("Сховати фільтри")
 
     def on_add_gang(self):
-        """Handle add button click."""
         self.add_gang_requested.emit()
     
     def on_edit_gang(self):
-        """Handle edit button click."""
         if self.selected_gang_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть угруповання для редагування")
             return
@@ -95,7 +89,6 @@ class GangsView(QMainWindow):
         self.edit_gang_requested.emit(self.selected_gang_id)
     
     def on_delete_gang(self):
-        """Handle delete button click."""
         if self.selected_gang_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть угруповання для видалення")
             return
@@ -112,7 +105,6 @@ class GangsView(QMainWindow):
             self.delete_gang_requested.emit(self.selected_gang_id)
     
     def on_table_clicked(self, index):
-        """Handle table click to select a gang."""
         if not index.isValid():
             return
             
@@ -136,13 +128,13 @@ class GangsView(QMainWindow):
         
         self.ui.tableView.setModel(model)
         
-        self.ui.tableView.setColumnWidth(0, 60)  # ID
-        self.ui.tableView.setColumnWidth(1, 150) # Name
-        self.ui.tableView.setColumnWidth(2, 120) # Founding Date
-        self.ui.tableView.setColumnWidth(3, 100) # Member Count
-        self.ui.tableView.setColumnWidth(4, 200) # Main Activity
-        self.ui.tableView.setColumnWidth(5, 170) # Base Location
-        self.ui.tableView.setColumnWidth(6, 80)  # Active Members
+        self.ui.tableView.setColumnWidth(0, 60)  
+        self.ui.tableView.setColumnWidth(1, 150) 
+        self.ui.tableView.setColumnWidth(2, 120) 
+        self.ui.tableView.setColumnWidth(3, 100)
+        self.ui.tableView.setColumnWidth(4, 200) 
+        self.ui.tableView.setColumnWidth(5, 170) 
+        self.ui.tableView.setColumnWidth(6, 80)
         
         self.ui.tableView.verticalHeader().setVisible(False)
         
@@ -152,8 +144,6 @@ class GangsView(QMainWindow):
         self.selected_gang_id = None
         
     def on_export_gangs(self):
-        """Handle export button click and open export dialog."""
-        # Create a simple export dialog
         dialog = QDialog(self)
         dialog.setWindowTitle("Експорт даних")
         layout = QVBoxLayout(dialog)
@@ -161,7 +151,6 @@ class GangsView(QMainWindow):
         label = QLabel("Експорт даних угруповань:", dialog)
         layout.addWidget(label)
         
-        # Create buttons
         buttons_layout = QHBoxLayout()
         export_button = QPushButton("Експортувати", dialog)
         cancel_button = QPushButton("Скасувати", dialog)
@@ -171,7 +160,6 @@ class GangsView(QMainWindow):
         
         layout.addLayout(buttons_layout)
         
-        # Connect button signals
         export_button.clicked.connect(lambda: self._perform_export(dialog))
         cancel_button.clicked.connect(dialog.reject)
         
@@ -179,12 +167,10 @@ class GangsView(QMainWindow):
         dialog.exec_()
     
     def _perform_export(self, dialog):
-        """Emit signal to export data and close the dialog."""
         dialog.accept()
         self.export_gangs_requested.emit()
         
     def export_gangs_data(self, data):
-        """Export criminal group data to a file."""
         if not data:
             QMessageBox.warning(self, "Експорт", "Немає даних для експорту.")
             return
@@ -192,5 +178,4 @@ class GangsView(QMainWindow):
         export_data_to_file(data, self, f"угруповання_{datetime.now().strftime('%Y%m%d')}")
     
     def closeEvent(self, event):
-        """Handle window close event."""
         event.accept()

@@ -258,7 +258,7 @@ class CriminalGroupModel:
                         "Статус": row[5] or "",
                         "Місце бази": row[6] or "",
                         "Лідер": row[7] or "Невідомо",
-                        "Активних членів": row[8] or 0
+                        "Кількість заарештованих членів": row[8] or 0
                     }
                     groups_data.append(data)
                 

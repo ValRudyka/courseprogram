@@ -80,11 +80,11 @@ class CriminalModel:
                         text("""
                         INSERT INTO "Crimes" (
                             id_crime, crime_name, commitment_date, id_location, 
-                            court_sentence, id_criminal
+                            court_sentence, id_criminal, crime_type
                         ) 
                         VALUES (
                             :id_crime, :crime_name, :date, :location_id,
-                            :court_sentence, :criminal_id
+                            :court_sentence, :criminal_id, :crime_type
                         )
                         """), 
                         {
@@ -93,7 +93,8 @@ class CriminalModel:
                             "date": data.get("last_case_date"),
                             "location_id": data.get("last_case_location_id"),
                             "court_sentence": data.get("court_sentence", 1),
-                            "criminal_id": criminal_id
+                            "criminal_id": criminal_id,
+                            "crime_type": data.get("crime_type", "")
                         }
                     )
                 
@@ -249,11 +250,11 @@ class CriminalModel:
                         text("""
                         INSERT INTO "Crimes" (
                             id_crime, crime_name, commitment_date, id_location,
-                            court_sentence, id_criminal
+                            court_sentence, id_criminal, crime_type
                         ) 
                         VALUES (
                             :id_crime, :crime_name, :date, :location_id,
-                            :court_sentence, :criminal_id
+                            :court_sentence, :criminal_id, :crime_type
                         )
                         """), 
                         {
@@ -262,7 +263,8 @@ class CriminalModel:
                             "date": data.get("last_case_date"),
                             "location_id": data.get("last_case_location_id"),
                             "court_sentence": data.get("court_sentence", 1),
-                            "criminal_id": criminal_id
+                            "criminal_id": criminal_id,
+                            "crime_type": data.get("crime_type", "")
                         }
                     )
                 transaction.commit()
@@ -400,7 +402,7 @@ class CriminalModel:
                     text("""
                     SELECT 
                         crime_name, commitment_date, id_location, court_sentence,
-                        c.city_name as location_name
+                        c.city_name as location_name, cr.crime_type
                     FROM "Crimes" cr
                     LEFT JOIN "Cities" c ON cr.id_location = c.id_city
                     WHERE cr.id_criminal = :id
@@ -409,7 +411,7 @@ class CriminalModel:
                     """),
                     {"id": criminal_id}
                 )
-                
+
                 crime_row = crime_result.fetchone()
                 if crime_row:
                     criminal_data.update({
@@ -417,7 +419,8 @@ class CriminalModel:
                         "last_case_date": crime_row[1].strftime("%Y-%m-%d") if crime_row[1] else None,
                         "last_case_location_id": crime_row[2],
                         "court_sentence": crime_row[3],
-                        "last_case_location_name": crime_row[4]
+                        "last_case_location_name": crime_row[4],
+                        "crime_type": crime_row[5]  # Added this line
                     })
                 
                 prof_result = conn.execute(
@@ -547,38 +550,39 @@ class CriminalModel:
         try:
             with self.engine.connect() as conn:
                 query = """
-                SELECT 
-                    c.id_criminal, 
-                    c.first_name, 
-                    c.last_name, 
-                    c.nickname,
-                    c.date_of_birth,
-                    c.is_archived,
-                    bc.city_name as birth_place, 
-                    lc.city_name as residence_place, 
-                    p.height, 
-                    p.weight, 
-                    p.hair_color, 
-                    p.eye_color, 
-                    p.distinguishing_features,
-                    g.name as group_name,
-                    c.role as role_in_group,
-                    cr.crime_name as last_crime,
-                    cr.commitment_date as last_crime_date,
-                    cr_city.city_name as last_crime_location,
-                    cr.court_sentence
-                FROM "Criminals" c
-                LEFT JOIN "Physical_characteristics" p ON c.id_criminal = p.id_criminal
-                LEFT JOIN "Cities" bc ON c.place_of_birth_id = bc.id_city
-                LEFT JOIN "Cities" lc ON c.last_live_place_id = lc.id_city
-                LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
-                LEFT JOIN (
-                    SELECT cr.id_criminal, cr.crime_name, cr.commitment_date, cr.id_location, cr.court_sentence,
-                        ROW_NUMBER() OVER (PARTITION BY cr.id_criminal ORDER BY cr.commitment_date DESC) as rn
-                    FROM "Crimes" cr
-                ) cr ON c.id_criminal = cr.id_criminal AND cr.rn = 1
-                LEFT JOIN "Cities" cr_city ON cr.id_location = cr_city.id_city
-                """
+                    SELECT 
+                        c.id_criminal, 
+                        c.first_name, 
+                        c.last_name, 
+                        c.nickname,
+                        c.date_of_birth,
+                        c.is_archived,
+                        bc.city_name as birth_place, 
+                        lc.city_name as residence_place, 
+                        p.height, 
+                        p.weight, 
+                        p.hair_color, 
+                        p.eye_color, 
+                        p.distinguishing_features,
+                        g.name as group_name,
+                        c.role as role_in_group,
+                        cr.crime_name as last_crime,
+                        cr.commitment_date as last_crime_date,
+                        cr_city.city_name as last_crime_location,
+                        cr.court_sentence,
+                        cr.crime_type
+                    FROM "Criminals" c
+                    LEFT JOIN "Physical_characteristics" p ON c.id_criminal = p.id_criminal
+                    LEFT JOIN "Cities" bc ON c.place_of_birth_id = bc.id_city
+                    LEFT JOIN "Cities" lc ON c.last_live_place_id = lc.id_city
+                    LEFT JOIN "Criminal_groups" g ON c.id_group = g.group_id
+                    LEFT JOIN (
+                        SELECT cr.id_criminal, cr.crime_name, cr.commitment_date, cr.id_location, cr.court_sentence, cr.crime_type,
+                            ROW_NUMBER() OVER (PARTITION BY cr.id_criminal ORDER BY cr.commitment_date DESC) as rn
+                        FROM "Crimes" cr
+                    ) cr ON c.id_criminal = cr.id_criminal AND cr.rn = 1
+                    LEFT JOIN "Cities" cr_city ON cr.id_location = cr_city.id_city
+                    """
                 
                 if not include_archived:
                     query += " WHERE c.is_archived = FALSE"
@@ -635,7 +639,8 @@ class CriminalModel:
                         "Остання справа": row[15] or "",
                         "Дата останньої справи": row[16].strftime("%Y-%m-%d") if row[16] else "",
                         "Місце останньої справи": row[17] or "",
-                        "Вирок (роки)": row[18] or ""
+                        "Вирок (роки)": row[18] or "",
+                        "Тип злочину": row[19] or ""
                     }
                     criminals_data.append(data)
                 

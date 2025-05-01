@@ -88,7 +88,6 @@ class CriminalAddForm(QMainWindow):
         return True
     
     def collect_form_data(self):
-        """Collect form data into a dictionary for saving."""
         data = {
             "first_name": self.ui.lineEdit_3.text().strip(),
             "last_name": self.ui.lineEdit_4.text().strip(),
@@ -108,7 +107,8 @@ class CriminalAddForm(QMainWindow):
             "role": self.get_gang_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
             "language_ids": self.language_selector.get_selected_language_ids(),
-            "court_sentence": safe_get_spinbox_value(self.ui.spinBox_3, 1) 
+            "court_sentence": safe_get_spinbox_value(self.ui.spinBox_3, 1),
+            "crime_type": self.ui.lineEdit_2.text().strip()  # Added this line
         }
         
         return data

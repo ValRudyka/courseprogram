@@ -11,7 +11,6 @@ class CriminalDetailView(QMainWindow):
         self.setWindowTitle("Інформація про злочинця")
         
     def set_criminal_data(self, criminal_data):
-        """Display criminal data in the form."""
         if not criminal_data:
             return
             
@@ -34,9 +33,10 @@ class CriminalDetailView(QMainWindow):
         self.ui.lineEdit_15.setText(criminal_data.get("last_case_date", ""))
         self.ui.lineEdit_16.setText(criminal_data.get("last_case_location_name", ""))
         self.ui.lineEdit_17.setText(str(criminal_data.get("court_sentence", "")))
+        self.ui.lineEdit_20.setText(criminal_data.get("crime_type", ""))  # Added this line
         
         languages = ", ".join([lang.get("name", "") for lang in criminal_data.get("languages", [])])
         professions = ", ".join([prof.get("name", "") for prof in criminal_data.get("professions", [])])
-        
+            
         self.ui.lineEdit_18.setText(languages)
         self.ui.lineEdit_19.setText(professions)

@@ -20,7 +20,6 @@ class CriminalEditForm(QMainWindow):
         self.criminal_id = None
     
     def setup_custom_components(self):
-        """Replace standard combo boxes with custom components for many-to-many relationships."""
         self.profession_container = QWidget(self.ui.centralwidget)
         profession_layout = QVBoxLayout(self.profession_container)
         profession_layout.setContentsMargins(0, 0, 0, 0)
@@ -41,7 +40,6 @@ class CriminalEditForm(QMainWindow):
         self.ui.listWidget_2.clear()
     
     def setup_connections(self):
-        """Connect UI elements to their corresponding actions."""
         self.ui.pushButton_2.clicked.connect(self.on_update)
     
     def load_reference_data(self, cities, professions, gangs, languages):
@@ -67,7 +65,6 @@ class CriminalEditForm(QMainWindow):
             print("No languages data provided")
     
     def set_criminal_data(self, criminal_id, data):
-        """Set form data for editing a criminal."""
         self.criminal_id = criminal_id
         
         self.ui.lineEdit_17.setText(data.get("first_name", ""))  
@@ -75,6 +72,7 @@ class CriminalEditForm(QMainWindow):
         self.ui.lineEdit_12.setText(data.get("nickname", ""))   
         self.ui.lineEdit_16.setText(data.get("distinguishing_features", ""))  
         self.ui.lineEdit_18.setText(data.get("last_case", ""))   
+        self.ui.lineEdit_2.setText(data.get("crime_type", ""))
         
         gang_id = data.get("id_group")
         role = data.get("role", "")
@@ -126,7 +124,6 @@ class CriminalEditForm(QMainWindow):
             print("No languages data in criminal record")
     
     def set_combobox_by_id(self, combobox, item_id):
-        """Set the selected item in a combo box by its data ID."""
         if item_id is None:
             return
             
@@ -136,7 +133,6 @@ class CriminalEditForm(QMainWindow):
                 break
     
     def on_update(self):
-        """Handle update button click."""
         if self.criminal_id is None:
             QMessageBox.warning(self, "Error", "No criminal selected for editing")
             return
@@ -149,7 +145,6 @@ class CriminalEditForm(QMainWindow):
         self.update_requested.emit(self.criminal_id, data)
     
     def validate_form(self):
-        """Validate form input before updating."""
         if not self.ui.lineEdit_17.text().strip():
             QMessageBox.warning(self, "Validation Error", "Ім'я є обов'язковим")
             return False
@@ -161,7 +156,6 @@ class CriminalEditForm(QMainWindow):
         return True
     
     def collect_form_data(self):
-        """Collect form data into a dictionary for updating."""
         data = {
             "first_name": self.ui.lineEdit_17.text().strip(),
             "last_name": self.ui.lineEdit_11.text().strip(),
@@ -181,13 +175,13 @@ class CriminalEditForm(QMainWindow):
             "role": self.get_gang_role(),
             "profession_ids": self.profession_selector.get_selected_profession_ids(),
             "language_ids": self.language_selector.get_selected_language_ids(),
-            "court_sentence": safe_get_spinbox_value(self.ui.spinBox, 1) 
+            "court_sentence": safe_get_spinbox_value(self.ui.spinBox, 1),
+            "crime_type": self.ui.lineEdit_2.text().strip()
         }
         
         return data
     
     def load_gangs(self, gangs):
-        """Load gangs directly into the existing combobox."""
         combo = self.ui.comboBox_12
         combo.clear()
         combo.addItem("Немає", None)
@@ -195,15 +189,12 @@ class CriminalEditForm(QMainWindow):
             combo.addItem(gang["name"], gang["id"])
 
     def get_selected_gang_id(self):
-        """Get the selected gang ID from the combobox."""
         return self.ui.comboBox_12.currentData()  
 
     def get_gang_role(self):
-        """Get the role from the text field."""
         return self.ui.lineEdit.text().strip() 
 
     def set_selected_gang(self, gang_id, role=""):
-        """Set preselected gang."""
         combo = self.ui.comboBox_12 
         index = combo.findData(gang_id)
         if index >= 0:
