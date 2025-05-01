@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'edit_criminalskJnSWs.ui'
+## Form generated from reading UI file 'edit_criminalsxJORaI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(903, 748)
+        MainWindow.resize(997, 841)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.comboBox_8 = QComboBox(self.centralwidget)
@@ -154,6 +154,18 @@ class Ui_MainWindow(object):
         self.label_23.setGeometry(QRect(50, 230, 151, 31))
         self.label_23.setFont(font)
         self.listWidget_2 = QListWidget(self.centralwidget)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
+        QListWidgetItem(self.listWidget_2)
         self.listWidget_2.setObjectName(u"listWidget_2")
         self.listWidget_2.setGeometry(QRect(30, 470, 301, 131))
         self.listWidget_2.setSelectionMode(QAbstractItemView.MultiSelection)
@@ -182,7 +194,7 @@ class Ui_MainWindow(object):
         self.label_30.setFont(font)
         self.pushButton_2 = QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(620, 640, 151, 41))
+        self.pushButton_2.setGeometry(QRect(620, 720, 151, 41))
         self.pushButton_2.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
 "border-radius: 3px;")
         self.comboBox = QComboBox(self.centralwidget)
@@ -195,20 +207,27 @@ class Ui_MainWindow(object):
         self.label_35.setFont(font)
         self.label_36 = QLabel(self.centralwidget)
         self.label_36.setObjectName(u"label_36")
-        self.label_36.setGeometry(QRect(620, 540, 181, 31))
+        self.label_36.setGeometry(QRect(620, 620, 181, 31))
         self.label_36.setFont(font)
         self.lineEdit = QLineEdit(self.centralwidget)
         self.lineEdit.setObjectName(u"lineEdit")
         self.lineEdit.setGeometry(QRect(370, 580, 161, 21))
         self.spinBox = QSpinBox(self.centralwidget)
         self.spinBox.setObjectName(u"spinBox")
-        self.spinBox.setGeometry(QRect(620, 580, 191, 21))
+        self.spinBox.setGeometry(QRect(620, 660, 191, 21))
         self.spinBox.setMinimum(1)
         self.spinBox.setMaximum(25)
+        self.lineEdit_2 = QLineEdit(self.centralwidget)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        self.lineEdit_2.setGeometry(QRect(620, 580, 231, 22))
+        self.label_37 = QLabel(self.centralwidget)
+        self.label_37.setObjectName(u"label_37")
+        self.label_37.setGeometry(QRect(620, 540, 181, 31))
+        self.label_37.setFont(font)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 903, 26))
+        self.menubar.setGeometry(QRect(0, 0, 997, 26))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -264,6 +283,30 @@ class Ui_MainWindow(object):
 
         __sortingEnabled = self.listWidget_2.isSortingEnabled()
         self.listWidget_2.setSortingEnabled(False)
+        ___qlistwidgetitem = self.listWidget_2.item(0)
+        ___qlistwidgetitem.setText(QCoreApplication.translate("MainWindow", u"\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem1 = self.listWidget_2.item(1)
+        ___qlistwidgetitem1.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0433\u043b\u0456\u0439\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem2 = self.listWidget_2.item(2)
+        ___qlistwidgetitem2.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0456\u043c\u0435\u0446\u044c\u043a\u0430", None));
+        ___qlistwidgetitem3 = self.listWidget_2.item(3)
+        ___qlistwidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0440\u0430\u043d\u0446\u0443\u0437\u044c\u043a\u0430", None));
+        ___qlistwidgetitem4 = self.listWidget_2.item(4)
+        ___qlistwidgetitem4.setText(QCoreApplication.translate("MainWindow", u"\u0406\u0441\u043f\u0430\u043d\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem5 = self.listWidget_2.item(5)
+        ___qlistwidgetitem5.setText(QCoreApplication.translate("MainWindow", u"\u0406\u0442\u0430\u043b\u0456\u0439\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem6 = self.listWidget_2.item(6)
+        ___qlistwidgetitem6.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u043b\u044c\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem7 = self.listWidget_2.item(7)
+        ___qlistwidgetitem7.setText(QCoreApplication.translate("MainWindow", u"\u041a\u0438\u0442\u0430\u0439\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem8 = self.listWidget_2.item(8)
+        ___qlistwidgetitem8.setText(QCoreApplication.translate("MainWindow", u"\u042f\u043f\u043e\u043d\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem9 = self.listWidget_2.item(9)
+        ___qlistwidgetitem9.setText(QCoreApplication.translate("MainWindow", u"\u0428\u0432\u0435\u0434\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem10 = self.listWidget_2.item(10)
+        ___qlistwidgetitem10.setText(QCoreApplication.translate("MainWindow", u"\u0427\u0435\u0441\u044c\u043a\u0430", None));
+        ___qlistwidgetitem11 = self.listWidget_2.item(11)
+        ___qlistwidgetitem11.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0440\u0442\u0443\u0433\u0430\u043b\u044c\u0441\u044c\u043a\u0430", None));
         self.listWidget_2.setSortingEnabled(__sortingEnabled)
 
         self.label_21.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0441\u043e\u0431\u043b\u0438\u0432\u0456 \u043f\u0440\u0438\u043a\u043c\u0435\u0442\u0438", None))
@@ -275,5 +318,6 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"\u041e\u043d\u043e\u0432\u0438\u0442\u0438", None))
         self.label_35.setText(QCoreApplication.translate("MainWindow", u"\u0420\u043e\u043b\u044c \u0432 \u0443\u0433\u0440\u0443\u043f\u043e\u0432\u0443\u0432\u0430\u043d\u043d\u0456", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0438\u0440\u043e\u043a (\u0443 \u0440\u043e\u043a\u0430\u0445)", None))
+        self.label_37.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0438\u043f \u0437\u043b\u043e\u0447\u0438\u043d\u0443", None))
     # retranslateUi
 

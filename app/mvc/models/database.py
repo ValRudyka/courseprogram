@@ -8,10 +8,6 @@ class DatabaseConnector:
         try:
             self._engine = create_engine(db_uri)
             
-            # testing connection
-            with self._engine.connect() as conn:
-                conn.execute(text("SELECT 1"))
-            
             return True
             
         except Exception as e:

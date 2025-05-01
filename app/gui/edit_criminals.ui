@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>903</width>
-    <height>748</height>
+    <width>997</width>
+    <height>841</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -732,7 +732,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>640</y>
+      <y>720</y>
       <width>151</width>
       <height>41</height>
      </rect>
@@ -780,7 +780,7 @@ border-radius: 3px;</string>
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>540</y>
+      <y>620</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -808,7 +808,7 @@ border-radius: 3px;</string>
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>580</y>
+      <y>660</y>
       <width>191</width>
       <height>21</height>
      </rect>
@@ -820,13 +820,41 @@ border-radius: 3px;</string>
      <number>25</number>
     </property>
    </widget>
+   <widget class="QLineEdit" name="lineEdit_2">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>580</y>
+      <width>231</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_37">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>540</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Тип злочину</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>903</width>
+     <width>997</width>
      <height>26</height>
     </rect>
    </property>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'criminal_detailPdVMPg.ui'
+## Form generated from reading UI file 'criminal_detailoQoIbx.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -212,6 +212,15 @@ class Ui_MainWindow(object):
         self.lineEdit_19.setFont(font1)
         self.lineEdit_19.setFocusPolicy(Qt.NoFocus)
         self.lineEdit_19.setReadOnly(True)
+        self.label_37 = QLabel(self.centralwidget)
+        self.label_37.setObjectName(u"label_37")
+        self.label_37.setGeometry(QRect(920, 440, 181, 31))
+        font2 = QFont()
+        font2.setPointSize(10)
+        self.label_37.setFont(font2)
+        self.lineEdit_20 = QLineEdit(self.centralwidget)
+        self.lineEdit_20.setObjectName(u"lineEdit_20")
+        self.lineEdit_20.setGeometry(QRect(920, 490, 171, 31))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -247,5 +256,6 @@ class Ui_MainWindow(object):
         self.label_17.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0438\u0440\u043e\u043a (\u0432 \u0440\u043e\u043a\u0430\u0445):", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"\u0412\u043e\u043b\u043e\u0434\u0456\u0454 \u043c\u043e\u0432\u0430\u043c\u0438:", None))
         self.label_19.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u0430\u0446\u044e\u0432\u0430\u0432 \u0437\u0430 \u043f\u0440\u043e\u0444\u0435\u0441\u0456\u044f\u043c\u0438:", None))
+        self.label_37.setText(QCoreApplication.translate("MainWindow", u"\u0422\u0438\u043f \u0437\u043b\u043e\u0447\u0438\u043d\u0443:", None))
     # retranslateUi
 
