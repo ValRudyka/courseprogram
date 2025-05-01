@@ -60,6 +60,22 @@ class NavigationService(QObject):
         return True
     
     def setup_close_handlers(self, app):
+        view_parents = {
+            'criminal_add': 'criminals',
+            'criminal_edit': 'criminals',
+            'criminal_detail': 'criminals',
+            
+            'gang_add': 'gangs',
+            'gang_edit': 'gangs',
+            
+            'register': 'users',
+            'criminals': 'main',
+            'gangs': 'main',
+            'archive': 'main',
+            'users': 'main',
+            'change_password': 'main',
+        }
+        
         if 'main' in self.views:
             main_view = self.views['main']
             main_view.closeEvent = lambda _: app.quit()
@@ -71,9 +87,9 @@ class NavigationService(QObject):
                         if view_name == 'login':
                             app.quit()
                             event.accept()
-                        elif view_name == 'register' and 'users' in self.views:
-                            # Special case for register ->users transition
-                            self.navigate_to('users', 'register')
+                        elif view_name in view_parents and view_parents[view_name] in self.views:
+                            parent_view = view_parents[view_name]
+                            self.navigate_to(parent_view, view_name)
                             event.ignore()
                         elif 'main' in self.views:
                             self.navigate_to('main', view_name)
