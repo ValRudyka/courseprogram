@@ -3,19 +3,20 @@ from bokeh.layouts import layout
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.embed import file_html
 from bokeh.resources import CDN
-from bokeh.palettes import Category10, Viridis256
+from bokeh.palettes import Category10
 from bokeh.transform import factor_cmap
 import pandas as pd
+from datetime import datetime
 
 def create_bokeh_dashboard(data):
     df = pd.DataFrame(data)
     crime_types_chart = create_crime_types_chart(df)
     temporal_chart = create_temporal_trends_chart(df)
-    location_chart = create_location_chart(df)
+    age_chart = create_age_distribution_chart(df)
     profession_chart = create_profession_chart(df)
     
     dashboard = layout([
-        [crime_types_chart, location_chart],
+        [crime_types_chart, age_chart],
         [temporal_chart, profession_chart]
     ], sizing_mode='stretch_both')
     
@@ -75,7 +76,7 @@ def create_temporal_trends_chart(df):
         
         if len(df_dates) == 0:
             return create_empty_chart("Немає даних про дати злочинів")
-        
+            
         df_dates['year'] = df_dates['date'].dt.year
         yearly_counts = df_dates.groupby('year').size().reset_index()
         yearly_counts.columns = ['year', 'count']
@@ -94,7 +95,7 @@ def create_temporal_trends_chart(df):
         )
         
         line = p.line('date', 'count', source=source, line_width=3, line_color="navy", legend_label="Кількість злочинів")
-        circles = p.circle('date', 'count', source=source, size=10, color="navy", alpha=0.7)
+        circles = p.scatter('date', 'count', source=source, size=10, color="navy", alpha=0.7)
         
         p.add_tools(HoverTool(
             renderers=[circles],
@@ -106,7 +107,6 @@ def create_temporal_trends_chart(df):
         
         p.xaxis.axis_label = "Рік"
         p.yaxis.axis_label = "Кількість злочинів"
-        
         p.legend.location = "top_left"
         p.legend.click_policy = "hide"
         
@@ -114,51 +114,58 @@ def create_temporal_trends_chart(df):
     else:
         return create_empty_chart("Немає даних про дати злочинів")
 
-def create_location_chart(df):
-    if 'Місце останньої справи' in df.columns and not df['Місце останньої справи'].isna().all():
-        location_counts = df['Місце останньої справи'].value_counts().reset_index()
-        location_counts.columns = ['location', 'count']
+def create_age_distribution_chart(df):
+    if 'Дата народження' in df.columns and not df['Дата народження'].isna().all():
+        df['birth_date'] = pd.to_datetime(df['Дата народження'], errors='coerce')
         
-        location_counts = location_counts[location_counts['location'].notna() & (location_counts['location'] != '')]
-        location_counts = location_counts.head(10)
+        df_valid = df[df['birth_date'].notna()].copy()
         
-        if len(location_counts) == 0:
-            return create_empty_chart("Немає даних про місця злочинів")
+        if len(df_valid) == 0:
+            return create_empty_chart("Немає даних про вік злочинців")
         
-        source = ColumnDataSource(location_counts)
+        today = datetime.now()
+        df_valid['age'] = df_valid['birth_date'].apply(lambda x: today.year - x.year - 
+                                                   ((today.month, today.day) < (x.month, x.day)))
+        
+        age_bins = [0, 18, 25, 35, 45, 55, 65, 100]
+        age_labels = ["До 18", "18-25", "26-35", "36-45", "46-55", "56-65", "65+"]
+        
+        df_valid['age_group'] = pd.cut(df_valid['age'], bins=age_bins, labels=age_labels, right=False)
+        
+        age_counts = df_valid['age_group'].value_counts().reset_index()
+        age_counts.columns = ['age_group', 'count']
+        age_counts = age_counts.sort_values('age_group')
+        
+        source = ColumnDataSource(age_counts)
         
         p = figure(
-            y_range=location_counts['location'].tolist(),
+            y_range=age_counts['age_group'].tolist(),
             height=350,
-            title="Географічний розподіл злочинів (топ 10)",
+            title="Віковий розподіл злочинців",
             toolbar_location="right",
             tools="pan,box_zoom,reset,save"
         )
         
-        color_palette = Viridis256[:len(location_counts)]
-        color_mapper = factor_cmap('location', palette=color_palette, factors=location_counts['location'].tolist())
-        
         bars = p.hbar(
-            y='location',
+            y='age_group',
             right='count',
-            height=0.9,
+            height=0.7,
             source=source,
             line_color='white',
-            fill_color=color_mapper,
-            legend_field="location"
+            fill_color="#0099ff"
         )
         
         p.xgrid.grid_line_color = None
         p.x_range.start = 0
         
         p.add_tools(HoverTool(tooltips=[
-            ("Місце", "@location"),
+            ("Віковий діапазон", "@age_group"),
             ("Кількість", "@count")
         ]))
         
         return p
     else:
-        return create_empty_chart("Немає даних про місця злочинів")
+        return create_empty_chart("Немає даних про вік злочинців")
 
 def create_profession_chart(df):
     if 'Професії' in df.columns and not df['Професії'].isna().all():
@@ -191,11 +198,10 @@ def create_profession_chart(df):
         bars = p.hbar(
             y='profession',
             right='count',
-            height=0.9,
+            height=0.7,
             source=source,
             line_color='white',
-            fill_color=color_mapper,
-            legend_field="profession"
+            fill_color=color_mapper
         )
         
         p.xgrid.grid_line_color = None
@@ -205,6 +211,7 @@ def create_profession_chart(df):
             ("Професія", "@profession"),
             ("Кількість", "@count")
         ]))
+        
         return p
     else:
         return create_empty_chart("Немає даних про професії злочинців")
