@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'mainZioehk.ui'
+## Form generated from reading UI file 'mainiXDysE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -53,7 +53,7 @@ class Ui_MainWindow(object):
 "background-color: white;\n"
 "border-radius: 2px;")
         icon = QIcon()
-        icon.addFile(u"../../icons/icons8-sun-64.png", QSize(), QIcon.Normal, QIcon.On)
+        icon.addFile(u"../icons/icons8-sun-64.png", QSize(), QIcon.Normal, QIcon.Off)
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(QSize(30, 30))
         self.pushButton_2 = QPushButton(self.centralwidget)
@@ -68,7 +68,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setIconSize(QSize(30, 30))
         self.pushButton_3 = QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(50, 330, 171, 61))
+        self.pushButton_3.setGeometry(QRect(50, 310, 171, 61))
         self.pushButton_3.setStyleSheet(u"border-width: 5px;\n"
 "background-color: white;\n"
 "border-radius: 2px;")
@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.pushButton_4 = QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
         self.pushButton_4.setEnabled(True)
-        self.pushButton_4.setGeometry(QRect(260, 210, 171, 61))
+        self.pushButton_4.setGeometry(QRect(270, 210, 171, 61))
         self.pushButton_4.setStyleSheet(u"border-width: 5px;\n"
 "background-color: white;\n"
 "border-radius: 2px;")
@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
         self.frame.setFrameShadow(QFrame.Raised)
         self.label_4 = QLabel(self.frame)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setGeometry(QRect(40, 180, 361, 191))
+        self.label_4.setGeometry(QRect(30, 170, 361, 191))
         font2 = QFont()
         font2.setFamily(u"Segoe UI")
         font2.setPointSize(10)
@@ -111,7 +111,7 @@ class Ui_MainWindow(object):
         self.label_4.setIndent(1)
         self.label_3 = QLabel(self.frame)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(40, 10, 351, 171))
+        self.label_3.setGeometry(QRect(30, 10, 351, 171))
         self.label_3.setFont(font2)
         self.label_3.setTabletTracking(False)
         self.label_3.setContextMenuPolicy(Qt.DefaultContextMenu)
@@ -125,7 +125,7 @@ class Ui_MainWindow(object):
         self.pushButton_5 = QPushButton(self.centralwidget)
         self.pushButton_5.setObjectName(u"pushButton_5")
         self.pushButton_5.setEnabled(False)
-        self.pushButton_5.setGeometry(QRect(260, 330, 171, 61))
+        self.pushButton_5.setGeometry(QRect(270, 300, 171, 61))
         self.pushButton_5.setStyleSheet(u"border-width: 5px;\n"
 "background-color: white;\n"
 "border-radius: 2px;")
@@ -133,7 +133,7 @@ class Ui_MainWindow(object):
         self.pushButton_5.setIconSize(QSize(30, 30))
         self.pushButton_6 = QPushButton(self.centralwidget)
         self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setGeometry(QRect(50, 420, 171, 61))
+        self.pushButton_6.setGeometry(QRect(50, 400, 171, 61))
         self.pushButton_6.setStyleSheet(u"border-width: 5px;\n"
 "background-color: white;\n"
 "border-radius: 2px;")
@@ -141,7 +141,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setIconSize(QSize(30, 30))
         self.pushButton_7 = QPushButton(self.centralwidget)
         self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setGeometry(QRect(260, 420, 191, 61))
+        self.pushButton_7.setGeometry(QRect(250, 400, 191, 61))
         self.pushButton_7.setStyleSheet(u"border-width: 5px;\n"
 "background-color: white;\n"
 "border-radius: 2px;")
