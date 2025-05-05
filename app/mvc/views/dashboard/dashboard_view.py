@@ -1,12 +1,12 @@
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebEngineCore import QWebEngineSettings
 
 from .dashboard_source import Ui_DashboardWindow
-from .bokeh_dashboard import create_bokeh_dashboard
+from .bokeh_dashboard import CriminalDashboard
 
 class DashboardView(QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_DashboardWindow()
         self.ui.setupUi(self)
@@ -22,18 +22,17 @@ class DashboardView(QMainWindow):
         
         self.setWindowTitle("Дашборд злочинців")
     
-    def set_dashboard_data(self, data):
-        """Set data for the dashboard and render it."""
+    def set_dashboard_data(self, data: dict) -> None:
         if not data:
             self._show_no_data_message()
             return
         
-        dashboard_html = create_bokeh_dashboard(data)
+        dashboard = CriminalDashboard(data)
+        dashboard_html = dashboard.create_dashboard()
         
         self.web_view.setHtml(dashboard_html)
     
-    def _show_no_data_message(self):
-        """Show a message when no data is available."""
+    def _show_no_data_message(self) -> None:
         self.web_view.setHtml("""
         <html>
         <body style="display: flex; justify-content: center; align-items: center; height: 100%; font-family: Arial, sans-serif;">
