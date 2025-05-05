@@ -8,6 +8,9 @@ class MainWindow(QMainWindow):
     open_archive_requested = Signal()
     open_change_password_requested = Signal()
     open_users_requested = Signal()
+    open_dashboard_requested = Signal()
+
+    
     
     def __init__(self):
         super().__init__()
@@ -19,6 +22,9 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_4.clicked.connect(self._on_archive_action)
         self.ui.pushButton_6.clicked.connect(self._on_change_password_action)
         self.ui.pushButton_7.clicked.connect(self._on_users_action) 
+
+        self.ui.pushButton_5.setEnabled(True)
+        self.ui.pushButton_5.clicked.connect(self._on_dashboard_action)
         
         self.setup_time_display()
     
@@ -78,3 +84,6 @@ class MainWindow(QMainWindow):
     def set_user_role(self, username):
         is_admin = (username == 'admin')
         self.ui.pushButton_7.setVisible(is_admin)
+
+    def _on_dashboard_action(self):
+        self.open_dashboard_requested.emit()

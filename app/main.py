@@ -16,6 +16,8 @@ from mvc.controllers.authcontroller import AuthController
 from mvc.controllers.criminalcontroller import CriminalController
 from mvc.controllers.gangcontroller import GangController
 from mvc.controllers.archivecontroller import ArchiveController
+from mvc.controllers.dashboardcontroller import DashboardController
+
 
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
@@ -23,6 +25,7 @@ from mvc.views.criminals.criminal_info import CriminalsView
 from mvc.views.gangs.gang_info import GangsView
 from mvc.views.archive.archive_info import ArchiveView
 from mvc.views.criminals.criminal_detail import CriminalDetailView
+from mvc.views.dashboard.dashboard_view import DashboardView
 from mvc.views.mainwindow import MainWindow
 
 from mvc.views.criminals.criminal_manipulation.criminal_add_form import CriminalAddForm
@@ -60,6 +63,7 @@ def main() -> int:
     language_model = LanguageModel(db_connector.engine)
     profession_model = ProfessionModel(db_connector.engine)
     criminal_group_model = CriminalGroupModel(db_connector.engine)
+    dashboard_controller = DashboardController(criminal_model, city_model)
     
     # Initialize controllers
     auth_controller = AuthController(user_model)
@@ -82,9 +86,10 @@ def main() -> int:
     gangs_view = GangsView()
     archive_view = ArchiveView()
     criminal_detail_view = CriminalDetailView()
-    main_view = MainWindow()
+    dashboard_view = DashboardView()
     change_password_view = ChangePasswordView()
     users_view = UsersView()
+    main_view = MainWindow()
     
     criminal_add_form = CriminalAddForm()
     criminal_edit_form = CriminalEditForm()
@@ -103,6 +108,7 @@ def main() -> int:
     navigation_service.register_view("gang_add", gang_add_form)
     navigation_service.register_view("gang_edit", gang_edit_form)
     navigation_service.register_view("change_password", change_password_view)
+    navigation_service.register_view("dashboard", dashboard_view)
     navigation_service.register_view("users", users_view)
 
     navigation_service.register_transition("main", "criminals")
@@ -110,6 +116,8 @@ def main() -> int:
     navigation_service.register_transition("main", "archive")
     navigation_service.register_transition("main", "change_password")
     navigation_service.register_transition("change_password", "main")
+    navigation_service.register_transition("main", "dashboard")
+    navigation_service.register_transition("dashboard", "main")
     
     navigation_service.register_transition("criminals", "main")
     navigation_service.register_transition("gangs", "main")
@@ -153,6 +161,11 @@ def main() -> int:
         user_list_controller.get_all_users(),
         navigation_service.navigate_to("users", "main")
     ) if user_controller.is_admin() else None)
+
+    main_view.open_dashboard_requested.connect(lambda: (
+        dashboard_view.set_dashboard_data(dashboard_controller.get_dashboard_data()),
+        navigation_service.navigate_to("dashboard", "main")
+    ))
 
     users_view.add_user_requested.connect(lambda: (
         register_view.clear(),
