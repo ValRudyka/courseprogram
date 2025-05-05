@@ -4,9 +4,6 @@ from .filter_header_view import FilterHeaderView
 from .criminal_filter_model import CriminalFilterProxyModel
 
 class FilterableTableView(QTableView):
-    """
-    A table view with filter inputs in the header.
-    """
     def __init__(self, parent=None):
         super().__init__(parent)
         
@@ -23,7 +20,6 @@ class FilterableTableView(QTableView):
         self.setSelectionMode(QTableView.SingleSelection)
         
     def setModel(self, model):
-        """Override to insert a proxy model for filtering."""
         self.filter_model = CriminalFilterProxyModel(self)
         self.filter_model.setSourceModel(model)
         
@@ -32,14 +28,12 @@ class FilterableTableView(QTableView):
         self.filter_header.setModel(model)
         
     def applyFilter(self, column, text):
-        """Apply a filter on a specific column."""
         if not self.filter_model:
             return
             
         self.filter_model.setColumnFilter(column, text)
         
     def clearFilters(self):
-        """Clear all filters."""
         if hasattr(self, 'filter_header') and self.filter_header and hasattr(self.filter_header, 'clearFilters'):
             self.filter_header.clearFilters()
         
@@ -47,12 +41,10 @@ class FilterableTableView(QTableView):
             self.filter_model.clearFilters()
         
     def sourceModel(self):
-        """Get the original source model."""
         if self.filter_model:
             return self.filter_model.sourceModel()
         return self.model()
         
     def setFilterVisible(self, visible):
-        """Show or hide the filter row."""
         if hasattr(self, 'filter_header') and self.filter_header:
             self.filter_header.setFilterVisible(visible)

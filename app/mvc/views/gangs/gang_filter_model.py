@@ -1,12 +1,6 @@
-from PySide6.QtCore import QSortFilterProxyModel, Qt, QDate
+from PySide6.QtCore import QSortFilterProxyModel, Qt
 
 class GangFilterProxyModel(QSortFilterProxyModel):
-    """
-    Provides column-specific filtering capabilities for gang table, including:
-    - Date filtering for founding date
-    - Numeric range filtering for member counts
-    - Case-insensitive text filtering for names and activities
-    """
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFilterCaseSensitivity(Qt.CaseInsensitive)
@@ -29,7 +23,6 @@ class GangFilterProxyModel(QSortFilterProxyModel):
         self.invalidateFilter()
         
     def filterAcceptsRow(self, source_row, source_parent):
-        """Determine if a row should be shown based on all column filters."""
         if not self.column_filters:
             return True
             
@@ -46,15 +39,54 @@ class GangFilterProxyModel(QSortFilterProxyModel):
             data_str = str(data).lower()
             filter_text = filter_text.lower()
             
+            # Plain text columns
             if column in [0, 1, 4, 5, 7]:
-                if filter_text not in data_str:
-                    return False
+                if '-' in filter_text and not filter_text.startswith('>') and not filter_text.startswith('<'):
+                    try:
+                        start_text, end_text = filter_text.split('-')
+                        start_text = start_text.strip()
+                        end_text = end_text.strip()
+                        
+                        if start_text and end_text:
+                            if not (start_text <= data_str <= end_text):
+                                return False
+                        elif start_text:
+                            if data_str < start_text:
+                                return False
+                        elif end_text:
+                            if data_str > end_text:
+                                return False
+                    except Exception:
+                        if filter_text not in data_str:
+                            return False
+                else:
+                    if filter_text not in data_str:
+                        return False
             
+            # Date column (founding date)
             elif column == 2:
                 if not data_str:
                     return False
                 
-                if filter_text.startswith('>'):
+                if '-' in filter_text and not filter_text.startswith('>') and not filter_text.startswith('<'):
+                    try:
+                        start_date, end_date = filter_text.split('-')
+                        start_date = start_date.strip()
+                        end_date = end_date.strip()
+                        
+                        if start_date and end_date:
+                            if not (start_date <= data_str <= end_date):
+                                return False
+                        elif start_date:
+                            if data_str < start_date:
+                                return False
+                        elif end_date:
+                            if data_str > end_date:
+                                return False
+                    except Exception:
+                        if filter_text not in data_str:
+                            return False
+                elif filter_text.startswith('>'):
                     filter_date = filter_text[1:].strip()
                     if data_str <= filter_date:
                         return False
@@ -62,24 +94,28 @@ class GangFilterProxyModel(QSortFilterProxyModel):
                     filter_date = filter_text[1:].strip()
                     if data_str >= filter_date:
                         return False
-                elif '-' in filter_text:
-                    start_date, end_date = filter_text.split('-')
-                    if not (start_date.strip() <= data_str <= end_date.strip()):
-                        return False
                 elif filter_text not in data_str:
                     return False
                 
+            # Numeric columns (number of members, active members)
             elif column in [3, 6]:
                 try:
                     value = int(data_str)
                     
-                    if '-' in filter_text:
-                        min_val, max_val = filter_text.split('-')
-                        min_val = int(min_val.strip()) if min_val.strip() else 0
-                        max_val = int(max_val.strip()) if max_val.strip() else float('inf')
-                        
-                        if not (min_val <= value <= max_val):
-                            return False
+                    if '-' in filter_text and not filter_text.startswith('>') and not filter_text.startswith('<'):
+                        try:
+                            min_val, max_val = filter_text.split('-')
+                            min_val = min_val.strip()
+                            max_val = max_val.strip()
+                            
+                            min_val = int(min_val) if min_val else 0
+                            max_val = int(max_val) if max_val else float('inf')
+                            
+                            if not (min_val <= value <= max_val):
+                                return False
+                        except ValueError:
+                            if filter_text not in data_str:
+                                return False
                     elif filter_text.startswith('>'):
                         min_val = int(filter_text[1:].strip())
                         if value <= min_val:
@@ -97,5 +133,4 @@ class GangFilterProxyModel(QSortFilterProxyModel):
                 except (ValueError, TypeError):
                     if filter_text not in data_str:
                         return False
-                        
         return True

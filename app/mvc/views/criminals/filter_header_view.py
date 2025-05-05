@@ -4,9 +4,6 @@ from PySide6.QtCore import Qt, Signal, QSize, QRect, QPoint, QEvent
 from PySide6.QtGui import QPainter, QFontMetrics
 
 class FilterHeaderView(QHeaderView):
-    """
-    A custom header view that places filter widgets in the header.
-    """
     filterChanged = Signal(int, str)
     
     def __init__(self, orientation, parent=None):
@@ -26,7 +23,6 @@ class FilterHeaderView(QHeaderView):
         self.setMouseTracking(True)
         
     def setFilterVisible(self, visible):
-        """Show or hide the filter row."""
         self.filter_visible = visible
         
         for container in self.filter_containers:
@@ -35,7 +31,6 @@ class FilterHeaderView(QHeaderView):
         self.updateGeometries()
     
     def setModel(self, model):
-        """Override to create filter widgets when model is set."""
         super().setModel(model)
         
         for widget in self.filter_widgets:
@@ -52,6 +47,8 @@ class FilterHeaderView(QHeaderView):
                 container = QWidget(self.parent())
                 layout = QHBoxLayout(container)
                 layout.setContentsMargins(0, 0, 0, 0)
+
+                header_text = model.headerData(col, Qt.Horizontal)
                 
                 filter_widget = QLineEdit(container)
                 filter_widget.setPlaceholderText("Фільтр...")
@@ -62,9 +59,28 @@ class FilterHeaderView(QHeaderView):
                 
                 self.filter_widgets.append(filter_widget)
                 self.filter_containers.append(container)
+
+                tooltip_text = "Фільтрувати за частковим збігом\n"
+            
+                # Date columns
+                if "дата" in header_text.lower():
+                    tooltip_text += "Діапазон (вводити роки): РРРР-ММ-ДД - РРРР-ММ-ДД\n"
+                    tooltip_text += "Більше ніж: >РРРР-ММ-ДД\n"
+                    tooltip_text += "Менше ніж: <РРРР-ММ-ДД"
+                # Numeric columns
+                elif any(word in header_text.lower() for word in ["зріст", "вага", "кількість"]):
+                    tooltip_text += "Діапазон: число1 - число2\n"
+                    tooltip_text += "Більше ніж: >число\n"
+                    tooltip_text += "Менше ніж: <число"
+                # Text columns
+                else:
+                    tooltip_text += "Діапазон (алфавітний): текст1 - текст2"
+                    
+                filter_widget.setToolTip(tooltip_text)
                 
                 self._updateFilterPosition(col)
-    
+
+                
     def sectionResized(self, logicalIndex, oldSize, newSize):
         """Handle section resize events."""
         super().sectionResized(logicalIndex, oldSize, newSize)
