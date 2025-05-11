@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
-    <height>643</height>
+    <width>616</width>
+    <height>583</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,10 @@
       <height>41</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);
+border-radius: 3px;</string>
+    </property>
     <property name="text">
      <string>Увійти</string>
     </property>
@@ -133,7 +137,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>624</width>
+     <width>616</width>
      <height>26</height>
     </rect>
    </property>

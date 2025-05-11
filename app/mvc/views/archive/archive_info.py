@@ -6,14 +6,17 @@ from .archive_source import Ui_MainWindow
 from .archive_table_model import ArchiveTableModel
 from mvc.views.criminals.filterable_table_view import FilterableTableView
 
+from utils.icon_utils import icon_manager
+
 class ArchiveView(QMainWindow):
     delete_archived_criminal_requested = Signal(int)
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+        icon_manager.set_button_icon(self.ui.pushButton_4, 'icons8-delete-30', size=(18, 18))
+        icon_manager.set_button_icon(self.ui.pushButton_6, 'icons8-filter-50', size=(18, 18))
         self.setup_table_view()
         
         self.selected_criminal_id = None
@@ -21,8 +24,7 @@ class ArchiveView(QMainWindow):
         self.setup_connections()
         self.setup_context_menu()
     
-    def setup_table_view(self):
-        """Replace standard table with filterable table view."""
+    def setup_table_view(self) -> None:
         self.filterable_table_view = FilterableTableView(self.ui.centralwidget)
         self.filterable_table_view.setObjectName("tableWidget")
         
@@ -33,20 +35,17 @@ class ArchiveView(QMainWindow):
         self.ui.tableWidget = self.filterable_table_view
         self.original_table_widget.setVisible(False)
     
-    def setup_connections(self):
-        """Connect UI elements to their respective actions."""
+    def setup_connections(self) -> None:
         self.ui.pushButton_4.clicked.connect(self.on_delete_criminal)
         self.ui.pushButton_6.clicked.connect(self.toggle_filters)
         
         self.ui.tableWidget.clicked.connect(self.on_table_clicked)
     
-    def setup_context_menu(self):
-        """Create context menu for right-clicking in the table."""
+    def setup_context_menu(self) -> None:
         self.ui.tableWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableWidget.customContextMenuRequested.connect(self.show_context_menu)
     
-    def show_context_menu(self, position):
-        """Show context menu with actions for the selected criminal."""
+    def show_context_menu(self, position) -> None:
         if self.selected_criminal_id is None:
             return
             
@@ -59,21 +58,21 @@ class ArchiveView(QMainWindow):
         
         context_menu.exec_(QCursor.pos())
     
-    def toggle_filters(self):
-        """Toggle visibility of filter inputs in the table header."""
+    def toggle_filters(self) -> None:
         if hasattr(self.ui.tableWidget, 'setFilterVisible'):
             if hasattr(self.ui.tableWidget, 'filter_header') and hasattr(self.ui.tableWidget.filter_header, 'filter_visible'):
                 visible = not self.ui.tableWidget.filter_header.filter_visible
                 
                 self.ui.tableWidget.setFilterVisible(visible)
-                
+                icon_name = 'icons8-filter-50' if visible else 'icons8-filter-outlined'
+
+                icon_manager.set_button_icon(self.ui.pushButton_6, icon_name, size=(18,18))
                 self.ui.pushButton_6.setText("Сховати фільтри" if visible else "Показати фільтри")
             else:
                 self.ui.tableWidget.setFilterVisible(True)
                 self.ui.pushButton_6.setText("Сховати фільтри")
     
-    def on_table_clicked(self, index):
-        """Handle table click to select a criminal."""
+    def on_table_clicked(self, index) -> None:
         if not index.isValid():
             return
             
@@ -91,8 +90,7 @@ class ArchiveView(QMainWindow):
                 id_index = model.index(index.row(), 0)
                 self.selected_criminal_id = int(model.data(id_index))
     
-    def on_delete_criminal(self):
-        """Handle delete button click."""
+    def on_delete_criminal(self) -> None:
         if self.selected_criminal_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть злочинця для видалення з архіву")
             return
@@ -108,8 +106,7 @@ class ArchiveView(QMainWindow):
         if reply == QMessageBox.Yes:
             self.delete_archived_criminal_requested.emit(self.selected_criminal_id)
     
-    def set_archive_data(self, criminals):
-        """Set data for the archive table."""
+    def set_archive_data(self, criminals: list) -> None:
         self.archive_data = criminals
         
         model = ArchiveTableModel(criminals)

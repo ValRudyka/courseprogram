@@ -7,6 +7,7 @@ from .gangs_source import Ui_MainWindow
 from .gang_table_model import GangTableModel
 from mvc.views.criminals.filterable_table_view import FilterableTableView
 from utils.export_utils import export_data_to_file
+from utils.icon_utils import icon_manager
 
 class GangsView(QMainWindow):
     add_gang_requested = Signal()
@@ -14,11 +15,11 @@ class GangsView(QMainWindow):
     delete_gang_requested = Signal(int)
     export_gangs_requested = Signal()
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+        self.setup_icons()
         self.original_table_view = self.ui.tableView
         
         self.filterable_table_view = FilterableTableView(self.ui.centralwidget)
@@ -35,7 +36,19 @@ class GangsView(QMainWindow):
         self.setup_connections()
         self.setup_context_menu()
     
-    def setup_connections(self):
+    def setup_icons(self) -> None:
+        button_icons = {
+            self.ui.pushButton: 'icons8-filter-50',
+            self.ui.pushButton_2: 'icons8-export-file-30',
+            self.ui.pushButton_3: 'icons8-update-48',
+            self.ui.pushButton_4: 'icons8-delete-30',
+            self.ui.pushButton_5: 'icons8-add-30'
+        }
+
+        for button, icon in button_icons.items():
+            icon_manager.set_button_icon(button, icon, size=(18,18))
+
+    def setup_connections(self) -> None:
         self.ui.pushButton_5.clicked.connect(self.on_add_gang)
         self.ui.pushButton_3.clicked.connect(self.on_edit_gang)
         self.ui.pushButton_4.clicked.connect(self.on_delete_gang)
@@ -44,11 +57,11 @@ class GangsView(QMainWindow):
         
         self.ui.tableView.clicked.connect(self.on_table_clicked)
     
-    def setup_context_menu(self):
+    def setup_context_menu(self) -> None:
         self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableView.customContextMenuRequested.connect(self.show_context_menu)
     
-    def show_context_menu(self, position):
+    def show_context_menu(self, position) -> None:
         if self.selected_gang_id is None:
             return
             
@@ -66,7 +79,7 @@ class GangsView(QMainWindow):
         # Show menu
         context_menu.exec_(QCursor.pos())
     
-    def toggle_filters(self):
+    def toggle_filters(self) -> None:
         if hasattr(self.ui.tableView, 'setFilterVisible'):
             if hasattr(self.ui.tableView, 'filter_header') and hasattr(self.ui.tableView.filter_header, 'filter_visible'):
                 visible = not self.ui.tableView.filter_header.filter_visible
@@ -78,17 +91,17 @@ class GangsView(QMainWindow):
                 self.ui.tableView.setFilterVisible(True)
                 self.ui.pushButton.setText("Сховати фільтри")
 
-    def on_add_gang(self):
+    def on_add_gang(self) -> None:
         self.add_gang_requested.emit()
     
-    def on_edit_gang(self):
+    def on_edit_gang(self) -> None:
         if self.selected_gang_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть угруповання для редагування")
             return
         
         self.edit_gang_requested.emit(self.selected_gang_id)
     
-    def on_delete_gang(self):
+    def on_delete_gang(self) -> None:
         if self.selected_gang_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть угруповання для видалення")
             return
@@ -104,7 +117,7 @@ class GangsView(QMainWindow):
         if reply == QMessageBox.Yes:
             self.delete_gang_requested.emit(self.selected_gang_id)
     
-    def on_table_clicked(self, index):
+    def on_table_clicked(self, index) -> None:
         if not index.isValid():
             return
             
@@ -120,8 +133,7 @@ class GangsView(QMainWindow):
             id_index = self.ui.tableView.model().index(index.row(), 0)
             self.selected_gang_id = int(self.ui.tableView.model().data(id_index))
     
-    def set_gangs_data(self, gangs):
-        """Set data for the gangs table."""
+    def set_gangs_data(self, gangs: list) -> None:
         self.full_data = gangs
         
         model = GangTableModel(gangs)
@@ -143,7 +155,7 @@ class GangsView(QMainWindow):
         
         self.selected_gang_id = None
         
-    def on_export_gangs(self):
+    def on_export_gangs(self) -> None:
         dialog = QDialog(self)
         dialog.setWindowTitle("Експорт даних")
         layout = QVBoxLayout(dialog)
@@ -166,16 +178,16 @@ class GangsView(QMainWindow):
         dialog.setMinimumWidth(300)
         dialog.exec_()
     
-    def _perform_export(self, dialog):
+    def _perform_export(self, dialog) -> None:
         dialog.accept()
         self.export_gangs_requested.emit()
         
-    def export_gangs_data(self, data):
+    def export_gangs_data(self, data: list) -> None:
         if not data:
             QMessageBox.warning(self, "Експорт", "Немає даних для експорту.")
             return
         
         export_data_to_file(data, self, f"угруповання_{datetime.now().strftime('%Y%m%d')}")
     
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         event.accept()

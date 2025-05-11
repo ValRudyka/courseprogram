@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'loginkrkJmg.ui'
+## Form generated from reading UI file 'loginXVWrtZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -17,7 +17,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(624, 643)
+        MainWindow.resize(616, 583)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.username_edit = QLineEdit(self.centralwidget)
@@ -36,7 +36,9 @@ class Ui_MainWindow(object):
         self.username_label.setGeometry(QRect(60, 150, 211, 31))
         self.login_btn = QPushButton(self.centralwidget)
         self.login_btn.setObjectName(u"login_btn")
-        self.login_btn.setGeometry(QRect(60, 390, 111, 41))
+        self.login_btn.setGeometry(QRect(60, 390, 121, 51))
+        self.login_btn.setStyleSheet(u"background-color: rgb(255, 255, 255);\n"
+"border-radius: 3px;")
         self.title = QLabel(self.centralwidget)
         self.title.setObjectName(u"title")
         self.title.setGeometry(QRect(80, 30, 441, 71))
@@ -57,7 +59,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 624, 26))
+        self.menubar.setGeometry(QRect(0, 0, 616, 26))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

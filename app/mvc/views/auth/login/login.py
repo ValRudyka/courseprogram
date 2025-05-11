@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QMessageBox, QLabel
 from PySide6.QtCore import Signal, Qt
 from .login_source import Ui_MainWindow
+from utils.icon_utils import icon_manager
 
 class LoginView(QMainWindow):
     login_requested = Signal(str, str)    
@@ -11,6 +12,7 @@ class LoginView(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         
+        icon_manager.set_button_icon(self.ui.login_btn, 'icons8-login-50')
         self.status_label = QLabel(self.ui.centralwidget)
         self.status_label.setGeometry(60, 430, 500, 30)
         self.status_label.setAlignment(Qt.AlignCenter)

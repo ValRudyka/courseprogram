@@ -17,10 +17,13 @@ from mvc.controllers.criminalcontroller import CriminalController
 from mvc.controllers.gangcontroller import GangController
 from mvc.controllers.archivecontroller import ArchiveController
 from mvc.controllers.dashboardcontroller import DashboardController
-
+from mvc.controllers.usercontroller import UserController
+from mvc.controllers.userlistcontroller import UserListController
 
 from mvc.views.auth.register.register import RegisterView
 from mvc.views.auth.login.login import LoginView
+from mvc.views.auth.changepassword.changepassword import ChangePasswordView
+from mvc.views.users.users import UsersView
 from mvc.views.criminals.criminal_info import CriminalsView
 from mvc.views.gangs.gang_info import GangsView
 from mvc.views.archive.archive_info import ArchiveView
@@ -32,12 +35,6 @@ from mvc.views.criminals.criminal_manipulation.criminal_add_form import Criminal
 from mvc.views.criminals.criminal_manipulation.criminal_edit_form import CriminalEditForm
 from mvc.views.gangs.gang_manipulation.gang_add_form import GangAddForm
 from mvc.views.gangs.gang_manipulation.gang_edit_form import GangEditForm
-
-from mvc.controllers.usercontroller import UserController
-from mvc.views.auth.changepassword.changepassword import ChangePasswordView
-
-from mvc.controllers.userlistcontroller import UserListController
-from mvc.views.users.users import UsersView
 
 from mvc.views.navigate.navigation_service import NavigationService
 

@@ -7,6 +7,7 @@ from .criminals_source import Ui_CriminalsWindow
 from .criminals_table import CriminalTableModel
 from .filterable_table_view import FilterableTableView
 from utils.export_utils import export_data_to_file
+from utils.icon_utils import icon_manager
 
 class CriminalsView(QMainWindow):
     add_criminal_requested = Signal()
@@ -16,11 +17,11 @@ class CriminalsView(QMainWindow):
     export_criminals_requested = Signal(bool)
     show_criminal_details_requested = Signal(int)
     
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.ui = Ui_CriminalsWindow()
         self.ui.setupUi(self)
-        
+        self.setup_icons()
         self.original_table_view = self.ui.tableView
         
         self.filterable_table_view = FilterableTableView(self.ui.centralwidget)
@@ -40,8 +41,20 @@ class CriminalsView(QMainWindow):
         self.ui.pushButton.setText("Сховати фільтри")
         self.ui.pushButton.clicked.connect(self.toggle_filters)
     
-    def setup_connections(self):
-        """Connect UI elements to their respective actions."""
+    def setup_icons(self) -> None:
+        button_icons = {
+            self.ui.pushButton_5: 'icons8-add-30',
+            self.ui.pushButton_3: 'icons8-update-48',
+            self.ui.pushButton_4: 'icons8-delete-30',
+            self.ui.pushButton_2: 'icons8-archive-30',
+            self.ui.pushButton_6: 'icons8-export-file-30',
+            self.ui.pushButton: 'icons8-filter-50'
+        }
+
+        for button, icon_name in button_icons.items():
+            icon_manager.set_button_icon(button, icon_name, size=(18,18))
+
+    def setup_connections(self) -> None:
         self.ui.pushButton_5.clicked.connect(self.on_add_criminal)
         self.ui.pushButton_3.clicked.connect(self.on_edit_criminal)
         self.ui.pushButton_2.clicked.connect(self.on_archive_criminal)
@@ -51,13 +64,11 @@ class CriminalsView(QMainWindow):
         self.ui.tableView.clicked.connect(self.on_table_clicked)
         self.ui.tableView.doubleClicked.connect(self.on_show_criminal_details)
     
-    def setup_context_menu(self):
-        """Create context menu for right-clicking in the table."""
+    def setup_context_menu(self) -> None:
         self.ui.tableView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.ui.tableView.customContextMenuRequested.connect(self.show_context_menu)
     
-    def show_context_menu(self, position):
-        """Show context menu with actions for the selected criminal."""
+    def show_context_menu(self, position) -> None:
         if self.selected_criminal_id is None:
             return
             
@@ -82,41 +93,38 @@ class CriminalsView(QMainWindow):
 
         context_menu.exec_(QCursor.pos())
 
-    def on_show_criminal_details(self):
-        """Handle showing detailed criminal information."""
+    def on_show_criminal_details(self) -> None:
         if self.selected_criminal_id is None:
             QMessageBox.warning(self, "Попередження", "Виберіть злочинця для перегляду деталей")
             return
             
         self.show_criminal_details_requested.emit(self.selected_criminal_id)
     
-    def toggle_filters(self):
-        """Toggle visibility of filter inputs in the table header."""
+    def toggle_filters(self) -> None:
         if hasattr(self.ui.tableView, 'setFilterVisible'):
             if hasattr(self.ui.tableView, 'filter_header') and hasattr(self.ui.tableView.filter_header, 'filter_visible'):
                 visible = not self.ui.tableView.filter_header.filter_visible
                 
                 self.ui.tableView.setFilterVisible(visible)
-                
+                icon_name = 'icons8-filter-50' if visible else 'icons8-filter-outlined'
+
+                icon_manager.set_button_icon(self.ui.pushButton, icon_name, size=(18,18))
                 self.ui.pushButton.setText("Сховати фільтри" if visible else "Показати фільтри")
             else:
                 self.ui.tableView.setFilterVisible(True)
                 self.ui.pushButton.setText("Сховати фільтри")
 
-    def on_add_criminal(self):
-        """Handle add button click."""
+    def on_add_criminal(self) -> None:
         self.add_criminal_requested.emit()
     
-    def on_edit_criminal(self):
-        """Handle edit button click."""
+    def on_edit_criminal(self) -> None:
         if self.selected_criminal_id is None:
             QMessageBox.warning(self, "Warning", "Виберіть злочинця для редагування")
             return
         
         self.edit_criminal_requested.emit(self.selected_criminal_id)
     
-    def on_archive_criminal(self):
-        """Handle archive button click."""
+    def on_archive_criminal(self) -> None:
         if self.selected_criminal_id is None:
             QMessageBox.warning(self, "Warning", "Виберіть злочинця для архівування")
             return
@@ -133,7 +141,7 @@ class CriminalsView(QMainWindow):
         if reply == QMessageBox.Yes:
             self.archive_criminal_requested.emit(self.selected_criminal_id)
     
-    def on_delete_criminal(self):
+    def on_delete_criminal(self) -> None:
         """Handle delete button click."""
         if self.selected_criminal_id is None:
             QMessageBox.warning(self, "Warning", "Виберіть злочинця для видалення")
@@ -150,8 +158,7 @@ class CriminalsView(QMainWindow):
         if reply == QMessageBox.Yes:
             self.delete_criminal_requested.emit(self.selected_criminal_id)
     
-    def on_table_clicked(self, index):
-        """Handle table click to select a criminal."""
+    def on_table_clicked(self, index) -> None:
         if not index.isValid():
             return
             
@@ -167,8 +174,7 @@ class CriminalsView(QMainWindow):
             id_index = self.ui.tableView.model().index(index.row(), 0)
             self.selected_criminal_id = int(self.ui.tableView.model().data(id_index))
     
-    def set_criminals_data(self, criminals):
-        """Set data for the criminals table."""
+    def set_criminals_data(self, criminals) -> None:
         self.full_data = criminals
         
         model = CriminalTableModel(criminals)
@@ -192,8 +198,7 @@ class CriminalsView(QMainWindow):
         
         self.selected_criminal_id = None
 
-    def on_export_criminals(self):
-        """Handle export button click."""
+    def on_export_criminals(self) -> None:
         from PySide6.QtWidgets import QCheckBox, QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
         
         dialog = QDialog(self)
@@ -219,13 +224,11 @@ class CriminalsView(QMainWindow):
         dialog.setMinimumWidth(300)
         dialog.exec_()
     
-    def _export_data(self, include_archived, dialog):
-        """Emit signal to export data and close the dialog."""
+    def _export_data(self, include_archived, dialog) -> None:
         dialog.accept()
         self.export_criminals_requested.emit(include_archived)
         
-    def export_criminals_data(self, data):
-        """Export criminal data to a file."""
+    def export_criminals_data(self, data) -> None:
         if not data:
             QMessageBox.warning(self, "Експорт", "Немає даних для експорту.")
             return
