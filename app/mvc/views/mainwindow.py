@@ -1,6 +1,11 @@
-from PySide6.QtWidgets import QMainWindow
-from PySide6.QtCore import Signal, QTimer, QDateTime, QLocale
+from PySide6.QtWidgets import QMainWindow, QMessageBox
+from PySide6.QtCore import Signal, QTimer, QDateTime, QLocale, QUrl
+from PySide6.QtGui import QDesktopServices
 from .main_source import Ui_MainWindow
+import os
+import sys
+import subprocess
+import platform
 
 from utils.icon_utils import icon_manager
 
@@ -23,6 +28,9 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_4.clicked.connect(self._on_archive_action)
         self.ui.pushButton_6.clicked.connect(self._on_change_password_action)
         self.ui.pushButton_7.clicked.connect(self._on_users_action) 
+
+        # Connect the instruction button to open PDF
+        self.ui.pushButton.clicked.connect(self._on_instruction_action)
 
         self.ui.pushButton_5.setEnabled(True)
         self.ui.pushButton_5.clicked.connect(self._on_dashboard_action)
@@ -66,6 +74,69 @@ class MainWindow(QMainWindow):
         full_text = f"{date_text}\n{time_text}"
         
         self.ui.label_2.setText(full_text)
+
+    def _on_instruction_action(self) -> None:
+        try:
+            if getattr(sys, 'frozen', False):
+                app_dir = os.path.dirname(sys.executable)
+            else:
+                current_file = os.path.abspath(__file__)
+                app_dir = os.path.dirname(os.path.dirname(os.path.dirname(current_file)))
+            
+            pdf_path = os.path.join(app_dir, "docs", "documentation.pdf")
+            
+            if not os.path.exists(pdf_path):
+                QMessageBox.warning(
+                    self, 
+                    "Файл не знайдено", 
+                    f"Файл документації не знайдено за шляхом:\n{pdf_path}\n\nПереконайтеся, що файл існує в папці docs."
+                )
+                return
+            
+            success = self._open_pdf_file(pdf_path)
+            
+            if not success:
+                QMessageBox.warning(
+                    self, 
+                    "Помилка відкриття файлу", 
+                    "Не вдалося відкрити файл документації. Переконайтеся, що у вас встановлено програму для перегляду PDF файлів."
+                )
+                
+        except Exception as e:
+            QMessageBox.critical(
+                self, 
+                "Помилка", 
+                f"Сталася помилка при спробі відкрити документацію:\n{str(e)}"
+            )
+    
+    def _open_pdf_file(self, file_path: str) -> bool:
+        try:
+            system = platform.system().lower()
+            
+            if system == "windows":
+                os.startfile(file_path)
+                return True
+                
+            elif system == "darwin":
+                subprocess.run(["open", file_path], check=True)
+                return True
+                
+            elif system == "linux":
+                subprocess.run(["xdg-open", file_path], check=True)
+                return True
+                
+            else:
+                url = QUrl.fromLocalFile(file_path)
+                return QDesktopServices.openUrl(url)
+                
+        except subprocess.CalledProcessError:
+            try:
+                url = QUrl.fromLocalFile(file_path)
+                return QDesktopServices.openUrl(url)
+            except Exception:
+                return False
+        except Exception:
+            return False
 
     def closeEvent(self, event) -> None:
         if hasattr(self, 'timer'):
